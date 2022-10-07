@@ -1,0 +1,7 @@
+{
+  "presets": ["next/babel"],
+  "plugins": [
+    ["formatjs", { "ast": true }],
+    ["nativewind/babel", { "mode": "transformOnly" }]
+  ]
+}
