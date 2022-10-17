@@ -1,3 +1,4 @@
+import { Provider as JotaiProvider } from "jotai";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { IntlProvider } from "react-intl";
@@ -27,9 +28,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         />
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
-      <IntlProvider locale="en">
-        <Component {...pageProps} />
-      </IntlProvider>
+      <JotaiProvider>
+        <IntlProvider locale="en">
+          <Component {...pageProps} />
+        </IntlProvider>
+      </JotaiProvider>
     </>
   );
 }
