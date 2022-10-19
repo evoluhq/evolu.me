@@ -2,7 +2,8 @@ const withTM = require("next-transpile-modules")(["nativewind"]);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  // Waiting for RNfW 0.19
+  reactStrictMode: false,
   swcMinify: true,
 
   webpack: (config, { dev }) => {

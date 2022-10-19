@@ -1,16 +1,28 @@
-import { Text, View } from "react-native";
+import { resetOwner } from "evolu";
+import { FC } from "react";
+import { Pressable, Text, View } from "react-native";
 
-export const EvoluFilter = () => {
+const Button: FC<{ title: string; onPress?: () => void }> = ({
+  title,
+  onPress,
+}) => {
   return (
-    <View className="flex-row gap-4">
-      <Text className="text-xl text-gray-900 dark:text-gray-200">All</Text>
-    </View>
+    <Pressable onPress={onPress}>
+      <Text className="text-xl text-gray-900 dark:text-gray-200">{title}</Text>
+    </Pressable>
   );
 };
 
-/* <Text className="text-xl font-semibold dark:text-gray-300">
-Today
-</Text>
-<Text className="text-xl font-semibold dark:text-gray-300">
-Sport
-</Text> */
+export const EvoluFilter = () => {
+  return (
+    <View className="flex-row justify-between gap-4">
+      <Button title="All" />
+      <Button
+        title="Reset"
+        onPress={() => {
+          resetOwner();
+        }}
+      />
+    </View>
+  );
+};

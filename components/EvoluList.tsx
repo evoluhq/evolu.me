@@ -1,4 +1,3 @@
-import { View } from "react-native";
 import { useQuery } from "../lib/db";
 import { EvoluListItem } from "./EvoluListItem";
 
@@ -8,10 +7,10 @@ export const EvoluList = () => {
   );
 
   return (
-    <View className="gap-y-4">
+    <>
       {rows.map((row) => (
         <EvoluListItem key={row.id} row={row} />
       ))}
-    </View>
+    </>
   );
 };
