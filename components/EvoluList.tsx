@@ -3,7 +3,7 @@ import { EvoluListItem } from "./EvoluListItem";
 
 export const EvoluList = () => {
   const { rows } = useQuery((db) =>
-    db.selectFrom("evolu").select(["id", "title"]).orderBy("updatedAt")
+    db.selectFrom("evolu").select(["id", "title"]).orderBy("createdAt")
   );
 
   return (

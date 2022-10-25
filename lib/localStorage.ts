@@ -1,6 +1,5 @@
 export const localStorageKeys = {
   newEvoluTitle: "evolume:newEvoluTitle",
-  editEvoluTitle: "evolume:editEvoluTitle",
 };
 
 // Must be called before Evolu restoreOwner.
