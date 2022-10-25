@@ -1,31 +1,34 @@
-import { NonEmptyString1000 } from "evolu";
+import { String1000 } from "evolu";
+import { either } from "fp-ts";
+import { constVoid, pipe } from "fp-ts/function";
 import { useAtom } from "jotai";
 import { atomWithStorage, RESET } from "jotai/utils";
 import { useMutation } from "../lib/db";
 import { localStorageKeys } from "../lib/localStorage";
+import { safeParseToEither } from "../lib/safeParseToEither";
 import { EvoluTextInput } from "./EvoluTextInput";
 
 const newEvoluTitleAtom = atomWithStorage(localStorageKeys.newEvoluTitle, "");
 
 export const CreateEvolu = () => {
-  const [text, setText] = useAtom(newEvoluTitleAtom);
+  const [title, setTitle] = useAtom(newEvoluTitleAtom);
   const { mutate } = useMutation();
 
   const handleSubmitEditing = () => {
-    const result = NonEmptyString1000.safeParse(text);
-    if (!result.success) return;
-    mutate("evolu", { title: result.data });
-    setText(RESET);
+    pipe(
+      String1000.safeParse(title),
+      safeParseToEither,
+      either.match(constVoid, (title) => {
+        mutate("evolu", { title });
+        setTitle(RESET);
+      })
+    );
   };
 
   return (
     <EvoluTextInput
-      // ref={(n) => {
-      //   n?.focus();
-      // }}
-      value={text}
-      onChangeText={setText}
-      blurOnSubmit={false}
+      value={title}
+      onChangeText={setTitle}
       onSubmitEditing={handleSubmitEditing}
     />
   );
