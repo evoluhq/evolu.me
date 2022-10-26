@@ -30,6 +30,7 @@ export const CreateEvolu = () => {
       value={title}
       onChangeText={setTitle}
       onSubmitEditing={handleSubmitEditing}
+      hasUnsavedChange={title.length > 0}
     />
   );
 };
