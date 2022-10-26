@@ -1,6 +1,6 @@
 import { useEvoluFirstDataAreLoaded } from "evolu";
 import { FC, ReactNode } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View } from "../components/styled";
 import { ClientOnly } from "../components/ClientOnly";
 import { CreateEvolu } from "../components/CreateEvolu";
 import { EvoluFilter } from "../components/EvoluFilter";

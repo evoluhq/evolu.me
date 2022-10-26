@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@formatjs/cli': ^5.1.3
   '@types/node': ^18.11.5
-  '@types/react': ^18.0.22
+  '@types/react': ^18.0.23
   '@types/react-dom': ^18.0.7
   '@types/react-native': ^0.70.6
   '@typescript-eslint/eslint-plugin': ^5.41.0
@@ -16,7 +16,7 @@ specifiers:
   eslint: ^8.26.0
   eslint-config-next: ^12.3.1
   eslint-plugin-formatjs: ^4.3.4
-  evolu: ^0.3.0
+  evolu: ^0.3.1
   fp-ts: ^2.13.1
   jotai: ^1.8.6
   nativewind: ^2.0.11
@@ -36,7 +36,7 @@ specifiers:
 
 dependencies:
   clsx: 1.2.1
-  evolu: 0.3.0_v5r4n2jb3k2g2w5cerv7q4c2x4
+  evolu: 0.3.1_v5r4n2jb3k2g2w5cerv7q4c2x4
   fp-ts: 2.13.1
   jotai: 1.8.6_otspjrsspon4ofp37rshhlhp2y
   nativewind: 2.0.11_qh5vv7fybu7henbey4cwvjjpw4
@@ -52,7 +52,7 @@ dependencies:
 devDependencies:
   '@formatjs/cli': 5.1.3
   '@types/node': 18.11.5
-  '@types/react': 18.0.22
+  '@types/react': 18.0.23
   '@types/react-dom': 18.0.7
   '@types/react-native': 0.70.6
   '@typescript-eslint/eslint-plugin': 5.41.0_huremdigmcnkianavgfk3x6iou
@@ -657,7 +657,7 @@ packages:
   /@types/hoist-non-react-statics/3.3.1:
     resolution: {integrity: sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==}
     dependencies:
-      '@types/react': 18.0.22
+      '@types/react': 18.0.23
       hoist-non-react-statics: 3.3.2
     dev: false
 
@@ -691,17 +691,17 @@ packages:
   /@types/react-dom/18.0.7:
     resolution: {integrity: sha512-HaXc+BbqAZE1RdsK3tC8SbkFy6UL2xF76lT9rQs5JkPrJg3rWA3Ou/Lhw3YJQzEDkBpmJ79nBsfnd05WrBd2QQ==}
     dependencies:
-      '@types/react': 18.0.22
+      '@types/react': 18.0.23
     dev: true
 
   /@types/react-native/0.70.6:
     resolution: {integrity: sha512-ynQ2jj0km9d7dbnyKqVdQ6Nti7VQ8SLTA/KKkkS5+FnvGyvij2AOo1/xnkBR/jnSNXuzrvGVzw2n0VWfppmfKw==}
     dependencies:
-      '@types/react': 18.0.22
+      '@types/react': 18.0.23
     dev: true
 
-  /@types/react/18.0.22:
-    resolution: {integrity: sha512-4yWc5PyCkZN8ke8K9rQHkTXxHIWHxLzzW6RI1kXVoepkD3vULpKzC2sDtAMKn78h92BRYuzf+7b/ms7ajE6hFw==}
+  /@types/react/18.0.23:
+    resolution: {integrity: sha512-R1wTULtCiJkudAN2DJGoYYySbGtOdzZyUWAACYinKdiQC8auxso4kLDUhQ7AJ2kh3F6A6z4v69U6tNY39hihVQ==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
@@ -1684,8 +1684,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /evolu/0.3.0_v5r4n2jb3k2g2w5cerv7q4c2x4:
-    resolution: {integrity: sha512-9aMhyrIu3nefVNcZ5QaElPk8IHnJUrSiDpLTfw3zJq3RAAeNMX2xTwzPhpLuF4fVEuJuONUX+EpBY6vYA6jXIg==}
+  /evolu/0.3.1_v5r4n2jb3k2g2w5cerv7q4c2x4:
+    resolution: {integrity: sha512-raEz5mmvdLOcSpLKX7Rb/o4YdhT6sRn/hzzJHBx/odnOGCoKA/Kb4428COz3OLH9joIgTubiOo414lcHfJDflA==}
     engines: {node: '>=16.15'}
     peerDependencies:
       fp-ts: ^2.12.3
@@ -2812,7 +2812,7 @@ packages:
       '@formatjs/intl-displaynames': 6.1.4
       '@formatjs/intl-listformat': 7.1.3
       '@types/hoist-non-react-statics': 3.3.1
-      '@types/react': 18.0.22
+      '@types/react': 18.0.23
       hoist-non-react-statics: 3.3.2
       intl-messageformat: 10.2.1
       react: 18.2.0

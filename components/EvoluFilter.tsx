@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "./styled";
 
 const Button: FC<{ title: string; onPress?: () => void }> = ({
   title,

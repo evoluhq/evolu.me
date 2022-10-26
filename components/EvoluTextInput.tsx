@@ -1,6 +1,7 @@
 import { clsx } from "clsx";
 import { forwardRef } from "react";
 import { TextInput, TextInputProps } from "react-native";
+import { TextInput as StyledTextInput } from "./styled";
 
 export const EvoluTextInput = forwardRef<
   TextInput,
@@ -9,7 +10,7 @@ export const EvoluTextInput = forwardRef<
   }
 >(({ hasUnsavedChange, ...props }, ref) => {
   return (
-    <TextInput
+    <StyledTextInput
       {...props}
       ref={ref}
       maxLength={1000} // The same as NonEmptyString1000
