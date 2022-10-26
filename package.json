@@ -1,6 +1,5 @@
 {
-  "name": "evolu",
-  "version": "0.1.0",
+  "name": "evolu.me",
   "private": true,
   "scripts": {
     "dev": "next dev",
