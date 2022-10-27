@@ -17,10 +17,16 @@ export const CreateEvolu = () => {
   const { mutate } = useMutation();
   const inputRef = useRef<TextInput>(null);
 
-  // scrollIntoView in handleSubmitEditing is too soon.
   useEffect(() => {
-    // @ts-expect-error Types
-    if (title === "") inputRef.current?.scrollIntoView({ block: "nearest" });
+    if (title !== "" || inputRef.current == null) return;
+    const browserInput = inputRef.current as unknown as HTMLElement;
+    // IDK why, but scrollIntoView must be called in the next event cycle.
+    const timeout = setTimeout(() => {
+      browserInput.scrollIntoView({ block: "nearest" });
+    });
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [title]);
 
   const handleSubmitEditing = () => {
