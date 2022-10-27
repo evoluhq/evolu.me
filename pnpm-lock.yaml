@@ -2,9 +2,9 @@ lockfileVersion: 5.4
 
 specifiers:
   '@formatjs/cli': ^5.1.3
-  '@types/node': ^18.11.5
-  '@types/react': ^18.0.23
-  '@types/react-dom': ^18.0.7
+  '@types/node': ^18.11.7
+  '@types/react': ^18.0.24
+  '@types/react-dom': ^18.0.8
   '@types/react-native': ^0.70.6
   '@typescript-eslint/eslint-plugin': ^5.41.0
   '@typescript-eslint/parser': ^5.41.0
@@ -18,7 +18,7 @@ specifiers:
   eslint-plugin-formatjs: ^4.3.4
   evolu: ^0.3.1
   fp-ts: ^2.13.1
-  jotai: ^1.8.6
+  jotai: ^1.9.0
   nativewind: ^2.0.11
   next: 12.3.1
   next-transpile-modules: ^9.1.0
@@ -38,7 +38,7 @@ dependencies:
   clsx: 1.2.1
   evolu: 0.3.1_v5r4n2jb3k2g2w5cerv7q4c2x4
   fp-ts: 2.13.1
-  jotai: 1.8.6_otspjrsspon4ofp37rshhlhp2y
+  jotai: 1.9.0_otspjrsspon4ofp37rshhlhp2y
   nativewind: 2.0.11_qh5vv7fybu7henbey4cwvjjpw4
   next: 12.3.1_qtpcxnaaarbm4ws7ughq6oxfve
   next-transpile-modules: 9.1.0
@@ -51,9 +51,9 @@ dependencies:
 
 devDependencies:
   '@formatjs/cli': 5.1.3
-  '@types/node': 18.11.6
-  '@types/react': 18.0.23
-  '@types/react-dom': 18.0.7
+  '@types/node': 18.11.7
+  '@types/react': 18.0.24
+  '@types/react-dom': 18.0.8
   '@types/react-native': 0.70.6
   '@typescript-eslint/eslint-plugin': 5.41.0_huremdigmcnkianavgfk3x6iou
   '@typescript-eslint/parser': 5.41.0_wyqvi574yv7oiwfeinomdzmc3m
@@ -657,7 +657,7 @@ packages:
   /@types/hoist-non-react-statics/3.3.1:
     resolution: {integrity: sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==}
     dependencies:
-      '@types/react': 18.0.23
+      '@types/react': 18.0.24
       hoist-non-react-statics: 3.3.2
     dev: false
 
@@ -677,8 +677,8 @@ packages:
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
     dev: true
 
-  /@types/node/18.11.6:
-    resolution: {integrity: sha512-j3CEDa2vd96K0AXF8Wur7UucACvnjkk8hYyQAHhUNciabZLDl9nfAEVUSwmh245OOZV15bRA3Y590Gi5jUcDJg==}
+  /@types/node/18.11.7:
+    resolution: {integrity: sha512-LhFTglglr63mNXUSRYD8A+ZAIu5sFqNJ4Y2fPuY7UlrySJH87rRRlhtVmMHplmfk5WkoJGmDjE9oiTfyX94CpQ==}
     dev: true
 
   /@types/picomatch/2.3.0:
@@ -688,20 +688,20 @@ packages:
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
 
-  /@types/react-dom/18.0.7:
-    resolution: {integrity: sha512-HaXc+BbqAZE1RdsK3tC8SbkFy6UL2xF76lT9rQs5JkPrJg3rWA3Ou/Lhw3YJQzEDkBpmJ79nBsfnd05WrBd2QQ==}
+  /@types/react-dom/18.0.8:
+    resolution: {integrity: sha512-C3GYO0HLaOkk9dDAz3Dl4sbe4AKUGTCfFIZsz3n/82dPNN8Du533HzKatDxeUYWu24wJgMP1xICqkWk1YOLOIw==}
     dependencies:
-      '@types/react': 18.0.23
+      '@types/react': 18.0.24
     dev: true
 
   /@types/react-native/0.70.6:
     resolution: {integrity: sha512-ynQ2jj0km9d7dbnyKqVdQ6Nti7VQ8SLTA/KKkkS5+FnvGyvij2AOo1/xnkBR/jnSNXuzrvGVzw2n0VWfppmfKw==}
     dependencies:
-      '@types/react': 18.0.23
+      '@types/react': 18.0.24
     dev: true
 
-  /@types/react/18.0.23:
-    resolution: {integrity: sha512-R1wTULtCiJkudAN2DJGoYYySbGtOdzZyUWAACYinKdiQC8auxso4kLDUhQ7AJ2kh3F6A6z4v69U6tNY39hihVQ==}
+  /@types/react/18.0.24:
+    resolution: {integrity: sha512-wRJWT6ouziGUy+9uX0aW4YOJxAY0bG6/AOk5AW5QSvZqI7dk6VBIbXvcVgIw/W5Jrl24f77df98GEKTJGOLx7Q==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
@@ -982,7 +982,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.4
-      caniuse-lite: 1.0.30001425
+      caniuse-lite: 1.0.30001426
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -1062,7 +1062,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001425
+      caniuse-lite: 1.0.30001426
       electron-to-chromium: 1.4.284
       node-releases: 2.0.6
       update-browserslist-db: 1.0.10_browserslist@4.21.4
@@ -1087,8 +1087,8 @@ packages:
     resolution: {integrity: sha512-dU+Tx2fsypxTgtLoE36npi3UqcjSSMNYfkqgmoEhtZrraP5VWq0K7FkWVTYa8eMPtnU/G2txVsfdCJTn9uzpuQ==}
     dev: false
 
-  /caniuse-lite/1.0.30001425:
-    resolution: {integrity: sha512-/pzFv0OmNG6W0ym80P3NtapU0QEiDS3VuYAZMGoLLqiC7f6FJFe1MjpQDREGApeenD9wloeytmVDj+JLXPC6qw==}
+  /caniuse-lite/1.0.30001426:
+    resolution: {integrity: sha512-n7cosrHLl8AWt0wwZw/PJZgUg3lV0gk9LMI7ikGJwhyhgsd2Nb65vKvmSexCqq/J7rbH3mFG6yZZiPR5dLPW5A==}
 
   /chalk/2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -2139,36 +2139,33 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /jotai/1.8.6_otspjrsspon4ofp37rshhlhp2y:
-    resolution: {integrity: sha512-6JXNd2ewR6Ur0hGY0kRJebQ++p7lN/8kNdGNXv7XT11FDPxAtPN2XLM+m0w4bV22f1knQlG8ZpVLfY6BEGF+UQ==}
+  /jotai/1.9.0_otspjrsspon4ofp37rshhlhp2y:
+    resolution: {integrity: sha512-XYpSlxbxujUCTA8PNkzfj3+zF6XVyzo6XMZIEic3gXQCpTDPfmqhUj2FR8kwUACK5weosFrSBhesrjwfILUCoQ==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       '@babel/core': '*'
       '@babel/template': '*'
-      '@tanstack/query-core': '*'
-      '@urql/core': '*'
       immer: '*'
+      jotai-tanstack-query: '*'
+      jotai-urql: '*'
       optics-ts: '*'
       react: '>=16.8'
       valtio: '*'
-      wonka: '*'
       xstate: '*'
     peerDependenciesMeta:
       '@babel/core':
         optional: true
       '@babel/template':
         optional: true
-      '@tanstack/query-core':
-        optional: true
-      '@urql/core':
-        optional: true
       immer:
+        optional: true
+      jotai-tanstack-query:
+        optional: true
+      jotai-urql:
         optional: true
       optics-ts:
         optional: true
       valtio:
-        optional: true
-      wonka:
         optional: true
       xstate:
         optional: true
@@ -2403,7 +2400,7 @@ packages:
     dependencies:
       '@next/env': 12.3.1
       '@swc/helpers': 0.4.11
-      caniuse-lite: 1.0.30001425
+      caniuse-lite: 1.0.30001426
       postcss: 8.4.14
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -2812,7 +2809,7 @@ packages:
       '@formatjs/intl-displaynames': 6.1.4
       '@formatjs/intl-listformat': 7.1.3
       '@types/hoist-non-react-statics': 3.3.1
-      '@types/react': 18.0.23
+      '@types/react': 18.0.24
       hoist-non-react-statics: 3.3.2
       intl-messageformat: 10.2.1
       react: 18.2.0
