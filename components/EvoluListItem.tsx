@@ -54,6 +54,7 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
         move("nextX");
         break;
       case "ArrowLeft":
+        e.preventDefault();
         if (e.currentTarget.selectionStart === 0) move("previousY");
         break;
     }
@@ -70,6 +71,7 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
         move("nextX");
         break;
       case "ArrowRight":
+        e.preventDefault();
         move("nextY");
         break;
     }
@@ -87,7 +89,7 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
         // @ts-expect-error Web
         onKeyDown={handleButtonKeyPress}
       >
-        <View className="h-3 w-3 rounded-sm dark:bg-gray-800" />
+        <View className="h-3 w-3 rounded-sm bg-gray-200 dark:bg-gray-800" />
       </Pressable>
       <EvoluTextInput
         value={editTitle != null ? editTitle : title}
