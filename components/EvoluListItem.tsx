@@ -1,9 +1,10 @@
 import { String1000 } from "evolu";
-import { KeyboardEvent, memo, useCallback, useContext, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { TextInput, View as RnView } from "react-native";
 import { EvoluId, useMutation } from "../lib/db";
 import {
-  KeyboardNavigationContext,
+  useKeyboardNavigationOnFocus,
+  useKeyboardNavigationOnInputKeyDown,
   useKeyboardNavigationRef,
 } from "../lib/keyboardNavigation";
 import { EvoluTextInput } from "./EvoluTextInput";
@@ -40,44 +41,19 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
 
   const buttonRef = useKeyboardNavigationRef<RnView>(x, 0);
   const inputRef = useKeyboardNavigationRef<TextInput>(x, 1);
+  const onFocus = useKeyboardNavigationOnFocus();
 
-  const { move, onFocus } = useContext(KeyboardNavigationContext);
+  const handleButtonKeyDown = useKeyboardNavigationOnInputKeyDown({
+    ArrowUp: "previousX",
+    ArrowDown: "nextX",
+    ArrowRight: "nextY",
+  });
 
-  const handleInputKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    switch (e.key) {
-      case "ArrowUp":
-        e.preventDefault();
-        move("previousX");
-        break;
-      case "ArrowDown":
-        e.preventDefault();
-        move("nextX");
-        break;
-      case "ArrowLeft":
-        if (e.currentTarget.selectionStart === 0) {
-          e.preventDefault();
-          move("previousY");
-        }
-        break;
-    }
-  };
-
-  const handleButtonKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    switch (e.key) {
-      case "ArrowUp":
-        e.preventDefault();
-        move("previousX");
-        break;
-      case "ArrowDown":
-        e.preventDefault();
-        move("nextX");
-        break;
-      case "ArrowRight":
-        e.preventDefault();
-        move("nextY");
-        break;
-    }
-  };
+  const handleInputKeyDown = useKeyboardNavigationOnInputKeyDown({
+    ArrowUp: "previousX",
+    ArrowDown: "nextX",
+    ArrowLeft: ["previousY", (e) => e.currentTarget.selectionStart === 0],
+  });
 
   if (title == null) return null;
 
@@ -88,8 +64,8 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
         focusable={focusable === "button"}
         ref={buttonRef}
         onFocus={() => onFocus({ x, y: 0 })}
-        // @ts-expect-error Web
-        onKeyDown={handleButtonKeyPress}
+        // @ts-expect-error RNfW
+        onKeyDown={handleButtonKeyDown}
       >
         <View className="h-3 w-3 rounded-sm bg-gray-200 dark:bg-gray-800" />
       </Pressable>
@@ -102,7 +78,7 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
         focusable={focusable === "input"}
         ref={inputRef}
         onFocus={() => onFocus({ x, y: 1 })}
-        onKeyPress={handleInputKeyPress}
+        onKeyPress={handleInputKeyDown}
       />
     </View>
   );

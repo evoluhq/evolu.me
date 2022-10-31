@@ -1,8 +1,10 @@
-import { bounded, number } from "fp-ts";
-import { constVoid } from "fp-ts/function";
+import { bounded, number, option, record } from "fp-ts";
+import { constVoid, pipe } from "fp-ts/function";
+import { Predicate } from "fp-ts/Predicate";
 import {
   createContext,
   FC,
+  KeyboardEvent,
   ReactNode,
   Reducer,
   RefObject,
@@ -18,7 +20,7 @@ import { BRAND } from "zod";
 // React Hook for keyboard navigation via Roving tabindex
 //  - fast, flexible, minimal
 //  - for lists and grids
-//  - without unnecessary re-renders
+//  - and without unnecessary re-renders
 // https://developer.mozilla.org/en-US/docs/Web/Accessibility/Keyboard-navigable_JavaScript_widgets
 // TODO: Release as react-keyboard-navigation
 
@@ -210,3 +212,36 @@ export const useKeyboardNavigationRef = <
 
   return ref;
 };
+
+export const useKeyboardNavigationOnInputKeyDown = (
+  config: Record<
+    string,
+    | KeyboardNavigationMoveDirection
+    | [
+        KeyboardNavigationMoveDirection,
+        Predicate<KeyboardEvent<HTMLInputElement>>
+      ]
+  >
+) => {
+  const { move } = useContext(KeyboardNavigationContext);
+  // TODO: useEvent probably.
+  // https://github.com/reactjs/rfcs/blob/useevent/text/0000-useevent.md
+  return (e: KeyboardEvent<HTMLInputElement>) =>
+    pipe(
+      config,
+      record.lookup(e.key),
+      option.map((arg) =>
+        typeof arg === "string"
+          ? { direction: arg }
+          : { direction: arg[0], predicate: arg[1] }
+      ),
+      option.match(constVoid, ({ direction, predicate }) => {
+        if (predicate && !predicate(e)) return;
+        e.preventDefault();
+        move(direction);
+      })
+    );
+};
+
+export const useKeyboardNavigationOnFocus = () =>
+  useContext(KeyboardNavigationContext).onFocus;
