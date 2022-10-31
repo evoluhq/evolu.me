@@ -54,8 +54,10 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
         move("nextX");
         break;
       case "ArrowLeft":
-        e.preventDefault();
-        if (e.currentTarget.selectionStart === 0) move("previousY");
+        if (e.currentTarget.selectionStart === 0) {
+          e.preventDefault();
+          move("previousY");
+        }
         break;
     }
   };
