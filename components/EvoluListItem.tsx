@@ -60,14 +60,14 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
   return (
     <View className="flex-row">
       <Pressable
-        className="-ml-2 h-full w-8 items-center justify-center"
+        className="group -ml-2 w-8 items-center justify-center focus:outline-none"
         focusable={focusable === "button"}
         ref={buttonRef}
         onFocus={() => onFocus({ x, y: 0 })}
         // @ts-expect-error RNfW
         onKeyDown={handleButtonKeyDown}
       >
-        <View className="h-3 w-3 rounded-sm bg-gray-200 dark:bg-gray-800" />
+        <View className="h-3 w-3 rounded-sm bg-gray-200 group-focus-visible:bg-gray-500 dark:bg-gray-800" />
       </Pressable>
       <EvoluTextInput
         value={editTitle != null ? editTitle : title}
