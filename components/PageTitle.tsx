@@ -1,7 +1,9 @@
 import Head from "next/head";
 import { memo } from "react";
 
-export const PageTitle = memo<{ prefix?: string }>(({ prefix }) => {
+export const PageTitle = memo<{ prefix?: string }>(function PageTitle({
+  prefix,
+}) {
   const title = `${prefix ? prefix + " - " : ""}Evolu`;
 
   return (
@@ -10,5 +12,3 @@ export const PageTitle = memo<{ prefix?: string }>(({ prefix }) => {
     </Head>
   );
 });
-
-PageTitle.displayName = "PageTitle";
