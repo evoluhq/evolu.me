@@ -3,7 +3,7 @@ import { either } from "fp-ts";
 import { constVoid, pipe } from "fp-ts/function";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { memo, useEffect, useRef } from "react";
+import { memo, useRef } from "react";
 import { TextInput } from "react-native";
 import { useMutation } from "../lib/db";
 import { localStorageKeys } from "../lib/localStorage";
@@ -18,20 +18,6 @@ export const CreateEvolu = memo(function CreateEvolu() {
   const { mutate } = useMutation();
   const inputRef = useRef<TextInput>(null);
 
-  // co tohle? nemuze to srat? to uklada, tak to pri nacteni hodi focus, ne?
-  // proc to neni lazout?
-  useEffect(() => {
-    if (title !== "" || inputRef.current == null) return;
-    const browserInput = inputRef.current as unknown as HTMLElement;
-    // IDK why, but scrollIntoView must be called in the setTimeout.
-    const timeout = setTimeout(() => {
-      browserInput.scrollIntoView({ block: "nearest" });
-    });
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [inputRef, title]);
-
   const handleSubmitEditing = () => {
     pipe(
       String1000.safeParse(title),
@@ -39,6 +25,11 @@ export const CreateEvolu = memo(function CreateEvolu() {
       either.match(constVoid, (title) => {
         mutate("evolu", { title }, () => {
           setTitle("");
+          // IDK why, but scrollIntoView must be called in the setTimeout.
+          setTimeout(() => {
+            // @ts-expect-error RNfW
+            inputRef.current?.scrollIntoView({ block: "nearest" });
+          }, 1);
         });
       })
     );
