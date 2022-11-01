@@ -221,6 +221,7 @@ export const useKeyboardNavigationOnInputKeyDown = (
         KeyboardNavigationMoveDirection,
         Predicate<KeyboardEvent<HTMLInputElement>>
       ]
+    | (() => void)
   >
 ) => {
   const { move } = useContext(KeyboardNavigationContext);
@@ -231,14 +232,15 @@ export const useKeyboardNavigationOnInputKeyDown = (
       config,
       record.lookup(e.key),
       option.map((arg) =>
-        typeof arg === "string"
-          ? { direction: arg }
-          : { direction: arg[0], predicate: arg[1] }
+        typeof arg === "string" || typeof arg === "function"
+          ? { arg }
+          : { arg: arg[0], predicate: arg[1] }
       ),
-      option.match(constVoid, ({ direction, predicate }) => {
+      option.match(constVoid, ({ arg, predicate }) => {
         if (predicate && !predicate(e)) return;
         e.preventDefault();
-        move(direction);
+        if (typeof arg === "string") move(arg);
+        else arg();
       })
     );
 };

@@ -53,6 +53,9 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
     ArrowUp: "previousX",
     ArrowDown: "nextX",
     ArrowLeft: ["previousY", (e) => e.currentTarget.selectionStart === 0],
+    Escape: () => {
+      setEditTitle(null);
+    },
   });
 
   if (title == null) return null;
@@ -66,6 +69,10 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
         onFocus={() => onFocus({ x, y: 0 })}
         // @ts-expect-error RNfW
         onKeyDown={handleButtonKeyDown}
+        onPress={() => {
+          // eslint-disable-next-line no-console
+          console.log("press");
+        }}
       >
         <View className="h-3 w-3 rounded-sm bg-gray-200 group-focus-visible:bg-gray-500 dark:bg-gray-800" />
       </Pressable>
