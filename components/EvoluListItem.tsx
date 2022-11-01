@@ -66,7 +66,8 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
         {...buttonKeyNavigation}
         focusable={focusable === "button"}
       >
-        <View className="h-3 w-3 rounded-sm bg-gray-200 group-focus-visible:bg-gray-500 dark:bg-gray-800" />
+        {/* for selection bg-gray-500 */}
+        <View className="h-3 w-3 rounded-sm bg-gray-200 group-focus-visible:ring dark:bg-gray-800" />
       </Pressable>
       <EvoluTextInput
         value={editTitle != null ? editTitle : title}
