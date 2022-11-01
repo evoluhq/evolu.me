@@ -1,14 +1,10 @@
 import { String1000 } from "evolu";
 import { memo, useCallback, useState } from "react";
-import { TextInput, View as RnView } from "react-native";
 import { EvoluId, useMutation } from "../lib/db";
-import {
-  useKeyboardNavigationOnFocus,
-  useKeyboardNavigationOnInputKeyDown,
-  useKeyboardNavigationRef,
-} from "../lib/keyboardNavigation";
+import { useKeyNavigation } from "../lib/useKeyNavigation";
 import { EvoluTextInput } from "./EvoluTextInput";
 import { Pressable, View } from "./styled";
+import { TextInput, View as RnView } from "react-native";
 
 interface EvoluListItemProps {
   row: {
@@ -39,22 +35,25 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
     }
   }, [editTitle, hasChange, id, mutate]);
 
-  const buttonRef = useKeyboardNavigationRef<RnView>(x, 0);
-  const inputRef = useKeyboardNavigationRef<TextInput>(x, 1);
-  const onFocus = useKeyboardNavigationOnFocus();
-
-  const handleButtonKeyDown = useKeyboardNavigationOnInputKeyDown({
-    ArrowUp: "previousX",
-    ArrowDown: "nextX",
-    ArrowRight: "nextY",
+  const buttonKeyNavigation = useKeyNavigation<RnView>({
+    x,
+    keys: {
+      ArrowUp: "previousX",
+      ArrowDown: "nextX",
+      ArrowRight: "nextY",
+    },
   });
 
-  const handleInputKeyDown = useKeyboardNavigationOnInputKeyDown({
-    ArrowUp: "previousX",
-    ArrowDown: "nextX",
-    ArrowLeft: ["previousY", (e) => e.currentTarget.selectionStart === 0],
-    Escape: () => {
-      setEditTitle(null);
+  const inputKeyNavigation = useKeyNavigation<TextInput>({
+    x,
+    y: 1,
+    keys: {
+      ArrowUp: "previousX",
+      ArrowDown: "nextX",
+      ArrowLeft: ["previousY", (e) => e.currentTarget.selectionStart === 0],
+      Escape: () => {
+        setEditTitle(null);
+      },
     },
   });
 
@@ -64,15 +63,8 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
     <View className="flex-row">
       <Pressable
         className="group -ml-2 w-8 items-center justify-center focus:outline-none"
+        {...buttonKeyNavigation}
         focusable={focusable === "button"}
-        ref={buttonRef}
-        onFocus={() => onFocus({ x, y: 0 })}
-        // @ts-expect-error RNfW
-        onKeyDown={handleButtonKeyDown}
-        onPress={() => {
-          // eslint-disable-next-line no-console
-          console.log("press");
-        }}
       >
         <View className="h-3 w-3 rounded-sm bg-gray-200 group-focus-visible:bg-gray-500 dark:bg-gray-800" />
       </Pressable>
@@ -82,10 +74,9 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
         hasUnsavedChange={hasChange}
         onSubmitEditing={handleSubmitEditing}
         onBlur={handleSubmitEditing}
+        {...inputKeyNavigation}
         focusable={focusable === "input"}
-        ref={inputRef}
-        onFocus={() => onFocus({ x, y: 1 })}
-        onKeyPress={handleInputKeyDown}
+        selectTextOnFocus
       />
     </View>
   );

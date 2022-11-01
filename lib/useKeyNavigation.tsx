@@ -1,5 +1,6 @@
 import { bounded, number, option, record } from "fp-ts";
 import { constVoid, pipe } from "fp-ts/function";
+import { IO } from "fp-ts/IO";
 import { Predicate } from "fp-ts/Predicate";
 import {
   createContext,
@@ -22,7 +23,9 @@ import { BRAND } from "zod";
 //  - for lists and grids
 //  - and without unnecessary re-renders
 // https://developer.mozilla.org/en-US/docs/Web/Accessibility/Keyboard-navigable_JavaScript_widgets
-// TODO: Release as react-keyboard-navigation
+// TODO: useEvent
+// https://github.com/reactjs/rfcs/blob/useevent/text/0000-useevent.md
+// TODO: Release as use-key-navigation
 
 export interface KeyboardNavigationPosition {
   x: number;
@@ -191,18 +194,48 @@ export const KeyboardNavigationProvider: FC<
   );
 };
 
-export interface KeyboardNavigationFocusHandler {
-  focus: KeyboardNavigationFocusCallback;
+export interface KeyboardNavigationFocusable {
+  focus: () => void;
 }
 
-export const useKeyboardNavigationRef = <
-  T extends KeyboardNavigationFocusHandler
->(
-  x: number,
-  y = 0
-): RefObject<T> => {
+export type KeyboardNavigationKeys =
+  | "ArrowUp"
+  | "ArrowDown"
+  | "ArrowRight"
+  | "ArrowLeft"
+  | "Escape";
+
+export type KeyboardNavigationKeysMapping = Partial<
+  Record<
+    KeyboardNavigationKeys,
+    | KeyboardNavigationMoveDirection
+    | [
+        KeyboardNavigationMoveDirection,
+        Predicate<KeyboardEvent<HTMLInputElement>>
+      ]
+    | IO<void>
+  >
+>;
+
+export type KeyboardNavigationKeyDownHandler = (
+  e: KeyboardEvent<HTMLInputElement>
+) => void;
+
+export const useKeyNavigation = <T extends KeyboardNavigationFocusable>({
+  x,
+  y = 0,
+  keys,
+}: {
+  x: number;
+  y?: number;
+  keys: KeyboardNavigationKeysMapping;
+}): {
+  ref: RefObject<T>;
+  onFocus: () => void;
+  onKeyDown: KeyboardNavigationKeyDownHandler;
+} => {
+  const { register, onFocus, move } = useContext(KeyboardNavigationContext);
   const ref = useRef<T>(null);
-  const { register } = useContext(KeyboardNavigationContext);
 
   useLayoutEffect(() => {
     const { current: handler } = ref;
@@ -210,40 +243,31 @@ export const useKeyboardNavigationRef = <
     return register({ x, y }, handler.focus.bind(handler));
   }, [register, x, y]);
 
-  return ref;
-};
+  const handleOnFocus = useCallback(() => onFocus({ x, y }), [onFocus, x, y]);
 
-export const useKeyboardNavigationOnInputKeyDown = (
-  config: Record<
-    string,
-    | KeyboardNavigationMoveDirection
-    | [
-        KeyboardNavigationMoveDirection,
-        Predicate<KeyboardEvent<HTMLInputElement>>
-      ]
-    | (() => void)
-  >
-) => {
-  const { move } = useContext(KeyboardNavigationContext);
-  // TODO: useEvent probably.
-  // https://github.com/reactjs/rfcs/blob/useevent/text/0000-useevent.md
-  return (e: KeyboardEvent<HTMLInputElement>) =>
-    pipe(
-      config,
-      record.lookup(e.key),
-      option.map((arg) =>
-        typeof arg === "string" || typeof arg === "function"
-          ? { arg }
-          : { arg: arg[0], predicate: arg[1] }
-      ),
-      option.match(constVoid, ({ arg, predicate }) => {
-        if (predicate && !predicate(e)) return;
-        e.preventDefault();
-        if (typeof arg === "string") move(arg);
-        else arg();
-      })
-    );
-};
+  const handleKeyDown = useCallback<KeyboardNavigationKeyDownHandler>(
+    (e) => {
+      pipe(
+        keys,
+        record.lookup(e.key),
+        option.map((arg) =>
+          typeof arg === "string" || typeof arg === "function"
+            ? { arg }
+            : { arg: arg[0], predicate: arg[1] }
+        ),
+        option.match(constVoid, ({ arg, predicate }) => {
+          if (predicate && !predicate(e)) return;
+          e.preventDefault();
+          if (typeof arg === "string") move(arg);
+          else arg();
+        })
+      );
+    },
+    [keys, move]
+  );
 
-export const useKeyboardNavigationOnFocus = () =>
-  useContext(KeyboardNavigationContext).onFocus;
+  return useMemo(
+    () => ({ ref, onFocus: handleOnFocus, onKeyDown: handleKeyDown }),
+    [handleKeyDown, handleOnFocus]
+  );
+};

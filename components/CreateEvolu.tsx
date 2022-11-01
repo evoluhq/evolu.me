@@ -3,7 +3,7 @@ import { either } from "fp-ts";
 import { constVoid, pipe } from "fp-ts/function";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import { TextInput } from "react-native";
 import { useMutation } from "../lib/db";
 import { localStorageKeys } from "../lib/localStorage";
@@ -13,22 +13,24 @@ import { View } from "./styled";
 
 const newEvoluTitleAtom = atomWithStorage(localStorageKeys.newEvoluTitle, "");
 
-export const CreateEvolu = () => {
+export const CreateEvolu = memo(function CreateEvolu() {
   const [title, setTitle] = useAtom(newEvoluTitleAtom);
   const { mutate } = useMutation();
   const inputRef = useRef<TextInput>(null);
 
+  // co tohle? nemuze to srat? to uklada, tak to pri nacteni hodi focus, ne?
+  // proc to neni lazout?
   useEffect(() => {
     if (title !== "" || inputRef.current == null) return;
     const browserInput = inputRef.current as unknown as HTMLElement;
-    // IDK why, but scrollIntoView must be called in the next event cycle.
+    // IDK why, but scrollIntoView must be called in the setTimeout.
     const timeout = setTimeout(() => {
       browserInput.scrollIntoView({ block: "nearest" });
     });
     return () => {
       clearTimeout(timeout);
     };
-  }, [title]);
+  }, [inputRef, title]);
 
   const handleSubmitEditing = () => {
     pipe(
@@ -54,4 +56,4 @@ export const CreateEvolu = () => {
       />
     </View>
   );
-};
+});

@@ -10,12 +10,13 @@ export const EvoluTextInput = forwardRef<
     "maxLength" | "className" | "blurOnSubmit" | "onKeyPress"
   > & {
     hasUnsavedChange?: boolean;
-    onKeyPress?: (e: KeyboardEvent<HTMLInputElement>) => void;
+    onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
   }
->(function EvoluTextInput({ hasUnsavedChange, onKeyPress, ...props }, ref) {
+>(function EvoluTextInput({ hasUnsavedChange, onKeyDown, ...props }, ref) {
   return (
     <StyledTextInput
       {...props}
+      autoComplete="off"
       ref={ref}
       maxLength={1000} // The same as NonEmptyString1000
       blurOnSubmit={false}
@@ -23,8 +24,8 @@ export const EvoluTextInput = forwardRef<
         "my-2 flex-1 border-b border-gray-300 text-lg text-gray-900 outline-none dark:border-gray-800 dark:text-gray-200",
         hasUnsavedChange && "border-gray-700 dark:border-gray-500"
       )}
-      // @ts-expect-error Web
-      onKeyPress={onKeyPress}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onKeyPress={onKeyDown as any}
     />
   );
 });

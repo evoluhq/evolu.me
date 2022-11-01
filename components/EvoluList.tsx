@@ -1,8 +1,8 @@
 import { useDeferredValue, useMemo } from "react";
 import { useQuery } from "../lib/db";
-import { KeyboardNavigationProvider } from "../lib/keyboardNavigation";
+import { KeyboardNavigationProvider } from "../lib/useKeyNavigation";
+import { CreateEvolu } from "./CreateEvolu";
 import { EvoluListItem } from "./EvoluListItem";
-import { NoAutoCompleteView } from "./NoAutoCompleteView";
 
 export const EvoluList = () => {
   const { rows } = useQuery((db) =>
@@ -21,16 +21,17 @@ export const EvoluList = () => {
         initialY={1}
       >
         {({ x, y }) => (
-          <NoAutoCompleteView>
+          <>
             {deferredRows.map((row, i) => (
               <EvoluListItem
                 key={row.id}
                 row={row}
-                focusable={i === x && (y === 0 ? "button" : "input")}
                 x={i}
+                focusable={i === x && (y === 0 ? "button" : "input")}
               />
             ))}
-          </NoAutoCompleteView>
+            <CreateEvolu />
+          </>
         )}
       </KeyboardNavigationProvider>
     ),

@@ -2,7 +2,6 @@ import clsx from "clsx";
 import { useEvoluFirstDataAreLoaded } from "evolu";
 import { FC, ReactNode } from "react";
 import { ClientOnly } from "../components/ClientOnly";
-import { CreateEvolu } from "../components/CreateEvolu";
 import { EvoluFilter } from "../components/EvoluFilter";
 import { EvoluList } from "../components/EvoluList";
 import { PageTitle } from "../components/PageTitle";
@@ -39,7 +38,6 @@ const Index = () => {
               textClassName="py-[30vh]"
             >
               <EvoluList />
-              <CreateEvolu />
             </ContentContainer>
           </ScrollView>
           <ContentContainer isLoaded={dataAreLoaded}>
