@@ -1,7 +1,7 @@
 import { clsx } from "clsx";
 import { forwardRef, KeyboardEvent } from "react";
 import { TextInput as RnTextInput, TextInputProps } from "react-native";
-import { TextInput } from "./styled";
+import { TextInput, View } from "./styled";
 
 export const EvoluTextInput = forwardRef<
   RnTextInput,
@@ -14,19 +14,24 @@ export const EvoluTextInput = forwardRef<
   }
 >(function EvoluTextInput({ hasUnsavedChange, onKeyDown, ...props }, ref) {
   return (
-    <TextInput
-      {...props}
-      autoComplete="off"
-      // @ts-expect-error Beta.
-      ref={ref}
-      maxLength={1000} // The same as NonEmptyString1000
-      blurOnSubmit={false}
-      className={clsx(
-        "my-2 flex-1 border-b border-gray-300 text-lg text-gray-900 outline-none dark:border-gray-800 dark:text-gray-200",
-        hasUnsavedChange && "border-gray-700 dark:border-gray-500"
-      )}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onKeyPress={onKeyDown as any}
-    />
+    <View className="flex-1">
+      <View
+        className={clsx(
+          "absolute top-10 -z-10 h-[1px] w-full bg-gray-300 dark:bg-gray-800",
+          hasUnsavedChange && "bg-gray-700 dark:bg-gray-500"
+        )}
+      />
+      <TextInput
+        {...props}
+        autoComplete="off"
+        // @ts-expect-error Beta.
+        ref={ref}
+        maxLength={1000} // The same as NonEmptyString1000
+        blurOnSubmit={false}
+        className="py-2 text-lg text-gray-900 outline-none dark:text-gray-200"
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onKeyPress={onKeyDown as any}
+      />
+    </View>
   );
 });

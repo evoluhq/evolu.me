@@ -51,7 +51,7 @@ export const CreateEvolu = memo(function CreateEvolu() {
 
   return (
     <View className="flex-row">
-      <View className="w-6" />
+      <View className="w-7" />
       <EvoluTextInput
         nativeID={domId.createEvoluInput}
         value={title}
