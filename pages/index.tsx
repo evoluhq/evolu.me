@@ -13,7 +13,7 @@ const ContentContainer: FC<{
 }> = ({ children, isLoaded }) => {
   return (
     <View
-      className="mx-auto w-full max-w-[500px] p-4"
+      className="mx-auto w-full max-w-[500px] px-3"
       style={!isLoaded && { display: "none" }}
     >
       {children}

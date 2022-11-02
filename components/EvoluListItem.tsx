@@ -75,7 +75,7 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
       accessibilityRole="listitem"
     >
       <Pressable
-        className="group -ml-2 w-8 items-center justify-center focus:outline-none"
+        className="group -ml-2 w-9 items-center justify-center focus:outline-none"
         {...buttonKeyNavigation}
         focusable={focusable === "button"}
       >
