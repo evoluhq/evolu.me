@@ -53,7 +53,11 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
     keys: {
       ArrowUp: "previousX",
       ArrowDown: !isLast ? "nextX" : domFocus("createEvoluInput"),
-      ArrowLeft: ["previousY", (e) => e.currentTarget.selectionStart === 0],
+      ArrowLeft: [
+        "previousY",
+        ({ currentTarget: { selectionStart, selectionEnd } }) =>
+          selectionStart === 0 && selectionEnd === 0,
+      ],
       Escape: () => {
         setEditTitle(null);
       },
@@ -80,7 +84,8 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
         onBlur={handleSubmitEditing}
         {...inputKeyNavigation}
         focusable={focusable === "input"}
-        selectTextOnFocus
+        // It's nice for key navigation but bad for mobile and mouse.
+        // selectTextOnFocus
         {...(isLast && { nativeID: domId.lastEvoluInput })}
       />
     </View>
