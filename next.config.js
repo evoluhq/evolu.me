@@ -1,10 +1,12 @@
-const withTM = require("next-transpile-modules")(["nativewind"]);
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Waiting for RNfW 0.19
   reactStrictMode: false,
   swcMinify: true,
+
+  experimental: {
+    transpilePackages: ["nativewind"],
+  },
 
   webpack: (config, { dev }) => {
     config.resolve.alias = {
@@ -28,4 +30,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withTM(nextConfig);
+module.exports = nextConfig;

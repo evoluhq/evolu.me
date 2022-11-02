@@ -1,10 +1,10 @@
 import { clsx } from "clsx";
 import { forwardRef, KeyboardEvent } from "react";
-import { TextInput, TextInputProps } from "react-native";
-import { TextInput as StyledTextInput } from "./styled";
+import { TextInput as RnTextInput, TextInputProps } from "react-native";
+import { TextInput } from "./styled";
 
 export const EvoluTextInput = forwardRef<
-  TextInput,
+  RnTextInput,
   Omit<
     TextInputProps,
     "maxLength" | "className" | "blurOnSubmit" | "onKeyPress"
@@ -14,9 +14,10 @@ export const EvoluTextInput = forwardRef<
   }
 >(function EvoluTextInput({ hasUnsavedChange, onKeyDown, ...props }, ref) {
   return (
-    <StyledTextInput
+    <TextInput
       {...props}
       autoComplete="off"
+      // @ts-expect-error Beta.
       ref={ref}
       maxLength={1000} // The same as NonEmptyString1000
       blurOnSubmit={false}
