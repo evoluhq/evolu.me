@@ -84,8 +84,6 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
         onBlur={handleSubmitEditing}
         {...inputKeyNavigation}
         focusable={focusable === "input"}
-        // It's nice for key navigation but bad for mobile and mouse.
-        // selectTextOnFocus
         {...(isLast && { nativeID: domId.lastEvoluInput })}
       />
     </View>
