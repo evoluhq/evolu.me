@@ -43,7 +43,7 @@ export const EvoluFilter = () => {
         {({ x }) => (
           <>
             <Button
-              title="All"
+              title="all"
               x={0}
               focusable={x === 0}
               nativeID={domId.firstFilterButton}
