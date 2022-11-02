@@ -4,6 +4,7 @@ import { constVoid, pipe } from "fp-ts/function";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { KeyboardEvent, memo, useRef } from "react";
+import { useIntl } from "react-intl";
 import { TextInput } from "react-native";
 import { useMutation } from "../lib/db";
 import { domFocus, domId } from "../lib/domId";
@@ -15,6 +16,7 @@ import { View } from "./styled";
 const newEvoluTitleAtom = atomWithStorage(localStorageKeys.newEvoluTitle, "");
 
 export const CreateEvolu = memo(function CreateEvolu() {
+  const intl = useIntl();
   const [title, setTitle] = useAtom(newEvoluTitleAtom);
   const { mutate } = useMutation();
   const inputRef = useRef<TextInput>(null);
@@ -58,6 +60,10 @@ export const CreateEvolu = memo(function CreateEvolu() {
         onSubmitEditing={handleSubmitEditing}
         hasUnsavedChange={title.length > 0}
         onKeyDown={handleKeyDown}
+        accessibilityLabel={intl.formatMessage({
+          defaultMessage: "Write a new Evolu item",
+          id: "3DQarp",
+        })}
       />
     </View>
   );

@@ -1,5 +1,6 @@
 import { String1000 } from "evolu";
 import { memo, useCallback, useState } from "react";
+import { useIntl } from "react-intl";
 import { TextInput, View as RnView } from "react-native";
 import { EvoluId, useMutation } from "../lib/db";
 import { domFocus, domId } from "../lib/domId";
@@ -23,6 +24,7 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
   x,
   isLast,
 }) {
+  const intl = useIntl();
   const [editTitle, setEditTitle] = useState<string | null>(null);
   const hasChange = editTitle != null && editTitle !== title;
   const { mutate } = useMutation();
@@ -67,7 +69,11 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
   if (title == null) return null;
 
   return (
-    <View className="flex-row">
+    <View
+      className="flex-row"
+      // @ts-expect-error RNfW
+      accessibilityRole="listitem"
+    >
       <Pressable
         className="group -ml-2 w-8 items-center justify-center focus:outline-none"
         {...buttonKeyNavigation}
@@ -77,6 +83,11 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
         <View className="h-3 w-3 rounded-sm bg-gray-200 group-focus-visible:ring-2 dark:bg-gray-800" />
       </Pressable>
       <EvoluTextInput
+        // accessibilityRole="listitem"
+        accessibilityLabel={intl.formatMessage({
+          defaultMessage: "A Evolu item",
+          id: "t2ZKjf",
+        })}
         value={editTitle != null ? editTitle : title}
         onChangeText={setEditTitle}
         hasUnsavedChange={hasChange}

@@ -4,7 +4,7 @@ import { memo } from "react";
 export const PageTitle = memo<{ prefix?: string }>(function PageTitle({
   prefix,
 }) {
-  const title = `${prefix ? prefix + " - " : ""}Evolu`;
+  const title = `${prefix ? prefix + " - " : ""}Evolu Me`;
 
   return (
     <Head>

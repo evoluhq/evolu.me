@@ -1,7 +1,7 @@
 import { useDeferredValue, useMemo } from "react";
+import { View } from "react-native";
 import { useQuery } from "../lib/db";
 import { KeyboardNavigationProvider } from "../lib/useKeyNavigation";
-import { CreateEvolu } from "./CreateEvolu";
 import { EvoluListItem } from "./EvoluListItem";
 
 export const EvoluList = () => {
@@ -21,7 +21,7 @@ export const EvoluList = () => {
         initialY={1}
       >
         {({ x, y }) => (
-          <>
+          <View accessibilityRole="list">
             {deferredRows.map((row, i) => (
               <EvoluListItem
                 key={row.id}
@@ -31,8 +31,7 @@ export const EvoluList = () => {
                 isLast={i === deferredRows.length - 1}
               />
             ))}
-            <CreateEvolu />
-          </>
+          </View>
         )}
       </KeyboardNavigationProvider>
     ),

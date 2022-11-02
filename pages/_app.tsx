@@ -9,6 +9,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="description"
+          content="Yet another mind mapping app, but this one is local, mobile, keyboard, and private first."
+        ></meta>
         <link
           rel="apple-touch-icon"
           sizes="180x180"
