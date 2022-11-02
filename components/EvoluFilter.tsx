@@ -1,12 +1,32 @@
 import { FC } from "react";
+import { View as RnView } from "react-native";
+import {
+  KeyboardNavigationProvider,
+  useKeyNavigation,
+} from "../lib/useKeyNavigation";
 import { Pressable, Text, View } from "./styled";
 
-const Button: FC<{ title: string; onPress?: () => void }> = ({
-  title,
-  onPress,
-}) => {
+const Button: FC<{
+  title: string;
+  onPress?: () => void;
+  x: number;
+  focusable: boolean;
+}> = ({ title, onPress, x, focusable }) => {
+  const keyNavigation = useKeyNavigation<RnView>({
+    x,
+    keys: {
+      ArrowRight: "nextX",
+      ArrowLeft: "previousX",
+    },
+  });
+
   return (
-    <Pressable onPress={onPress}>
+    <Pressable
+      {...keyNavigation}
+      focusable={focusable}
+      onPress={onPress}
+      className="rounded-sm px-2 focus:outline-none focus-visible:ring-2"
+    >
       <Text className="text-xl text-gray-900 dark:text-gray-200">{title}</Text>
     </Pressable>
   );
@@ -14,9 +34,15 @@ const Button: FC<{ title: string; onPress?: () => void }> = ({
 
 export const EvoluFilter = () => {
   return (
-    <View className="flex-row gap-4">
-      <Button title="All" />
-      <Button title="…" />
+    <View className="-ml-2 flex-row">
+      <KeyboardNavigationProvider maxX={1}>
+        {({ x }) => (
+          <>
+            <Button title="All" x={0} focusable={x === 0} />
+            <Button title="…" x={1} focusable={x === 1} />
+          </>
+        )}
+      </KeyboardNavigationProvider>
       {/* <Button title="⊕" /> */}
       {/* <Pressable className="place-self-center">
         <Text className="text-xl text-gray-900 dark:text-gray-200">
