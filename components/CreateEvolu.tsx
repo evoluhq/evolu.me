@@ -32,7 +32,7 @@ export const CreateEvolu = memo(function CreateEvolu() {
           setTimeout(() => {
             // @ts-expect-error RNfW
             inputRef.current?.scrollIntoView({ block: "nearest" });
-          }, 1);
+          }, 10);
         });
       })
     );
