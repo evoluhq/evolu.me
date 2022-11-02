@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { useEvoluFirstDataAreLoaded } from "evolu";
 import { FC, ReactNode } from "react";
 import { ClientOnly } from "../components/ClientOnly";
@@ -11,11 +10,10 @@ import { ScrollView, View } from "../components/styled";
 const ContentContainer: FC<{
   children: ReactNode;
   isLoaded: boolean;
-  textClassName?: string;
-}> = ({ children, isLoaded, textClassName }) => {
+}> = ({ children, isLoaded }) => {
   return (
     <View
-      className={clsx("mx-auto w-full max-w-[500px] p-4", textClassName)}
+      className="mx-auto w-full max-w-[500px] p-4"
       style={!isLoaded && { display: "none" }}
     >
       {children}
@@ -33,11 +31,7 @@ const Index = () => {
       <View className="flex-1 bg-white dark:bg-black">
         <ClientOnly>
           <ScrollView className="flex-1" centerContent>
-            <ContentContainer
-              isLoaded={dataAreLoaded}
-              // Ensure that my thumb reaches EvoluListItem.
-              textClassName="py-[30vh]"
-            >
+            <ContentContainer isLoaded={dataAreLoaded}>
               <EvoluList />
               <CreateEvolu />
             </ContentContainer>
