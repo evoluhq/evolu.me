@@ -1,6 +1,5 @@
 import { bounded, number, option, record } from "fp-ts";
 import { constVoid, pipe } from "fp-ts/function";
-import { IO } from "fp-ts/IO";
 import { Predicate } from "fp-ts/Predicate";
 import {
   createContext,
@@ -213,7 +212,7 @@ export type KeyboardNavigationKeysMapping = Partial<
         KeyboardNavigationMoveDirection,
         Predicate<KeyboardEvent<HTMLInputElement>>
       ]
-    | IO<void>
+    | ((e: { preventDefault: () => void }) => void)
   >
 >;
 
@@ -259,7 +258,7 @@ export const useKeyNavigation = <T extends KeyboardNavigationFocusable>({
           if (predicate && !predicate(e)) return;
           e.preventDefault();
           if (typeof arg === "string") move(arg);
-          else arg();
+          else arg(e);
         })
       );
     },

@@ -1,10 +1,11 @@
 import { String1000 } from "evolu";
 import { memo, useCallback, useState } from "react";
+import { TextInput, View as RnView } from "react-native";
 import { EvoluId, useMutation } from "../lib/db";
+import { domFocus, domId } from "../lib/domId";
 import { useKeyNavigation } from "../lib/useKeyNavigation";
 import { EvoluTextInput } from "./EvoluTextInput";
 import { Pressable, View } from "./styled";
-import { TextInput, View as RnView } from "react-native";
 
 interface EvoluListItemProps {
   row: {
@@ -13,12 +14,14 @@ interface EvoluListItemProps {
   };
   focusable: false | "button" | "input";
   x: number;
+  isLast: boolean;
 }
 
 export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
   row: { id, title },
   focusable,
   x,
+  isLast,
 }) {
   const [editTitle, setEditTitle] = useState<string | null>(null);
   const hasChange = editTitle != null && editTitle !== title;
@@ -49,7 +52,7 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
     y: 1,
     keys: {
       ArrowUp: "previousX",
-      ArrowDown: "nextX",
+      ArrowDown: !isLast ? "nextX" : domFocus("createEvoluInput"),
       ArrowLeft: ["previousY", (e) => e.currentTarget.selectionStart === 0],
       Escape: () => {
         setEditTitle(null);
@@ -78,6 +81,7 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
         {...inputKeyNavigation}
         focusable={focusable === "input"}
         selectTextOnFocus
+        {...(isLast && { nativeID: domId.lastEvoluInput })}
       />
     </View>
   );

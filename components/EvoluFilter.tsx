@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { View as RnView } from "react-native";
+import { domFocus, domId } from "../lib/domId";
 import {
   KeyboardNavigationProvider,
   useKeyNavigation,
@@ -11,12 +12,14 @@ const Button: FC<{
   onPress?: () => void;
   x: number;
   focusable: boolean;
-}> = ({ title, onPress, x, focusable }) => {
+  nativeID?: string;
+}> = ({ title, onPress, x, focusable, nativeID }) => {
   const keyNavigation = useKeyNavigation<RnView>({
     x,
     keys: {
       ArrowRight: "nextX",
       ArrowLeft: "previousX",
+      ArrowUp: domFocus("createEvoluInput"),
     },
   });
 
@@ -26,6 +29,7 @@ const Button: FC<{
       focusable={focusable}
       onPress={onPress}
       className="rounded-sm px-2 focus:outline-none focus-visible:ring-2"
+      {...(nativeID && { nativeID })}
     >
       <Text className="text-xl text-gray-900 dark:text-gray-200">{title}</Text>
     </Pressable>
@@ -38,7 +42,12 @@ export const EvoluFilter = () => {
       <KeyboardNavigationProvider maxX={1}>
         {({ x }) => (
           <>
-            <Button title="All" x={0} focusable={x === 0} />
+            <Button
+              title="All"
+              x={0}
+              focusable={x === 0}
+              nativeID={domId.firstFilterButton}
+            />
             <Button title="…" x={1} focusable={x === 1} />
           </>
         )}

@@ -28,6 +28,7 @@ export const EvoluList = () => {
                 row={row}
                 x={i}
                 focusable={i === x && (y === 0 ? "button" : "input")}
+                isLast={i === deferredRows.length - 1}
               />
             ))}
             <CreateEvolu />

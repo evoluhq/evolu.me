@@ -3,9 +3,10 @@ import { either } from "fp-ts";
 import { constVoid, pipe } from "fp-ts/function";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { memo, useRef } from "react";
+import { KeyboardEvent, memo, useRef } from "react";
 import { TextInput } from "react-native";
 import { useMutation } from "../lib/db";
+import { domFocus, domId } from "../lib/domId";
 import { localStorageKeys } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
 import { EvoluTextInput } from "./EvoluTextInput";
@@ -35,15 +36,28 @@ export const CreateEvolu = memo(function CreateEvolu() {
     );
   };
 
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    switch (e.key) {
+      case "ArrowUp":
+        domFocus("lastEvoluInput")(e);
+        break;
+      case "ArrowDown":
+        domFocus("firstFilterButton")(e);
+        break;
+    }
+  };
+
   return (
     <View className="flex-row">
       <View className="w-6" />
       <EvoluTextInput
+        nativeID={domId.createEvoluInput}
         value={title}
         ref={inputRef}
         onChangeText={setTitle}
         onSubmitEditing={handleSubmitEditing}
         hasUnsavedChange={title.length > 0}
+        onKeyDown={handleKeyDown}
       />
     </View>
   );
