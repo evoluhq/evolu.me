@@ -1,15 +1,19 @@
 import { IO } from "fp-ts/IO";
 
-export const domId = {
+export const nativeId = {
   createEvoluInput: "createEvoluInput",
   lastEvoluInput: "lastEvoluInput",
   firstFilterButton: "firstFilterButton",
 } as const;
 
-export const domFocus =
-  (id: keyof typeof domId) =>
+export const focusNativeId =
+  (id: keyof typeof nativeId) =>
   (e: { preventDefault: IO<void> }): false => {
     e.preventDefault();
-    document.getElementById(id)?.focus();
+    try {
+      document.getElementById(id)?.focus();
+    } catch (e) {
+      //
+    }
     return false;
   };

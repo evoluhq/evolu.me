@@ -3,7 +3,7 @@ import { memo, useCallback, useState } from "react";
 import { useIntl } from "react-intl";
 import { TextInput, View as RnView } from "react-native";
 import { EvoluId, useMutation } from "../lib/db";
-import { domFocus, domId } from "../lib/domId";
+import { focusNativeId, nativeId } from "../lib/focusNativeId";
 import { useKeyNavigation } from "../lib/useKeyNavigation";
 import { EvoluTextInput } from "./EvoluTextInput";
 import { Pressable, View } from "./styled";
@@ -54,7 +54,7 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
     y: 1,
     keys: {
       ArrowUp: "previousX",
-      ArrowDown: !isLast ? "nextX" : domFocus("createEvoluInput"),
+      ArrowDown: !isLast ? "nextX" : focusNativeId("createEvoluInput"),
       ArrowLeft: [
         "previousY",
         ({ currentTarget: { selectionStart, selectionEnd } }) =>
@@ -95,7 +95,7 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
         onBlur={handleSubmitEditing}
         {...inputKeyNavigation}
         focusable={focusable === "input"}
-        {...(isLast && { nativeID: domId.lastEvoluInput })}
+        {...(isLast && { nativeID: nativeId.lastEvoluInput })}
       />
     </View>
   );

@@ -7,7 +7,7 @@ import { KeyboardEvent, memo, useRef } from "react";
 import { useIntl } from "react-intl";
 import { TextInput } from "react-native";
 import { useMutation } from "../lib/db";
-import { domFocus, domId } from "../lib/domId";
+import { focusNativeId, nativeId } from "../lib/focusNativeId";
 import { localStorageKeys } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
 import { EvoluTextInput } from "./EvoluTextInput";
@@ -41,10 +41,10 @@ export const CreateEvolu = memo(function CreateEvolu() {
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     switch (e.key) {
       case "ArrowUp":
-        domFocus("lastEvoluInput")(e);
+        focusNativeId("lastEvoluInput")(e);
         break;
       case "ArrowDown":
-        domFocus("firstFilterButton")(e);
+        focusNativeId("firstFilterButton")(e);
         break;
     }
   };
@@ -53,7 +53,7 @@ export const CreateEvolu = memo(function CreateEvolu() {
     <View className="flex-row">
       <View className="w-7" />
       <EvoluTextInput
-        nativeID={domId.createEvoluInput}
+        nativeID={nativeId.createEvoluInput}
         value={title}
         ref={inputRef}
         onChangeText={setTitle}

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { View as RnView } from "react-native";
-import { domFocus, domId } from "../lib/domId";
+import { focusNativeId, nativeId } from "../lib/focusNativeId";
 import {
   KeyboardNavigationProvider,
   useKeyNavigation,
@@ -19,7 +19,7 @@ const Button: FC<{
     keys: {
       ArrowRight: "nextX",
       ArrowLeft: "previousX",
-      ArrowUp: domFocus("createEvoluInput"),
+      ArrowUp: focusNativeId("createEvoluInput"),
     },
   });
 
@@ -46,37 +46,12 @@ export const EvoluFilter = () => {
               title="all"
               x={0}
               focusable={x === 0}
-              nativeID={domId.firstFilterButton}
+              nativeID={nativeId.firstFilterButton}
             />
             <Button title="…" x={1} focusable={x === 1} />
           </>
         )}
       </KeyboardNavigationProvider>
-      {/* <Button title="⊕" /> */}
-      {/* <Pressable className="place-self-center">
-        <Text className="text-xl text-gray-900 dark:text-gray-200">
-          <svg
-            // TODO: Make a component for this.
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="h-5 w-5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        </Text>
-      </Pressable>
-      <Button
-        title="Reset"
-        onPress={() => {
-          // resetOwner();
-        }}
-      /> */}
     </View>
   );
 };
