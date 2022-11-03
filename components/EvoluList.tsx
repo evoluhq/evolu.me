@@ -1,3 +1,4 @@
+import { model } from "evolu";
 import { useDeferredValue, useMemo } from "react";
 import { View } from "react-native";
 import { useQuery } from "../lib/db";
@@ -6,7 +7,11 @@ import { EvoluListItem } from "./EvoluListItem";
 
 export const EvoluList = () => {
   const { rows } = useQuery((db) =>
-    db.selectFrom("evolu").select(["id", "title"]).orderBy("createdAt")
+    db
+      .selectFrom("evolu")
+      .select(["id", "title"])
+      .orderBy("createdAt")
+      .where("isDeleted", "is not", model.cast(true))
   );
 
   // Ensure the list is rendered at the same time as CreateEvolu setTitle("").

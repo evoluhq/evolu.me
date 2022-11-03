@@ -46,6 +46,12 @@ export const CreateEvolu = memo(function CreateEvolu() {
       case "ArrowDown":
         focusNativeId("firstFilterButton")(e);
         break;
+      case "Backspace": {
+        const { selectionStart, selectionEnd } = e.currentTarget;
+        if (selectionStart === 0 && selectionEnd === 0)
+          focusNativeId("lastEvoluInput")(e);
+        break;
+      }
     }
   };
 

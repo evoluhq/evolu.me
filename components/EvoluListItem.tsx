@@ -1,10 +1,13 @@
 import { String1000 } from "evolu";
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useContext, useState } from "react";
 import { useIntl } from "react-intl";
 import { TextInput, View as RnView } from "react-native";
 import { EvoluId, useMutation } from "../lib/db";
 import { focusNativeId, nativeId } from "../lib/focusNativeId";
-import { useKeyNavigation } from "../lib/useKeyNavigation";
+import {
+  KeyboardNavigationContext,
+  useKeyNavigation,
+} from "../lib/useKeyNavigation";
 import { EvoluTextInput } from "./EvoluTextInput";
 import { Pressable, View } from "./styled";
 
@@ -49,6 +52,8 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
     },
   });
 
+  const { move } = useContext(KeyboardNavigationContext);
+
   const inputKeyNavigation = useKeyNavigation<TextInput>({
     x,
     y: 1,
@@ -63,6 +68,14 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
       Escape: () => {
         setEditTitle(null);
       },
+      Backspace: [
+        () => {
+          mutate("evolu", { id, isDeleted: true }, () => {
+            move("previousX");
+          });
+        },
+        () => (hasChange ? editTitle.length === 0 : title?.length === 0),
+      ],
     },
   });
 

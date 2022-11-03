@@ -203,39 +203,41 @@ export type KeyboardNavigationKeys =
   | "ArrowDown"
   | "ArrowRight"
   | "ArrowLeft"
-  | "Escape";
+  | "Escape"
+  | "Backspace";
 
-export type KeyboardNavigationKeysMapping = Partial<
+export type KeyboardNavigationKeysMapping<E extends HTMLElement> = Partial<
   Record<
     KeyboardNavigationKeys,
     | KeyboardNavigationMoveDirection
-    | [
-        KeyboardNavigationMoveDirection,
-        Predicate<KeyboardEvent<HTMLInputElement>>
-      ]
-    | ((e: { preventDefault: () => void }) => void)
+    | [KeyboardNavigationMoveDirection, Predicate<KeyboardEvent<E>>]
+    | [(e: KeyboardEvent<E>) => void, Predicate<KeyboardEvent<E>>]
+    | ((e: KeyboardEvent<E>) => void)
   >
 >;
 
-export type KeyboardNavigationKeyDownHandler = (
-  e: KeyboardEvent<HTMLInputElement>
+export type KeyboardNavigationKeyDownHandler<E extends HTMLElement> = (
+  e: KeyboardEvent<E>
 ) => void;
 
-export const useKeyNavigation = <T extends KeyboardNavigationFocusable>({
+export const useKeyNavigation = <
+  R extends KeyboardNavigationFocusable,
+  E extends HTMLElement = HTMLInputElement
+>({
   x,
   y = 0,
   keys,
 }: {
   x: number;
   y?: number;
-  keys: KeyboardNavigationKeysMapping;
+  keys: KeyboardNavigationKeysMapping<E>;
 }): {
-  ref: RefObject<T>;
+  ref: RefObject<R>;
   onFocus: () => void;
-  onKeyDown: KeyboardNavigationKeyDownHandler;
+  onKeyDown: KeyboardNavigationKeyDownHandler<E>;
 } => {
   const { register, onFocus, move } = useContext(KeyboardNavigationContext);
-  const ref = useRef<T>(null);
+  const ref = useRef<R>(null);
 
   useLayoutEffect(() => {
     const { current: handler } = ref;
@@ -245,7 +247,7 @@ export const useKeyNavigation = <T extends KeyboardNavigationFocusable>({
 
   const handleOnFocus = useCallback(() => onFocus({ x, y }), [onFocus, x, y]);
 
-  const handleKeyDown = useCallback<KeyboardNavigationKeyDownHandler>(
+  const handleKeyDown = useCallback<KeyboardNavigationKeyDownHandler<E>>(
     (e) => {
       pipe(
         keys,
