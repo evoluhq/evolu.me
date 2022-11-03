@@ -2,8 +2,9 @@ import { useEvoluFirstDataAreLoaded } from "evolu";
 import { FC, ReactNode } from "react";
 import { ClientOnly } from "../components/ClientOnly";
 import { CreateEvolu } from "../components/CreateEvolu";
+import { EvoluFilter } from "../components/EvoluFilter";
 import { EvoluList } from "../components/EvoluList";
-import { Footer } from "../components/Footer";
+import { MainNav } from "../components/MainNav";
 import { PageTitle } from "../components/PageTitle";
 import { ScrollView, View } from "../components/styled";
 
@@ -37,7 +38,10 @@ const Index = () => {
             </ContentContainer>
           </ScrollView>
           <ContentContainer isLoaded={dataAreLoaded}>
-            <Footer />
+            <View className="-my-[2px] flex-row pb-11">
+              <EvoluFilter />
+              <MainNav />
+            </View>
           </ContentContainer>
         </ClientOnly>
       </View>

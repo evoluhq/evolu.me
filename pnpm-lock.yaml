@@ -11,7 +11,7 @@ specifiers:
   autoprefixer: ^10.4.13
   babel-plugin-formatjs: ^10.3.31
   babel-plugin-module-resolver: ^4.1.0
-  babel-plugin-react-native-web: ^0.18.9
+  babel-plugin-react-native-web: ^0.18.10
   clsx: ^1.2.1
   eslint: ^8.26.0
   eslint-config-next: ^13.0.1
@@ -19,7 +19,7 @@ specifiers:
   evolu: ^0.3.1
   fp-ts: ^2.13.1
   jotai: ^1.9.1
-  nativewind: 3.0.0-next.10
+  nativewind: 3.0.0-next.12
   next: 13.0.1
   openpgp: ^5.5.0
   postcss: ^8.4.18
@@ -28,7 +28,7 @@ specifiers:
   react: ^18.2.0
   react-dom: ^18.2.0
   react-intl: ^6.2.1
-  react-native-web: 0.18.9
+  react-native-web: ^0.18.10
   tailwindcss: ^3.2.1
   typescript: ^4.8.4
   zod: ^3.19.1
@@ -38,13 +38,13 @@ dependencies:
   evolu: 0.3.1_v5r4n2jb3k2g2w5cerv7q4c2x4
   fp-ts: 2.13.1
   jotai: 1.9.1_otspjrsspon4ofp37rshhlhp2y
-  nativewind: 3.0.0-next.10_ulq6t62hlutihjmkvs74ikp6ny
+  nativewind: 3.0.0-next.12_ulq6t62hlutihjmkvs74ikp6ny
   next: 13.0.1_qtpcxnaaarbm4ws7ughq6oxfve
   openpgp: 5.5.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-intl: 6.2.1_uz2ogxeagc4rbieizlfzyaazee
-  react-native-web: 0.18.9_biqbaboplfbrettd7655fr4n2y
+  react-native-web: 0.18.10_biqbaboplfbrettd7655fr4n2y
   zod: 3.19.1
 
 devDependencies:
@@ -58,7 +58,7 @@ devDependencies:
   autoprefixer: 10.4.13_postcss@8.4.18
   babel-plugin-formatjs: 10.3.31
   babel-plugin-module-resolver: 4.1.0
-  babel-plugin-react-native-web: 0.18.9
+  babel-plugin-react-native-web: 0.18.10
   eslint: 8.26.0
   eslint-config-next: 13.0.1_wyqvi574yv7oiwfeinomdzmc3m
   eslint-plugin-formatjs: 4.3.4_eslint@8.26.0
@@ -156,7 +156,7 @@ packages:
     resolution: {integrity: sha512-0NFvs3VkuSYbFi1x2Vd6tKrywq+z/cLeYC/RJNFrIX/30Bf5aiGYbtvGXolEktzJH8o5E5KJ3tT+nkxuuZFVlA==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.20.0
+      '@babel/types': 7.19.4
 
   /@babel/helper-module-transforms/7.19.6:
     resolution: {integrity: sha512-fCmcfQo/KYr/VXXDIyd3CBGZ6AFhPFy1TfSEJ+PilGVlQT6jcbqtHAM4C1EciRqMza7/TpOUZliuSH+U6HAhJw==}
@@ -401,7 +401,6 @@ packages:
       '@babel/helper-string-parser': 7.19.4
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
-    dev: false
 
   /@babel/types/7.20.0:
     resolution: {integrity: sha512-Jlgt3H0TajCW164wkTOTzHkZb075tMQMULzrLUoUeKmO7eFL96GgDxf7/Axhc5CAuKE3KFyVW1p6ysKsi2oXAg==}
@@ -1054,8 +1053,8 @@ packages:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
     dev: true
 
-  /@sinonjs/commons/1.8.3:
-    resolution: {integrity: sha512-xkNcLAn/wZaX14RPlwizcKicDk9G3F8m2nU3L7Ukm5zBgTwiT0wsoFAHx9Jq56fJA1z/7uKGtCRu16sOUCLIHQ==}
+  /@sinonjs/commons/1.8.4:
+    resolution: {integrity: sha512-RpmQdHVo8hCEHDVpO39zToS9jOhR6nw+/lQAzRNq9ErrGV9IeHM71XCn68svVl/euFeVW6BWX4p35gkhbOcSIQ==}
     dependencies:
       type-detect: 4.0.8
     dev: false
@@ -1063,7 +1062,7 @@ packages:
   /@sinonjs/fake-timers/8.1.0:
     resolution: {integrity: sha512-OAPJUAtgeINhh/TAlUID4QTs53Njm7xzddaVlEs/SXwgtiD1tW22zAB/W1wdqfrpmikgaWQ9Fw6Ws+hsiRm5Vg==}
     dependencies:
-      '@sinonjs/commons': 1.8.3
+      '@sinonjs/commons': 1.8.4
     dev: false
 
   /@swc/helpers/0.4.11:
@@ -1521,8 +1520,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /array.prototype.flat/1.3.0:
-    resolution: {integrity: sha512-12IUEkHsAhA4DY5s0FPgNXIdc8VRSqD9Zp78a5au9abH/SOBrsp082JOWFNTjkMozh8mqcdiKuaLGhPeYztxSw==}
+  /array.prototype.flat/1.3.1:
+    resolution: {integrity: sha512-roTU0KWIOmJ4DRLmwKd19Otg0/mT3qPNt0Qb3GWW8iObuZXxrjB/pzn0R3hqpRSWg4HCwqx+0vwOnWnvlOyeIA==}
     engines: {node: '>= 0.4'}
     dependencies:
       call-bind: 1.0.2
@@ -1531,8 +1530,8 @@ packages:
       es-shim-unscopables: 1.0.0
     dev: true
 
-  /array.prototype.flatmap/1.3.0:
-    resolution: {integrity: sha512-PZC9/8TKAIxcWKdyeb77EzULHPrIX/tIZebLJUQOMR1OwYosT8yggdfWScfTBCDj5utONvOuPQQumYsU2ULbkg==}
+  /array.prototype.flatmap/1.3.1:
+    resolution: {integrity: sha512-8UGn9O1FDVvMNB0UlLv4voxRMze7+FpHyF5mSMRjWHUMlpoDViniy05870VlxhfgTnLbpuwTzvD76MTtWxB/mQ==}
     engines: {node: '>= 0.4'}
     dependencies:
       call-bind: 1.0.2
@@ -1673,7 +1672,7 @@ packages:
     engines: {node: '>= 10.14.2'}
     dependencies:
       '@babel/template': 7.18.10
-      '@babel/types': 7.20.0
+      '@babel/types': 7.19.4
       '@types/babel__core': 7.1.19
       '@types/babel__traverse': 7.18.2
     dev: false
@@ -1699,8 +1698,8 @@ packages:
       resolve: 1.22.1
     dev: true
 
-  /babel-plugin-react-native-web/0.18.9:
-    resolution: {integrity: sha512-A9rrSfV98CFRS+ACgZorxaHH8gDrVyK2Nea8OHepY4Sv/Mf+vk8uvQq+tRUEBpHnUvd/qRDKIjFLbygecAt9VA==}
+  /babel-plugin-react-native-web/0.18.10:
+    resolution: {integrity: sha512-2UiwS6G7XKJvpo0X5OFkzGjHGFuNx9J+DgEG8TEmm+X5S0z6EB59W11RDEZghdKzsQzVbs1jB+2VHBuVgjMTiw==}
     dev: true
 
   /babel-preset-current-node-syntax/1.0.1_@babel+core@7.19.6:
@@ -2507,7 +2506,7 @@ packages:
     dependencies:
       '@typescript-eslint/parser': 5.42.0_wyqvi574yv7oiwfeinomdzmc3m
       array-includes: 3.1.5
-      array.prototype.flat: 1.3.0
+      array.prototype.flat: 1.3.1
       debug: 2.6.9
       doctrine: 2.1.0
       eslint: 8.26.0
@@ -2564,7 +2563,7 @@ packages:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
     dependencies:
       array-includes: 3.1.5
-      array.prototype.flatmap: 1.3.0
+      array.prototype.flatmap: 1.3.1
       doctrine: 2.1.0
       eslint: 8.26.0
       estraverse: 5.3.0
@@ -4584,8 +4583,8 @@ packages:
       - supports-color
     dev: false
 
-  /nativewind/3.0.0-next.10_ulq6t62hlutihjmkvs74ikp6ny:
-    resolution: {integrity: sha512-r7Fx74jDmHYJdu7Z3oJ/RaA2U7peTzxhYztZ9kV6BTh5eUDR2NYjbJtjD3AD3JFRWTLW5i65KjIog4Ae+Q//LA==}
+  /nativewind/3.0.0-next.12_ulq6t62hlutihjmkvs74ikp6ny:
+    resolution: {integrity: sha512-/zHimUeWcrp6cQho/3ZX58Nihp8/92WyFQkU4bmGgUoAS8hdxGuV6+A4tDAdSwyJ6adAEP+lI5G4NTJzrTT93Q==}
     engines: {node: '>=14.18'}
     peerDependencies:
       tailwindcss: ~3
@@ -5187,8 +5186,8 @@ packages:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: false
 
-  /react-native-web/0.18.9_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-BaV5Mpe7u9pN5vTRDW2g+MLh6PbPBJZpXRQM3Jr2cNv7hNa3sxCGh9T+NcW6wOFzf/+USrdrEPI1M9wNyr7vyA==}
+  /react-native-web/0.18.10_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-YV2gtZa1n7ulTGp+HcxH+KsAtaDPBI/dKd9oOQS31zyFHURjObLUVkKnGjkmlYAUReWfvmlU64GzyNwoZF9/tA==}
     peerDependencies:
       react: ^17.0.2 || ^18.0.0
       react-dom: ^17.0.2 || ^18.0.0

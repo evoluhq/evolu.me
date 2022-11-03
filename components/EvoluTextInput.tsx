@@ -24,7 +24,6 @@ export const EvoluTextInput = forwardRef<
       <TextInput
         {...props}
         autoComplete="off"
-        // @ts-expect-error Beta.
         ref={ref}
         maxLength={1000} // The same as NonEmptyString1000
         blurOnSubmit={false}

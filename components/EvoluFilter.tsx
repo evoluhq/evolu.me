@@ -5,15 +5,10 @@ import {
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/useKeyNavigation";
-import { Pressable, Text, View } from "./styled";
+import { ScrollView } from "./styled";
+import { TextButton, TextButtonProps } from "./TextButton";
 
-const Button: FC<{
-  title: string;
-  onPress?: () => void;
-  x: number;
-  focusable: boolean;
-  nativeID?: string;
-}> = ({ title, onPress, x, focusable, nativeID }) => {
+const FilterButton: FC<TextButtonProps & { x: number }> = ({ x, ...props }) => {
   const keyNavigation = useKeyNavigation<RnView>({
     x,
     keys: {
@@ -23,35 +18,29 @@ const Button: FC<{
     },
   });
 
-  return (
-    <Pressable
-      {...keyNavigation}
-      focusable={focusable}
-      onPress={onPress}
-      className="rounded-sm px-2 focus:outline-none focus-visible:ring-2"
-      {...(nativeID && { nativeID })}
-    >
-      <Text className="text-xl text-gray-900 dark:text-gray-200">{title}</Text>
-    </Pressable>
-  );
+  return <TextButton {...keyNavigation} {...props} />;
 };
 
 export const EvoluFilter = () => {
+  const example = ["all", "evolu", "dev", "footer", "…"];
+
   return (
-    <View className="-ml-2 flex-row">
-      <KeyboardNavigationProvider maxX={1}>
+    <ScrollView horizontal className="p-[2px]">
+      <KeyboardNavigationProvider maxX={example.length - 1}>
         {({ x }) => (
           <>
-            <Button
-              title="all"
-              x={0}
-              focusable={x === 0}
-              nativeID={nativeId.firstFilterButton}
-            />
-            <Button title="…" x={1} focusable={x === 1} />
+            {example.map((title, i) => (
+              <FilterButton
+                key={title}
+                title={title}
+                focusable={i === x}
+                x={i}
+                {...(i === 0 && { nativeID: nativeId.firstFilterButton })}
+              />
+            ))}
           </>
         )}
       </KeyboardNavigationProvider>
-    </View>
+    </ScrollView>
   );
 };

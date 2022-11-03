@@ -136,6 +136,7 @@ export const KeyboardNavigationProvider: FC<
       const { current: callbacks } = focusCallbacksRef;
       const yCallbacks = callbacks[x] || (callbacks[x] = []);
       yCallbacks[y] = focusCallback;
+
       return () => {
         delete yCallbacks[y];
       };
