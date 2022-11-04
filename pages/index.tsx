@@ -38,7 +38,7 @@ const Index = () => {
             </ContentContainer>
           </ScrollView>
           <ContentContainer isLoaded={dataAreLoaded}>
-            <View className="flex-row py-4">
+            <View className="flex-row py-3">
               <EvoluFilter />
               <MainNav />
             </View>

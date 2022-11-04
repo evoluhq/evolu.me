@@ -1,23 +1,29 @@
-import { Modal } from "react-native";
+import { useState } from "react";
+import { Modal } from "./Modal";
 import { View } from "./styled";
 import { TextButton } from "./TextButton";
 
 export const MainNav = () => {
+  const [modalIsVisible, setModalIsVisible] = useState(false);
+
   return (
-    <View className="p-[2px]">
-      <TextButton title="⋮" />
-      <Modal
-        transparent
-        onRequestClose={() => {
-          //
+    <>
+      <TextButton
+        title="⋮"
+        onPress={() => {
+          setModalIsVisible(true);
         }}
-        visible={false}
+      />
+      <Modal
+        visible={modalIsVisible}
+        onRequestClose={() => {
+          setModalIsVisible(false);
+        }}
       >
         <View>
-          {/* <Text>Hello, World!</Text> */}
-          {/* <Button onPress={() => setIsVisible(false)} title={"Close"} /> */}
+          <TextButton title="Ahoj" />
         </View>
       </Modal>
-    </View>
+    </>
   );
 };
