@@ -25,7 +25,11 @@ export const EvoluFilter = () => {
   const example = ["all", "evolu", "dev", "footer", "…"];
 
   return (
-    <ScrollView horizontal className="p-[2px]">
+    <ScrollView
+      horizontal
+      // Ensure focus ring is visible.
+      className="p-[2px]"
+    >
       <KeyboardNavigationProvider maxX={example.length - 1}>
         {({ x }) => (
           <>
