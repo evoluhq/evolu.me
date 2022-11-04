@@ -1,9 +1,9 @@
 import { model } from "evolu";
 import { useDeferredValue, useMemo } from "react";
-import { View } from "react-native";
 import { useQuery } from "../lib/db";
 import { KeyboardNavigationProvider } from "../lib/useKeyNavigation";
 import { EvoluListItem } from "./EvoluListItem";
+import { View } from "./styled";
 
 export const EvoluList = () => {
   const { rows } = useQuery((db) =>
