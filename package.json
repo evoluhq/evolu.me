@@ -12,7 +12,7 @@
     "evolu": "^0.3.1",
     "fp-ts": "^2.13.1",
     "jotai": "^1.9.1",
-    "nativewind": "3.0.0-next.12",
+    "nativewind": "3.0.0-next.14",
     "next": "13.0.1",
     "openpgp": "^5.5.0",
     "react": "^18.2.0",
