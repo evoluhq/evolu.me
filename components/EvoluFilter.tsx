@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { View as RnView } from "react-native";
-import { focusNativeId, nativeId } from "../lib/focusNativeId";
+import { uniqueId } from "../lib/uniqueId";
 import {
   KeyboardNavigationProvider,
   useKeyNavigation,
@@ -8,13 +8,17 @@ import {
 import { ScrollView } from "./styled";
 import { TextButton, TextButtonProps } from "./TextButton";
 
-const FilterButton: FC<TextButtonProps & { x: number }> = ({ x, ...props }) => {
+const FilterButton: FC<TextButtonProps & { x: number; isLast: boolean }> = ({
+  x,
+  isLast,
+  ...props
+}) => {
   const keyNavigation = useKeyNavigation<RnView>({
     x,
     keys: {
-      ArrowRight: "nextX",
+      ArrowRight: !isLast ? "nextX" : { id: uniqueId.mainNavButton },
       ArrowLeft: "previousX",
-      ArrowUp: focusNativeId("createEvoluInput"),
+      ArrowUp: { id: uniqueId.createEvoluInput },
     },
   });
 
@@ -35,7 +39,14 @@ export const EvoluFilter = () => {
                 title={title}
                 focusable={i === x}
                 x={i}
-                {...(i === 0 && { nativeID: nativeId.firstFilterButton })}
+                isLast={i === example.length - 1}
+                nativeID={
+                  i === 0
+                    ? uniqueId.firstFilterButton
+                    : i === example.length - 1
+                    ? uniqueId.lastFilterButton
+                    : undefined
+                }
               />
             ))}
           </>

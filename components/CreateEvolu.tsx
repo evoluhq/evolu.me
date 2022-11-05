@@ -3,13 +3,14 @@ import { either } from "fp-ts";
 import { constVoid, pipe } from "fp-ts/function";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { KeyboardEvent, memo, useRef } from "react";
+import { memo } from "react";
 import { useIntl } from "react-intl";
 import { TextInput } from "react-native";
 import { useMutation } from "../lib/db";
-import { focusNativeId, nativeId } from "../lib/focusNativeId";
 import { localStorageKeys } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
+import { uniqueId } from "../lib/uniqueId";
+import { useKeyNavigation } from "../lib/useKeyNavigation";
 import { EvoluTextInput } from "./EvoluTextInput";
 import { View } from "./styled";
 
@@ -19,7 +20,18 @@ export const CreateEvolu = memo(function CreateEvolu() {
   const intl = useIntl();
   const [title, setTitle] = useAtom(newEvoluTitleAtom);
   const { mutate } = useMutation();
-  const inputRef = useRef<TextInput>(null);
+
+  const inputKeyNavigation = useKeyNavigation<TextInput>({
+    keys: {
+      ArrowUp: { id: uniqueId.lastEvoluInput },
+      ArrowDown: { id: uniqueId.firstFilterButton },
+      Backspace: [
+        { id: uniqueId.lastEvoluInput },
+        ({ currentTarget: { selectionStart, selectionEnd } }) =>
+          selectionStart === 0 && selectionEnd === 0,
+      ],
+    },
+  });
 
   const handleSubmitEditing = () => {
     pipe(
@@ -31,41 +43,25 @@ export const CreateEvolu = memo(function CreateEvolu() {
           // IDK why, but scrollIntoView must be called in the setTimeout.
           setTimeout(() => {
             // @ts-expect-error RNfW
-            inputRef.current?.scrollIntoView({ block: "nearest" });
+            inputKeyNavigation.ref.current?.scrollIntoView({
+              block: "nearest",
+            });
           }, 10);
         });
       })
     );
   };
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    switch (e.key) {
-      case "ArrowUp":
-        focusNativeId("lastEvoluInput")(e);
-        break;
-      case "ArrowDown":
-        focusNativeId("firstFilterButton")(e);
-        break;
-      case "Backspace": {
-        const { selectionStart, selectionEnd } = e.currentTarget;
-        if (selectionStart === 0 && selectionEnd === 0)
-          focusNativeId("lastEvoluInput")(e);
-        break;
-      }
-    }
-  };
-
   return (
     <View className="flex-row">
       <View className="w-7" />
       <EvoluTextInput
-        nativeID={nativeId.createEvoluInput}
+        nativeID={uniqueId.createEvoluInput}
         value={title}
-        ref={inputRef}
+        {...inputKeyNavigation}
         onChangeText={setTitle}
         onSubmitEditing={handleSubmitEditing}
         hasUnsavedChange={title.length > 0}
-        onKeyDown={handleKeyDown}
         accessibilityLabel={intl.formatMessage({
           defaultMessage: "Write a new Evolu item",
           id: "3DQarp",

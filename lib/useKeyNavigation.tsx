@@ -173,10 +173,10 @@ export const KeyboardNavigationProvider: FC<
       isNext ? i <= (isX ? maxX : maxY) : i >= 0;
       i += increment
     ) {
-      const callback =
+      const focusCallback =
         focusCallbacksRef.current[isX ? i : position.x]?.[isX ? position.y : i];
-      if (callback) {
-        callback();
+      if (focusCallback) {
+        focusCallback();
         break;
       }
     }
@@ -198,7 +198,7 @@ export interface KeyboardNavigationFocusable {
   focus: () => void;
 }
 
-export type KeyboardNavigationKeys =
+export type KeyboardNavigationKey =
   | "ArrowUp"
   | "ArrowDown"
   | "ArrowRight"
@@ -206,13 +206,16 @@ export type KeyboardNavigationKeys =
   | "Escape"
   | "Backspace";
 
-export type KeyboardNavigationKeysMapping<E extends HTMLElement> = Partial<
+export type KeyboardNavigationKeyAction<E extends HTMLElement> =
+  | KeyboardNavigationMoveDirection
+  | { id: string }
+  | ((e: KeyboardEvent<E>) => void);
+
+export type KeyboardNavigationKeys<E extends HTMLElement> = Partial<
   Record<
-    KeyboardNavigationKeys,
-    | KeyboardNavigationMoveDirection
-    | [KeyboardNavigationMoveDirection, Predicate<KeyboardEvent<E>>]
-    | [(e: KeyboardEvent<E>) => void, Predicate<KeyboardEvent<E>>]
-    | ((e: KeyboardEvent<E>) => void)
+    KeyboardNavigationKey,
+    | KeyboardNavigationKeyAction<E>
+    | [KeyboardNavigationKeyAction<E>, Predicate<KeyboardEvent<E>>]
   >
 >;
 
@@ -224,13 +227,13 @@ export const useKeyNavigation = <
   R extends KeyboardNavigationFocusable,
   E extends HTMLElement = HTMLInputElement
 >({
-  x,
+  x = 0,
   y = 0,
   keys,
 }: {
-  x: number;
+  x?: number;
   y?: number;
-  keys: KeyboardNavigationKeysMapping<E>;
+  keys: KeyboardNavigationKeys<E>;
 }): {
   ref: RefObject<R>;
   onFocus: () => void;
@@ -253,15 +256,22 @@ export const useKeyNavigation = <
         keys,
         record.lookup(e.key),
         option.map((arg) =>
-          typeof arg === "string" || typeof arg === "function"
-            ? { arg }
-            : { arg: arg[0], predicate: arg[1] }
+          Array.isArray(arg) ? arg : ([arg, null] as const)
         ),
-        option.match(constVoid, ({ arg, predicate }) => {
+        option.match(constVoid, ([action, predicate]) => {
           if (predicate && !predicate(e)) return;
           e.preventDefault();
-          if (typeof arg === "string") move(arg);
-          else arg(e);
+          switch (typeof action) {
+            case "string":
+              move(action);
+              break;
+            case "function":
+              action(e);
+              break;
+            default: {
+              document.getElementById(action.id)?.focus();
+            }
+          }
         })
       );
     },
