@@ -3,8 +3,10 @@ import { memo, useCallback, useContext, useState } from "react";
 import { useIntl } from "react-intl";
 import { TextInput, View as RnView } from "react-native";
 import { EvoluId, useMutation } from "../lib/db";
+import { setSafeTimeout } from "../lib/setSafeTimeout";
 import { uniqueId } from "../lib/uniqueId";
 import {
+  focusElementWithId,
   KeyboardNavigationContext,
   useKeyNavigation,
 } from "../lib/useKeyNavigation";
@@ -71,11 +73,19 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
       Backspace: [
         () => {
           mutate("evolu", { id, isDeleted: true }, () => {
-            move("previousX");
+            if (x === 0) {
+              if (isLast) focusElementWithId(uniqueId.createEvoluInput);
+              else {
+                setSafeTimeout(() => {
+                  move("current");
+                });
+              }
+            } else move("previousX");
           });
         },
         () => (hasChange ? editTitle.length === 0 : title?.length === 0),
       ],
+      Enter: [{ id: uniqueId.createEvoluInput }, () => !hasChange],
     },
   });
 
@@ -98,7 +108,6 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
         <View className="h-3 w-3 rounded-sm bg-gray-200 group-focus-visible:ring-2 dark:bg-gray-800" />
       </Pressable>
       <EvoluTextInput
-        // accessibilityRole="listitem"
         accessibilityLabel={intl.formatMessage({
           defaultMessage: "A Evolu item",
           id: "t2ZKjf",

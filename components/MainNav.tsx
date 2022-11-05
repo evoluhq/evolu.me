@@ -26,6 +26,7 @@ export const MainNav = () => {
         {...keyNavigation}
         nativeID={uniqueId.mainNavButton}
       />
+      {/* TODO: SEO links if modal is closed */}
       <Modal
         visible={modalIsVisible}
         onRequestClose={() => {

@@ -9,6 +9,7 @@ import { TextInput } from "react-native";
 import { useMutation } from "../lib/db";
 import { localStorageKeys } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
+import { setSafeTimeout } from "../lib/setSafeTimeout";
 import { uniqueId } from "../lib/uniqueId";
 import { useKeyNavigation } from "../lib/useKeyNavigation";
 import { EvoluTextInput } from "./EvoluTextInput";
@@ -40,13 +41,12 @@ export const CreateEvolu = memo(function CreateEvolu() {
       either.match(constVoid, (title) => {
         mutate("evolu", { title }, () => {
           setTitle("");
-          // IDK why, but scrollIntoView must be called in the setTimeout.
-          setTimeout(() => {
+          setSafeTimeout(() => {
             // @ts-expect-error RNfW
             inputKeyNavigation.ref.current?.scrollIntoView({
               block: "nearest",
             });
-          }, 10);
+          });
         });
       })
     );

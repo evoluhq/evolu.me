@@ -57,7 +57,8 @@ export type KeyboardNavigationMoveDirection =
   | "nextX"
   | "previousX"
   | "nextY"
-  | "previousY";
+  | "previousY"
+  | "current";
 
 export type KeyboardNavigationMove = (
   direction: KeyboardNavigationMoveDirection
@@ -163,8 +164,16 @@ export const KeyboardNavigationProvider: FC<
 
   // Must be stable.
   const move = useCallback<KeyboardNavigationMove>((direction) => {
-    const isX = direction === "nextX" || direction === "previousX";
     const { position, maxX, maxY } = positionAndBoundsRef.current;
+    if (direction === "current") {
+      const focusCallback = focusCallbacksRef.current[position.x]?.[position.y];
+      if (focusCallback) {
+        focusCallback();
+        return;
+      }
+    }
+
+    const isX = direction === "nextX" || direction === "previousX";
     const isNext = direction === "nextX" || direction === "nextY";
     const increment = isNext ? 1 : -1;
 
@@ -204,7 +213,8 @@ export type KeyboardNavigationKey =
   | "ArrowRight"
   | "ArrowLeft"
   | "Escape"
-  | "Backspace";
+  | "Backspace"
+  | "Enter";
 
 export type KeyboardNavigationKeyAction<E extends HTMLElement> =
   | KeyboardNavigationMoveDirection
@@ -222,6 +232,10 @@ export type KeyboardNavigationKeys<E extends HTMLElement> = Partial<
 export type KeyboardNavigationKeyDownHandler<E extends HTMLElement> = (
   e: KeyboardEvent<E>
 ) => void;
+
+export const focusElementWithId = (id: string) => {
+  document.getElementById(id)?.focus();
+};
 
 export const useKeyNavigation = <
   R extends KeyboardNavigationFocusable,
@@ -269,7 +283,7 @@ export const useKeyNavigation = <
               action(e);
               break;
             default: {
-              document.getElementById(action.id)?.focus();
+              focusElementWithId(action.id);
             }
           }
         })
