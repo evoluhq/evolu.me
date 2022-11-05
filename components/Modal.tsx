@@ -19,16 +19,16 @@ export const Modal: FC<ModalProps> = ({
 
   return (
     <RnModal transparent onRequestClose={onRequestClose} visible={visible}>
+      {children}
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={intl.formatMessage({
           defaultMessage: "Close",
           id: "rbrahO",
         })}
-        className="absolute inset-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset"
+        className="absolute inset-0 -z-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset"
         onPress={onRequestClose}
       />
-      {children}
     </RnModal>
   );
 };
