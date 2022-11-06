@@ -14,7 +14,7 @@ export const TextButton = forwardRef<RnView, TextButtonProps>(
         ref={ref}
         className="rounded ring-inset focus:outline-none focus-visible:ring-2"
       >
-        <Text className="p-2 text-lg text-gray-900 dark:text-gray-200">
+        <Text className="p-2 text-lg text-gray-900 dark:text-gray-200 dark:antialiased">
           {title}
         </Text>
       </Pressable>

@@ -10,12 +10,19 @@ import {
   RefObject,
   useCallback,
   useContext,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useReducer,
   useRef,
 } from "react";
 import { BRAND } from "zod";
+
+const isWindowDefined = typeof window != "undefined";
+const IS_SERVER = !isWindowDefined || "Deno" in window;
+// React throws a warning when using useLayoutEffect on the server.
+// useEffect on the server is no-op.
+const useIsomorphicLayoutEffect = IS_SERVER ? useEffect : useLayoutEffect;
 
 // React Hook for keyboard navigation via Roving tabindex
 //  - fast, flexible, minimal
@@ -122,7 +129,7 @@ export const KeyboardNavigationProvider: FC<
     createSafePosition({ x: initialX, y: initialY, maxX, maxY })
   );
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     dispatch({ type: "updateBounds", bounds: { maxX, maxY } });
   }, [maxX, maxY]);
 
@@ -158,7 +165,7 @@ export const KeyboardNavigationProvider: FC<
     [maxX, maxY, position]
   );
   const positionAndBoundsRef = useRef(getPositionAndBounds());
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     positionAndBoundsRef.current = getPositionAndBounds();
   }, [getPositionAndBounds]);
 
@@ -256,7 +263,7 @@ export const useKeyNavigation = <
   const { register, onFocus, move } = useContext(KeyboardNavigationContext);
   const ref = useRef<R>(null);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const { current: handler } = ref;
     if (!handler) return;
     return register({ x, y }, handler.focus.bind(handler));

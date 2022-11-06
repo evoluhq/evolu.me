@@ -33,7 +33,7 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en" style={{ height: "100%" }}>
         <Head />
-        <body style={{ height: "100%", overflow: "hidden" }}>
+        <body className="h-full overflow-hidden bg-white dark:bg-black">
           <Main />
           <NextScript />
         </body>

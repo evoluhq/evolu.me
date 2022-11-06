@@ -27,7 +27,7 @@ export const EvoluTextInput = forwardRef<
         ref={ref}
         maxLength={1000} // The same as NonEmptyString1000
         blurOnSubmit={false}
-        className="py-2 text-lg text-gray-900 outline-none dark:text-gray-200"
+        className="py-2 text-lg text-gray-900 outline-none dark:text-gray-200 dark:antialiased"
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onKeyPress={onKeyDown as any}
       />
