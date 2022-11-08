@@ -2,6 +2,7 @@ import { Provider as JotaiProvider } from "jotai";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { IntlProvider } from "react-intl";
+import { appDescription } from "../lib/appDescription";
 import "../styles/globals.css";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
@@ -10,10 +11,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="color-scheme" content="dark light" />
-        <meta
-          name="description"
-          content="Yet another mind mapping app, but this one is local, mobile, keyboard, and private first."
-        ></meta>
+        <meta name="description" content={appDescription}></meta>
         <link
           rel="apple-touch-icon"
           sizes="180x180"
