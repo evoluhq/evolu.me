@@ -22,7 +22,7 @@ const FilterButton: FC<TextButtonProps & { x: number; isLast: boolean }> = ({
     },
   });
 
-  return <TextButton {...keyNavigation} {...props} />;
+  return <TextButton {...keyNavigation} {...props} variant="text" />;
 };
 
 export const EvoluFilter = () => {

@@ -6,15 +6,15 @@ import { Container } from "./Container";
 import { Pressable } from "./styled";
 
 export type ModalProps = {
-  children: ReactNode;
-  visible: boolean;
+  visible?: boolean;
   onRequestClose: IO<void>;
+  children: ReactNode;
 };
 
 export const Modal: FC<ModalProps> = ({
-  visible,
-  children,
+  visible = true,
   onRequestClose,
+  children,
 }) => {
   const intl = useIntl();
 
