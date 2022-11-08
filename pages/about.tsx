@@ -1,18 +1,36 @@
-import { useIntl } from "react-intl";
-import { Text, View } from "../components/styled";
+/* eslint-disable formatjs/no-literal-string-in-jsx */
+import { Layout } from "../components/Layout";
+import { PageTitle } from "../components/PageTitle";
+import { Paragraph } from "../components/Paragraph";
+import { Text } from "../components/styled";
+import { appDescription } from "../lib/appDescription";
 
 const About = () => {
-  const intl = useIntl();
-
   return (
-    <View>
-      <Text>
-        {intl.formatMessage({
-          defaultMessage: "about",
-          id: "iITGlU",
-        })}
-      </Text>
-    </View>
+    <>
+      <PageTitle title="About" />
+      <Layout>
+        <Paragraph>{appDescription}</Paragraph>
+        <Paragraph>
+          <Text
+            // @ts-expect-errors RNfW
+            href="https://twitter.com/steida"
+            hrefAttrs={{ target: "blank" }}
+            className="opacity-60"
+          >
+            Twitter
+          </Text>{" "}
+          <Text
+            // @ts-expect-errors RNfW
+            href="https://github.com/evoluhq/evolu.me"
+            hrefAttrs={{ target: "blank" }}
+            className="opacity-60"
+          >
+            GitHub
+          </Text>
+        </Paragraph>
+      </Layout>
+    </>
   );
 };
 

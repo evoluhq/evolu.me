@@ -1,15 +1,36 @@
-import { useState } from "react";
+import { FC, ReactNode, useState } from "react";
+import { View as RnView } from "react-native";
 import { uniqueId } from "../lib/uniqueId";
 import { useKeyNavigation } from "../lib/useKeyNavigation";
 import { Modal } from "./Modal";
 import { View } from "./styled";
-import { View as RnView } from "react-native";
 import { TextButton } from "./TextButton";
+import { TextLink } from "./TextLink";
+
+const Shadow: FC<{ children: ReactNode }> = ({ children }) => {
+  return (
+    <View className="rounded bg-white px-2 ring-1 ring-gray-300 dark:bg-black dark:ring-gray-800">
+      {children}
+    </View>
+  );
+};
+
+const MainNavLinks = () => {
+  return (
+    <View className="absolute bottom-3 right-3">
+      <Shadow>
+        <TextLink href="/" text="Home" />
+        <TextLink href="/settings" text="Settings" />
+        <TextLink href="/about" text="About" />
+      </Shadow>
+    </View>
+  );
+};
 
 export const MainNav = () => {
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
-  const keyNavigation = useKeyNavigation<RnView>({
+  const buttonKeyNavigation = useKeyNavigation<RnView>({
     keys: {
       ArrowLeft: { id: uniqueId.lastFilterButton },
       ArrowUp: { id: uniqueId.createEvoluInput },
@@ -20,23 +41,21 @@ export const MainNav = () => {
     <>
       <TextButton
         title="⋮"
-        onPress={() => {
-          setModalIsVisible(true);
-        }}
-        {...keyNavigation}
+        onPress={() => setModalIsVisible(true)}
+        {...buttonKeyNavigation}
         nativeID={uniqueId.mainNavButton}
       />
-      {/* TODO: SEO links if modal is closed */}
-      <Modal
-        visible={modalIsVisible}
-        onRequestClose={() => {
-          setModalIsVisible(false);
-        }}
-      >
-        <View>
-          <TextButton title="Ahoj" />
+
+      {modalIsVisible ? (
+        <Modal visible={true} onRequestClose={() => setModalIsVisible(false)}>
+          <MainNavLinks />
+        </Modal>
+      ) : (
+        // SEO
+        <View className="hidden">
+          <MainNavLinks />
         </View>
-      </Modal>
+      )}
     </>
   );
 };

@@ -1,7 +1,7 @@
 import { ClientOnly } from "../components/ClientOnly";
 import { CreateEvolu } from "../components/CreateEvolu";
-import { EvoluFilter } from "../components/EvoluFilter";
 import { EvoluList } from "../components/EvoluList";
+import { EvoluFilter } from "../components/EvoluNav";
 import { Layout } from "../components/Layout";
 import { PageTitle } from "../components/PageTitle";
 import { View } from "../components/styled";

@@ -2,6 +2,7 @@ import { IO } from "fp-ts/IO";
 import { FC, ReactNode } from "react";
 import { useIntl } from "react-intl";
 import { Modal as RnModal } from "react-native";
+import { Container } from "./Container";
 import { Pressable } from "./styled";
 
 export type ModalProps = {
@@ -19,16 +20,17 @@ export const Modal: FC<ModalProps> = ({
 
   return (
     <RnModal transparent onRequestClose={onRequestClose} visible={visible}>
-      {children}
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={intl.formatMessage({
           defaultMessage: "Close",
           id: "rbrahO",
         })}
-        className="absolute inset-0 -z-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset"
+        className="absolute inset-0 cursor-default focus:outline-none"
         onPress={onRequestClose}
-      />
+      >
+        <Container flex1>{children}</Container>
+      </Pressable>
     </RnModal>
   );
 };

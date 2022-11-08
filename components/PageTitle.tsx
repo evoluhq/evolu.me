@@ -1,14 +1,14 @@
 import Head from "next/head";
 import { memo } from "react";
 
-export const PageTitle = memo<{ prefix?: string }>(function PageTitle({
-  prefix,
+export const PageTitle = memo<{ title?: string }>(function PageTitle({
+  title,
 }) {
-  const title = `${prefix ? prefix + " - " : ""}Evolu Me`;
+  const fullTitle = `${title ? title + " - " : ""}Evolu Me`;
 
   return (
     <Head>
-      <title>{title}</title>
+      <title>{fullTitle}</title>
     </Head>
   );
 });
