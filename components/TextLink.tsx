@@ -5,6 +5,7 @@ import { Text } from "./styled";
 export type TextLinkProps = {
   href: string;
   text: string;
+  // extraClassName fakt dava smysl, prepise
 };
 
 export const TextLink: FC<TextLinkProps> = ({ href, text }) => {
@@ -12,7 +13,7 @@ export const TextLink: FC<TextLinkProps> = ({ href, text }) => {
     <Link href={href} passHref legacyBehavior>
       <Text
         accessibilityRole="link"
-        className="rounded p-2 text-lg text-gray-900 ring-inset focus:outline-none focus-visible:ring-2 dark:text-gray-200 dark:antialiased"
+        className="rounded py-2 px-3 text-lg text-gray-900 ring-inset focus:outline-none focus-visible:ring-2 dark:text-gray-200 dark:antialiased"
       >
         {text}
       </Text>

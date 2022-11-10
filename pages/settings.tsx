@@ -1,34 +1,55 @@
 import { getOwner, resetOwner, restoreOwner } from "evolu";
-import { useState } from "react";
+import { pipe } from "fp-ts/function";
+import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
+import { Dialog } from "../components/Dialog";
 import { Heading } from "../components/Heading";
 import { Layout } from "../components/Layout";
-import { Modal } from "../components/Modal";
 import { PageTitle } from "../components/PageTitle";
 import { Paragraph } from "../components/Paragraph";
-import { TextInput, View } from "../components/styled";
+import { Text } from "../components/styled";
 import { TextButton } from "../components/TextButton";
 import { useQuery } from "../lib/db";
 import { clearAllLocalStorageKeys } from "../lib/localStorage";
 
-const Download = () => {
+const DownloadLink = () => {
   const intl = useIntl();
-  const { rows } = useQuery((db) =>
+  const { rows, isLoaded } = useQuery((db) =>
+    // TODO: Add all tables.
     db.selectFrom("evolu").selectAll().orderBy("createdAt")
   );
+  const [url, setUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    pipe(
+      JSON.stringify(rows),
+      (json) => new Blob([json], { type: "application/json" }),
+      (blob) => URL.createObjectURL(blob),
+      setUrl
+    );
+  }, [isLoaded, rows]);
+
+  const fileName = intl.formatMessage({
+    defaultMessage: "backup.json",
+    id: "y1unJo",
+  });
 
   return (
-    <View className="w-80">
-      <Heading>
-        {intl.formatMessage({ defaultMessage: "Your Data", id: "jqRQnw" })}
-      </Heading>
-      <TextInput
-        multiline
-        numberOfLines={20}
-        value={JSON.stringify(rows, null, 2)}
-        // className="h-72"
-      />
-    </View>
+    <Paragraph>
+      {!url ? (
+        intl.formatMessage({ defaultMessage: "Preparing…", id: "Ob8gKI" })
+      ) : (
+        <Text
+          // @ts-expect-errors RNfW
+          href={url}
+          hrefAttrs={{ target: "blank", download: fileName }}
+          className="rounded underline focus:outline-none focus-visible:ring-2"
+        >
+          {fileName}
+        </Text>
+      )}
+    </Paragraph>
   );
 };
 
@@ -60,6 +81,17 @@ const Settings = () => {
             });
           }}
         />
+        {mnemonic && (
+          <Dialog
+            title={intl.formatMessage({
+              defaultMessage: "Your Mnemonic",
+              id: "mwh5gw",
+            })}
+            onRequestClose={() => setMnemonic(null)}
+          >
+            <Paragraph>{mnemonic}</Paragraph>
+          </Dialog>
+        )}
         <TextButton
           title={intl.formatMessage({
             defaultMessage: "Restore Data",
@@ -96,6 +128,17 @@ const Settings = () => {
             setDownload(true);
           }}
         />
+        {download && (
+          <Dialog
+            title={intl.formatMessage({
+              defaultMessage: "Your Data",
+              id: "jqRQnw",
+            })}
+            onRequestClose={() => setDownload(false)}
+          >
+            <DownloadLink />
+          </Dialog>
+        )}
         <TextButton
           title={intl.formatMessage({
             defaultMessage: "Delete Data",
@@ -121,22 +164,6 @@ const Settings = () => {
           }}
         />
       </Layout>
-      {mnemonic && (
-        <Modal centerContent onRequestClose={() => setMnemonic(null)}>
-          <Heading level={2}>
-            {intl.formatMessage({
-              defaultMessage: "Your Mnemonic",
-              id: "mwh5gw",
-            })}
-          </Heading>
-          <Paragraph>{mnemonic}</Paragraph>
-        </Modal>
-      )}
-      {download && (
-        <Modal centerContent onRequestClose={() => setDownload(false)}>
-          <Download />
-        </Modal>
-      )}
     </>
   );
 };
