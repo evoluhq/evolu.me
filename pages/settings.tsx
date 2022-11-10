@@ -1,4 +1,4 @@
-import { getOwner } from "evolu";
+import { getOwner, resetOwner, restoreOwner } from "evolu";
 import { useState } from "react";
 import { useIntl } from "react-intl";
 import { Heading } from "../components/Heading";
@@ -6,13 +6,36 @@ import { Layout } from "../components/Layout";
 import { Modal } from "../components/Modal";
 import { PageTitle } from "../components/PageTitle";
 import { Paragraph } from "../components/Paragraph";
-import { Ring } from "../components/Ring";
-import { View } from "../components/styled";
+import { TextInput, View } from "../components/styled";
 import { TextButton } from "../components/TextButton";
+import { useQuery } from "../lib/db";
+import { clearAllLocalStorageKeys } from "../lib/localStorage";
+
+const Download = () => {
+  const intl = useIntl();
+  const { rows } = useQuery((db) =>
+    db.selectFrom("evolu").selectAll().orderBy("createdAt")
+  );
+
+  return (
+    <View className="w-80">
+      <Heading>
+        {intl.formatMessage({ defaultMessage: "Your Data", id: "jqRQnw" })}
+      </Heading>
+      <TextInput
+        multiline
+        numberOfLines={20}
+        value={JSON.stringify(rows, null, 2)}
+        // className="h-72"
+      />
+    </View>
+  );
+};
 
 const Settings = () => {
   const intl = useIntl();
   const [mnemonic, setMnemonic] = useState<string | null>(null);
+  const [download, setDownload] = useState(false);
 
   return (
     <>
@@ -47,6 +70,18 @@ const Settings = () => {
               "Open this page on a different device and use your mnemonic to restore your data.",
             id: "6RggLU",
           })}
+          onPress={() => {
+            const mnemonic = prompt(
+              intl.formatMessage({
+                defaultMessage: "Your Mnemonic",
+                id: "mwh5gw",
+              })
+            );
+            if (mnemonic == null) return;
+            const either = restoreOwner(mnemonic);
+            if (either._tag === "Left")
+              alert(JSON.stringify(either.left, null, 2));
+          }}
         />
         <TextButton
           title={intl.formatMessage({
@@ -57,6 +92,9 @@ const Settings = () => {
             defaultMessage: "Download your data as JSON.",
             id: "bAR4Hi",
           })}
+          onPress={() => {
+            setDownload(true);
+          }}
         />
         <TextButton
           title={intl.formatMessage({
@@ -67,22 +105,36 @@ const Settings = () => {
             defaultMessage: "Delete all your data from this device.",
             id: "B7tjpq",
           })}
+          onPress={() => {
+            if (
+              confirm(
+                intl.formatMessage({
+                  defaultMessage:
+                    "Are you sure? It will delete all your local data.",
+                  id: "gUiimf",
+                })
+              )
+            ) {
+              clearAllLocalStorageKeys();
+              resetOwner();
+            }
+          }}
         />
       </Layout>
       {mnemonic && (
-        <Modal onRequestClose={() => setMnemonic(null)}>
-          <View className="absolute inset-0 bg-white opacity-80 dark:bg-black" />
-          <View className="flex-1 items-center justify-center px-2">
-            <Ring>
-              <Heading level={2}>
-                {intl.formatMessage({
-                  defaultMessage: "Your Mnemonic",
-                  id: "mwh5gw",
-                })}
-              </Heading>
-              <Paragraph>{mnemonic}</Paragraph>
-            </Ring>
-          </View>
+        <Modal centerContent onRequestClose={() => setMnemonic(null)}>
+          <Heading level={2}>
+            {intl.formatMessage({
+              defaultMessage: "Your Mnemonic",
+              id: "mwh5gw",
+            })}
+          </Heading>
+          <Paragraph>{mnemonic}</Paragraph>
+        </Modal>
+      )}
+      {download && (
+        <Modal centerContent onRequestClose={() => setDownload(false)}>
+          <Download />
         </Modal>
       )}
     </>
