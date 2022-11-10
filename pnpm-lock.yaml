@@ -18,9 +18,9 @@ specifiers:
   eslint: ^8.27.0
   eslint-config-next: ^13.0.2
   eslint-plugin-formatjs: ^4.3.4
-  evolu: ^0.4.0
+  evolu: ^0.4.1
   fp-ts: ^2.13.1
-  jotai: ^1.9.1
+  jotai: ^1.9.2
   nativewind: 3.0.0-next.15
   next: ^13.0.2
   openpgp: ^5.5.0
@@ -41,7 +41,7 @@ dependencies:
   cross-env: 7.0.3
   evolu: 0.4.1_v5r4n2jb3k2g2w5cerv7q4c2x4
   fp-ts: 2.13.1
-  jotai: 1.9.1_3lzqd2prgnu7gkxqqdmtvzna5u
+  jotai: 1.9.2_3lzqd2prgnu7gkxqqdmtvzna5u
   nativewind: 3.0.0-next.15_2x4rjrrt3z4d3susunojv6qqsa
   next: 13.0.2_mqvh5p7ejg4taogoj6tpk3gd5a
   openpgp: 5.5.0
@@ -4368,8 +4368,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /jotai/1.9.1_3lzqd2prgnu7gkxqqdmtvzna5u:
-    resolution: {integrity: sha512-rDmmDL6owX4Kg5fAV0arjGVJmT1VYnkROwAx/PgpMkYCzvHEtABm8qnq/Ki5o5/GFGbvdfE11VNP1brDWP7+9w==}
+  /jotai/1.9.2_3lzqd2prgnu7gkxqqdmtvzna5u:
+    resolution: {integrity: sha512-/893WrniZwoVc0+3JR056r0FTC/tGbgyHco9dfgde6K8TU6XNxrOSw4jCRdDicncw67A37v2GNGzXSpHKbHPmw==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       '@babel/core': '*'
