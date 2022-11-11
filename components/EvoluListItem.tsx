@@ -98,9 +98,12 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
       accessibilityRole="listitem"
     >
       <Pressable
-        // accessibilityRole="button"
-        // accessibilityLabel={intl.formatMessage({ defaultMessage: 'Close' })}
-        className="group -ml-2 w-9 items-center justify-center focus:outline-none"
+        accessibilityRole="button"
+        accessibilityLabel={intl.formatMessage({
+          defaultMessage: "Show detail",
+          id: "z7JWlo",
+        })}
+        className="group -ml-2 w-9 items-center justify-center hover:brightness-90 focus:outline-none active:scale-90"
         {...buttonKeyNavigation}
         focusable={focusable === "button"}
       >
