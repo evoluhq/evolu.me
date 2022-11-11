@@ -5,7 +5,6 @@ import { Text } from "./styled";
 export type TextLinkProps = {
   href: string;
   text: string;
-  // extraClassName fakt dava smysl, prepise
 };
 
 export const TextLink: FC<TextLinkProps> = ({ href, text }) => {
