@@ -6,7 +6,7 @@ import { Pressable, Text, View } from "./styled";
 
 const variantStyles = {
   primary: "dark:bg-gray-800 bg-gray-200",
-  text: "",
+  text: "hover:bg-gray-200",
 };
 
 export type TextButtonProps = Omit<PressableProps, "children"> & {
@@ -25,7 +25,7 @@ export const TextButton = forwardRef<RnView, TextButtonProps>(
         {...props}
         ref={ref}
         className={clsx(
-          "rounded ring-inset focus:outline-none focus-visible:ring-2",
+          "rounded ring-inset hover:bg-gray-300 focus:outline-none focus-visible:ring-2 active:brightness-95 dark:hover:bg-gray-900 dark:active:brightness-90",
           variantStyles[variant]
         )}
       >
