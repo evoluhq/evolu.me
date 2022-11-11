@@ -31,7 +31,7 @@ specifiers:
   react-dom: ^18.2.0
   react-intl: ^6.2.1
   react-native-web: ^0.18.10
-  tailwindcss: ^3.2.3
+  tailwindcss: ^3.2.4
   typescript: ^4.8.4
   zod: ^3.19.1
 
@@ -42,7 +42,7 @@ dependencies:
   evolu: 0.4.1_v5r4n2jb3k2g2w5cerv7q4c2x4
   fp-ts: 2.13.1
   jotai: 1.9.2_3lzqd2prgnu7gkxqqdmtvzna5u
-  nativewind: 3.0.0-next.15_2x4rjrrt3z4d3susunojv6qqsa
+  nativewind: 3.0.0-next.15_xukdx27capnp3tpfldsq3i5tgq
   next: 13.0.3_mqvh5p7ejg4taogoj6tpk3gd5a
   openpgp: 5.5.0
   react: 18.2.0
@@ -69,7 +69,7 @@ devDependencies:
   postcss: 8.4.19
   prettier: 2.7.1
   prettier-plugin-tailwindcss: 0.1.13_prettier@2.7.1
-  tailwindcss: 3.2.3_postcss@8.4.19
+  tailwindcss: 3.2.4_postcss@8.4.19
   typescript: 4.8.4
 
 packages:
@@ -4791,7 +4791,7 @@ packages:
       - supports-color
     dev: false
 
-  /nativewind/3.0.0-next.15_2x4rjrrt3z4d3susunojv6qqsa:
+  /nativewind/3.0.0-next.15_xukdx27capnp3tpfldsq3i5tgq:
     resolution: {integrity: sha512-60ehbAijaDK7OLw4+QBHLjWWBqI8sq8vjJJP1qss2ew7xxWjwy2HUxWpsiKpQCtnSGNXBoKoxB9Lz9oJD+ldPA==}
     engines: {node: '>=14.18'}
     peerDependencies:
@@ -4806,7 +4806,7 @@ packages:
       micromatch: 4.0.5
       react-is: 18.2.0
       tailwind-merge: 1.8.0
-      tailwindcss: 3.2.3_postcss@8.4.19
+      tailwindcss: 3.2.4_postcss@8.4.19
       use-sync-external-store: 1.2.0_react@18.2.0
     transitivePeerDependencies:
       - jest
@@ -6005,8 +6005,8 @@ packages:
     resolution: {integrity: sha512-tER/2SbYRdfPYg6m4pDWZSlbymLTmDi+dx4iCsJmgmz4UDGzgnVelOvBe3GNtGCw9Bmc4MiObfJJbKeVL+KnMQ==}
     dev: false
 
-  /tailwindcss/3.2.3_postcss@8.4.19:
-    resolution: {integrity: sha512-Xt9D4PK4zuuQCEB8bwK9JUCKmTgUwyac/6b0/42Vqhgl6YJkep+Wf5wq+5uXYfmrupdAD0YY2NY1hyZp1HjRrg==}
+  /tailwindcss/3.2.4_postcss@8.4.19:
+    resolution: {integrity: sha512-AhwtHCKMtR71JgeYDaswmZXhPcW9iuI9Sp2LvZPo9upDZ7231ZJ7eA9RaURbhpXGVlrjX4cFNlB4ieTetEb7hQ==}
     engines: {node: '>=12.13.0'}
     hasBin: true
     peerDependencies:
