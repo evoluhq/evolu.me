@@ -26,7 +26,8 @@ const FilterButton: FC<TextButtonProps & { x: number; isLast: boolean }> = ({
 };
 
 export const EvoluFilter = () => {
-  const example = ["all", "evolu", "dev", "footer", "…"];
+  // const example = ["all", "evolu", "dev", "footer", "…"];
+  const example = ["all", "…"];
 
   return (
     <ScrollView horizontal>
