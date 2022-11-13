@@ -12,12 +12,14 @@ export type DialogProps = {
   title: string;
   onRequestClose: IO<void>;
   children: ReactNode;
+  buttons?: ReactNode;
 };
 
 export const Dialog: FC<DialogProps> = ({
   title,
   onRequestClose,
   children,
+  buttons,
 }) => {
   const intl = useIntl();
   const closeMessage = intl.formatMessage({
@@ -34,8 +36,9 @@ export const Dialog: FC<DialogProps> = ({
               <View className="p-3">
                 <Heading level={1}>{title}</Heading>
                 {children}
-                <View className="flex-row">
+                <View className="flex-row gap-2">
                   <TextButton title={closeMessage} onPress={onRequestClose} />
+                  {buttons}
                 </View>
               </View>
             </Ring>
@@ -46,6 +49,7 @@ export const Dialog: FC<DialogProps> = ({
           accessibilityLabel={closeMessage}
           className="absolute inset-0 -z-10 bg-white opacity-80 focus:outline-none dark:bg-black"
           onPress={onRequestClose}
+          focusable={false}
         />
       </ScrollView>
     </Modal>
