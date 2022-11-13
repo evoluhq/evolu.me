@@ -1,13 +1,16 @@
-import { forwardRef, KeyboardEvent, useState } from "react";
+import { IO } from "fp-ts/IO";
+import { forwardRef, KeyboardEvent, useContext, useState } from "react";
 import { useIntl } from "react-intl";
 import { View as RnView } from "react-native";
-import { EvoluId } from "../lib/db";
+import { EvoluId, useMutation } from "../lib/db";
+import { setSafeTimeout } from "../lib/setSafeTimeout";
+import { KeyboardNavigationContext } from "../lib/useKeyNavigation";
 import { EvoluDialog } from "./EvoluDialog";
 import { Pressable, View } from "./styled";
 
 export interface EvoluButton {
   focusable: boolean;
-  onFocus: () => void;
+  onFocus: IO<void>;
   onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
   title: string;
   id: EvoluId;
@@ -18,7 +21,15 @@ export const EvoluButton = forwardRef<RnView, EvoluButton>(function EvoluButton(
   ref
 ) {
   const intl = useIntl();
+  const { mutate } = useMutation();
+  const { move } = useContext(KeyboardNavigationContext);
   const [dialogIsVisible, setDialogIsVisible] = useState(false);
+
+  const handleDialogDelete = () => {
+    mutate("evolu", { id, isDeleted: true }, () => {
+      setSafeTimeout(() => move("current"));
+    });
+  };
 
   return (
     <>
@@ -44,6 +55,7 @@ export const EvoluButton = forwardRef<RnView, EvoluButton>(function EvoluButton(
           title={title}
           id={id}
           onRequestClose={() => setDialogIsVisible(false)}
+          onDelete={handleDialogDelete}
         />
       )}
     </>

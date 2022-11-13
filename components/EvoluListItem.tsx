@@ -1,7 +1,7 @@
 import { String1000 } from "evolu";
 import { memo, useCallback, useContext, useState } from "react";
 import { useIntl } from "react-intl";
-import { TextInput, View as RnView } from "react-native";
+import { TextInput as RnTextInput, View as RnView } from "react-native";
 import { EvoluId, useMutation } from "../lib/db";
 import { setSafeTimeout } from "../lib/setSafeTimeout";
 import { uniqueId } from "../lib/uniqueId";
@@ -10,8 +10,9 @@ import {
   KeyboardNavigationContext,
   useKeyNavigation,
 } from "../lib/useKeyNavigation";
+import { EvoluButton } from "./EvoluButton";
 import { EvoluTextInput } from "./EvoluTextInput";
-import { Pressable, View } from "./styled";
+import { View } from "./styled";
 
 interface EvoluListItemProps {
   row: {
@@ -56,7 +57,7 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
 
   const { move } = useContext(KeyboardNavigationContext);
 
-  const inputKeyNavigation = useKeyNavigation<TextInput>({
+  const inputKeyNavigation = useKeyNavigation<RnTextInput>({
     x,
     y: 1,
     keys: {
@@ -97,19 +98,12 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
       // @ts-expect-error RNfW
       accessibilityRole="listitem"
     >
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={intl.formatMessage({
-          defaultMessage: "Show detail",
-          id: "z7JWlo",
-        })}
-        className="group -ml-2 w-9 items-center justify-center hover:brightness-90 focus:outline-none active:scale-90"
+      <EvoluButton
         {...buttonKeyNavigation}
         focusable={focusable === "button"}
-      >
-        {/* for selection bg-gray-500 */}
-        <View className="h-3 w-3 rounded-sm bg-gray-200 group-focus-visible:ring-2 dark:bg-gray-800" />
-      </Pressable>
+        title={title}
+        id={id}
+      />
       <EvoluTextInput
         accessibilityLabel={intl.formatMessage({
           defaultMessage: "A Evolu item",

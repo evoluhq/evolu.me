@@ -1,22 +1,25 @@
+import { IO } from "fp-ts/IO";
 import { FC } from "react";
+import { useIntl } from "react-intl";
 import { EvoluId } from "../lib/db";
 import { Dialog } from "./Dialog";
 import { Hr } from "./Hr";
-
-// onRequestClose
+import { TextButton } from "./TextButton";
 
 interface EvoluDialogProps {
-  onRequestClose: () => void;
+  onRequestClose: IO<void>;
+  onDelete: IO<void>;
   title: string;
   id: EvoluId;
 }
 
 export const EvoluDialog: FC<EvoluDialogProps> = ({
   onRequestClose,
+  onDelete,
   title,
   // id,
 }) => {
-  // const intl = useIntl();
+  const intl = useIntl();
   // const { rows: toAdd } = useQuery((db) =>
   //   db
   //     .selectFrom("evolu")
@@ -28,7 +31,16 @@ export const EvoluDialog: FC<EvoluDialogProps> = ({
   // );
 
   return (
-    <Dialog title={title} onRequestClose={onRequestClose}>
+    <Dialog
+      title={title}
+      onRequestClose={onRequestClose}
+      buttons={
+        <TextButton
+          title={intl.formatMessage({ defaultMessage: "Delete", id: "K3r6DQ" })}
+          onPress={onDelete}
+        />
+      }
+    >
       {/* <Paragraph>
         {intl.formatMessage({
           defaultMessage: "Associate it with something else.",
