@@ -1,5 +1,6 @@
 import { bounded, number, option, record } from "fp-ts";
 import { constVoid, pipe } from "fp-ts/function";
+import { IO } from "fp-ts/IO";
 import { Predicate } from "fp-ts/Predicate";
 import {
   createContext,
@@ -49,12 +50,12 @@ export interface KeyboardNavigationProviderProps {
   children: (position: KeyboardNavigationSafePosition) => ReactNode;
 }
 
-export type KeyboardNavigationFocusCallback = () => void;
+export type KeyboardNavigationFocusCallback = IO<void>;
 
 export type KeyboardNavigationRegister = (
   position: KeyboardNavigationPosition,
   focusCallback: KeyboardNavigationFocusCallback
-) => () => void;
+) => IO<void>;
 
 export type KeyboardNavigationOnFocus = (
   position: KeyboardNavigationPosition | number
@@ -211,7 +212,7 @@ export const KeyboardNavigationProvider: FC<
 };
 
 export interface KeyboardNavigationFocusable {
-  focus: () => void;
+  focus: IO<void>;
 }
 
 export type KeyboardNavigationKey =
@@ -257,7 +258,7 @@ export const useKeyNavigation = <
   keys: KeyboardNavigationKeys<E>;
 }): {
   ref: RefObject<R>;
-  onFocus: () => void;
+  onFocus: IO<void>;
   onKeyDown: KeyboardNavigationKeyDownHandler<E>;
 } => {
   const { register, onFocus, move } = useContext(KeyboardNavigationContext);
