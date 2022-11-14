@@ -1,35 +1,103 @@
+import clsx from "clsx";
 import { IO } from "fp-ts/IO";
-import { forwardRef, KeyboardEvent, useContext, useState } from "react";
+import {
+  FC,
+  ForwardedRef,
+  forwardRef,
+  KeyboardEvent,
+  useContext,
+  useState,
+} from "react";
 import { useIntl } from "react-intl";
 import { View as RnView } from "react-native";
 import { EvoluId, useMutation } from "../lib/db";
 import { setSafeTimeout } from "../lib/setSafeTimeout";
-import { KeyboardNavigationContext } from "../lib/useKeyNavigation";
-import { EvoluDialog } from "./EvoluDialog";
+import {
+  KeyboardNavigationContext,
+  KeyboardNavigationProvider,
+  useKeyNavigation,
+} from "../lib/useKeyNavigation";
+import { Popover } from "./Popover";
 import { Pressable, View } from "./styled";
+import { TextButton, TextButtonProps } from "./TextButton";
+
+const EvoluButtonPopoverButton: FC<TextButtonProps & { x: number }> = ({
+  x,
+  ...props
+}) => {
+  const keyNavigation = useKeyNavigation<RnView>({
+    x,
+    keys: { ArrowLeft: "previousX", ArrowRight: "nextX" },
+  });
+
+  return <TextButton {...props} {...keyNavigation} focusable={x === 0} />;
+};
+
+const EvoluButtonPopover: FC<{
+  id: EvoluId;
+  onRequestClose: IO<void>;
+  ownerRef: ForwardedRef<RnView>;
+}> = ({ id, onRequestClose, ownerRef }) => {
+  const { mutate } = useMutation();
+  const { move } = useContext(KeyboardNavigationContext);
+
+  const handleDeletePress = () => {
+    mutate("evolu", { id, isDeleted: true }, () => {
+      setSafeTimeout(() => move("current"));
+    });
+  };
+
+  return (
+    <Popover
+      ownerRef={ownerRef}
+      position="bottom right to right"
+      onRequestClose={onRequestClose}
+    >
+      <View className="flex-row">
+        <KeyboardNavigationProvider maxX={2}>
+          {({ x }) => (
+            <>
+              <EvoluButtonPopoverButton
+                title="Filter"
+                variant="text"
+                focusable={x === 0}
+                x={0}
+              />
+              <EvoluButtonPopoverButton
+                title="Move"
+                variant="text"
+                focusable={x === 1}
+                x={1}
+              />
+              <EvoluButtonPopoverButton
+                title="Delete"
+                variant="text"
+                onPress={handleDeletePress}
+                focusable={x === 2}
+                x={2}
+              />
+            </>
+          )}
+        </KeyboardNavigationProvider>
+      </View>
+    </Popover>
+  );
+};
 
 export interface EvoluButton {
   focusable: boolean;
   onFocus: IO<void>;
   onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
-  title: string;
   id: EvoluId;
+  title: string;
 }
 
 export const EvoluButton = forwardRef<RnView, EvoluButton>(function EvoluButton(
-  { focusable, onFocus, onKeyDown, title, id },
+  { focusable, onFocus, onKeyDown, id },
   ref
 ) {
   const intl = useIntl();
-  const { mutate } = useMutation();
-  const { move } = useContext(KeyboardNavigationContext);
-  const [dialogIsVisible, setDialogIsVisible] = useState(false);
-
-  const handleDialogDelete = () => {
-    mutate("evolu", { id, isDeleted: true }, () => {
-      setSafeTimeout(() => move("current"));
-    });
-  };
+  const [popoverIsVisible, setPopoverIsVisible] = useState(false);
 
   return (
     <>
@@ -45,17 +113,21 @@ export const EvoluButton = forwardRef<RnView, EvoluButton>(function EvoluButton(
         onKeyDown={onKeyDown}
         focusable={focusable}
         ref={ref}
-        onPress={() => setDialogIsVisible(true)}
+        onPress={() => setPopoverIsVisible(true)}
       >
-        {/* for selection bg-gray-500 */}
-        <View className="h-3 w-3 rounded-sm bg-gray-200 group-focus-visible:ring-2 dark:bg-gray-800" />
+        <View
+          // bg-gray-500 for selection
+          className={clsx(
+            "h-3 w-3 rounded-sm bg-gray-200 transition-transform group-focus-visible:ring-2 dark:bg-gray-800",
+            popoverIsVisible && "rotate-45"
+          )}
+        />
       </Pressable>
-      {dialogIsVisible && (
-        <EvoluDialog
-          title={title}
+      {popoverIsVisible && (
+        <EvoluButtonPopover
           id={id}
-          onRequestClose={() => setDialogIsVisible(false)}
-          onDelete={handleDialogDelete}
+          onRequestClose={() => setPopoverIsVisible(false)}
+          ownerRef={ref}
         />
       )}
     </>

@@ -9,11 +9,11 @@ import { TextLink } from "./TextLink";
 
 const MainNavLinks = () => {
   return (
-    <View>
+    <>
       <TextLink href="/" text="Home" />
       <TextLink href="/settings" text="Settings" />
       <TextLink href="/about" text="About" />
-    </View>
+    </>
   );
 };
 
@@ -38,7 +38,8 @@ export const MainNav = () => {
       />
       {popoverIsVisible ? (
         <Popover
-          position="bottom right"
+          ownerRef={buttonKeyNavigation.ref}
+          position="bottom right to left"
           onRequestClose={() => setPopoverIsVisible(false)}
         >
           <MainNavLinks />

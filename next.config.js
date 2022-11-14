@@ -7,7 +7,7 @@ const nextConfig = {
   // Waiting for RNfW 0.19
   reactStrictMode: false,
   swcMinify: true,
-  devIndicators: false,
+  devIndicators: { buildActivity: false },
 
   experimental: {
     transpilePackages: ["nativewind"],

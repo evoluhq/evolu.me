@@ -2,6 +2,7 @@ import { IO } from "fp-ts/IO";
 import { FC, ReactNode } from "react";
 import { useIntl } from "react-intl";
 import { Modal } from "react-native";
+import { CloseButtonLayer } from "./CloseButtonLayer";
 import { Container } from "./Container";
 import { Heading } from "./Heading";
 import { Ring } from "./Ring";
@@ -23,8 +24,8 @@ export const Dialog: FC<DialogProps> = ({
 }) => {
   const intl = useIntl();
   const closeMessage = intl.formatMessage({
-    defaultMessage: "Close",
-    id: "rbrahO",
+    defaultMessage: "Close dialog",
+    id: "UaOI5P",
   });
 
   return (
@@ -44,10 +45,11 @@ export const Dialog: FC<DialogProps> = ({
             </Ring>
           </View>
         </Container>
+        <CloseButtonLayer withBg onPress={onRequestClose} />
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={closeMessage}
-          className="absolute inset-0 -z-10 bg-white opacity-80 focus:outline-none dark:bg-black"
+          className="absolute inset-0 -z-10 cursor-default bg-white opacity-80 focus:outline-none dark:bg-black"
           onPress={onRequestClose}
           focusable={false}
         />
