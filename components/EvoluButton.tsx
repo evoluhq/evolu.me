@@ -38,6 +38,7 @@ const EvoluButtonPopover: FC<{
   onRequestClose: IO<void>;
   ownerRef: ForwardedRef<RnView>;
 }> = ({ id, onRequestClose, ownerRef }) => {
+  const intl = useIntl();
   const { mutate } = useMutation();
   const { move } = useContext(KeyboardNavigationContext);
 
@@ -58,16 +59,21 @@ const EvoluButtonPopover: FC<{
           {({ x }) => (
             <>
               <EvoluButtonPopoverButton
-                title="Filter"
+                title={intl.formatMessage({
+                  defaultMessage: "Focus",
+                  id: "hsJlm7",
+                })}
                 variant="text"
                 focusable={x === 0}
                 x={0}
+                rounded="l"
               />
               <EvoluButtonPopoverButton
                 title="Move"
                 variant="text"
                 focusable={x === 1}
                 x={1}
+                rounded="none"
               />
               <EvoluButtonPopoverButton
                 title="Delete"
@@ -75,6 +81,7 @@ const EvoluButtonPopover: FC<{
                 onPress={handleDeletePress}
                 focusable={x === 2}
                 x={2}
+                rounded="r"
               />
             </>
           )}

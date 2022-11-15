@@ -9,11 +9,12 @@ export type TextButtonProps = Omit<PressableProps, "children"> & {
   title: string;
   variant?: "primary" | "text";
   description?: string;
+  rounded?: "t" | "r" | "b" | "l" | "none";
 };
 
 export const TextButton = forwardRef<RnView, TextButtonProps>(
   function TextButton(
-    { title, variant = "primary", description, ...props },
+    { title, variant = "primary", description, rounded, ...props },
     ref
   ) {
     const pressable = (
@@ -21,7 +22,8 @@ export const TextButton = forwardRef<RnView, TextButtonProps>(
         {...props}
         ref={ref}
         className={clsx(
-          "rounded ring-inset hover:bg-gray-300 focus:outline-none focus-visible:ring-2 active:brightness-95 dark:hover:bg-gray-900 dark:active:brightness-90",
+          !rounded ? "rounded" : rounded !== "none" && `rounded-${rounded}`,
+          "ring-inset hover:bg-gray-300 focus:outline-none focus-visible:ring-2 active:brightness-95 dark:hover:bg-gray-900 dark:active:brightness-90",
           styleVariant(variant, {
             primary: "bg-gray-200 dark:bg-gray-800",
             // small: "bg-gray-200 dark:bg-gray-800",
