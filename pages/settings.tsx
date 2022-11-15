@@ -1,16 +1,32 @@
 import { getOwner, resetOwner, restoreOwner } from "evolu";
 import { pipe } from "fp-ts/function";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useIntl } from "react-intl";
+import { Button, ButtonProps } from "../components/Button";
 import { Dialog } from "../components/Dialog";
-import { Heading } from "../components/Heading";
 import { Layout } from "../components/Layout";
 import { PageTitle } from "../components/PageTitle";
-import { Paragraph } from "../components/Paragraph";
-import { Text } from "../components/styled";
-import { TextButton } from "../components/TextButton";
+import { Text, View } from "../components/styled";
+import { T } from "../components/T";
 import { useQuery } from "../lib/db";
 import { clearAllLocalStorageKeys } from "../lib/localStorage";
+
+const BigButtonWithDescription: FC<
+  ButtonProps & { title: string; description: string }
+> = ({ title, description, ...props }) => {
+  return (
+    <View className="mb-3">
+      <View className="mb-1 flex-row">
+        <Button {...props}>
+          <T v="bb">{title}</T>
+        </Button>
+      </View>
+      <View className="px-2">
+        <T v="p">{description}</T>
+      </View>
+    </View>
+  );
+};
 
 const DownloadLink = () => {
   const intl = useIntl();
@@ -36,7 +52,7 @@ const DownloadLink = () => {
   });
 
   return (
-    <Paragraph>
+    <T v="p">
       {!url ? (
         intl.formatMessage({ defaultMessage: "Preparing…", id: "Ob8gKI" })
       ) : (
@@ -49,7 +65,7 @@ const DownloadLink = () => {
           {fileName}
         </Text>
       )}
-    </Paragraph>
+    </T>
   );
 };
 
@@ -62,10 +78,10 @@ const Settings = () => {
     <>
       <PageTitle title="Settings" />
       <Layout>
-        <Heading level={1}>
+        <T v="h1">
           {intl.formatMessage({ defaultMessage: "Settings", id: "D3idYv" })}
-        </Heading>
-        <TextButton
+        </T>
+        <BigButtonWithDescription
           title={intl.formatMessage({
             defaultMessage: "Show Mnemonic",
             id: "/Kjmsc",
@@ -89,10 +105,10 @@ const Settings = () => {
             })}
             onRequestClose={() => setMnemonic(null)}
           >
-            <Paragraph>{mnemonic}</Paragraph>
+            <T v="p">{mnemonic}</T>
           </Dialog>
         )}
-        <TextButton
+        <BigButtonWithDescription
           title={intl.formatMessage({
             defaultMessage: "Restore Data",
             id: "fmvzdQ",
@@ -115,7 +131,7 @@ const Settings = () => {
               alert(JSON.stringify(either.left, null, 2));
           }}
         />
-        <TextButton
+        <BigButtonWithDescription
           title={intl.formatMessage({
             defaultMessage: "Download Data",
             id: "5jKtTm",
@@ -139,7 +155,7 @@ const Settings = () => {
             <DownloadLink />
           </Dialog>
         )}
-        <TextButton
+        <BigButtonWithDescription
           title={intl.formatMessage({
             defaultMessage: "Delete Data",
             id: "u0BHMY",

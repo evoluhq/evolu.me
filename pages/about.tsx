@@ -1,8 +1,8 @@
 /* eslint-disable formatjs/no-literal-string-in-jsx */
 import { Layout } from "../components/Layout";
 import { PageTitle } from "../components/PageTitle";
-import { Paragraph } from "../components/Paragraph";
 import { Text } from "../components/styled";
+import { T } from "../components/T";
 import { appDescription } from "../lib/appDescription";
 
 const About = () => {
@@ -10,8 +10,8 @@ const About = () => {
     <>
       <PageTitle title="About" />
       <Layout>
-        <Paragraph>{appDescription}</Paragraph>
-        <Paragraph>
+        <T v="p">{appDescription}</T>
+        <T v="p">
           <Text
             // @ts-expect-errors RNfW
             href="https://twitter.com/steida"
@@ -28,7 +28,7 @@ const About = () => {
           >
             GitHub
           </Text>
-        </Paragraph>
+        </T>
       </Layout>
     </>
   );

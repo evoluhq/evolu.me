@@ -2,9 +2,10 @@ import { IO } from "fp-ts/IO";
 import { FC } from "react";
 import { useIntl } from "react-intl";
 import { EvoluId } from "../lib/db";
+import { Button } from "./Button";
 import { Dialog } from "./Dialog";
 import { Hr } from "./Hr";
-import { TextButton } from "./TextButton";
+import { T } from "./T";
 
 interface EvoluDialogProps {
   onRequestClose: IO<void>;
@@ -35,10 +36,11 @@ export const EvoluDialog: FC<EvoluDialogProps> = ({
       title={title}
       onRequestClose={onRequestClose}
       buttons={
-        <TextButton
-          title={intl.formatMessage({ defaultMessage: "Delete", id: "K3r6DQ" })}
-          onPress={onDelete}
-        />
+        <Button onPress={onDelete}>
+          <T v="bb">
+            {intl.formatMessage({ defaultMessage: "Delete", id: "K3r6DQ" })}
+          </T>
+        </Button>
       }
     >
       {/* <Paragraph>
@@ -52,7 +54,7 @@ export const EvoluDialog: FC<EvoluDialogProps> = ({
         {toAdd.map(
           ({ id, title }) =>
             title && (
-              <TextButton
+              <Button...
                 title={
                   truncate(title)({
                     maxLength: 14,

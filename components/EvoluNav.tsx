@@ -5,10 +5,11 @@ import {
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/useKeyNavigation";
+import { Button, ButtonProps } from "./Button";
 import { ScrollView } from "./styled";
-import { TextButton, TextButtonProps } from "./TextButton";
+import { T } from "./T";
 
-const FilterButton: FC<TextButtonProps & { x: number; isLast: boolean }> = ({
+const FilterButton: FC<ButtonProps & { x: number; isLast: boolean }> = ({
   x,
   isLast,
   ...props
@@ -21,8 +22,7 @@ const FilterButton: FC<TextButtonProps & { x: number; isLast: boolean }> = ({
       ArrowUp: { id: uniqueId.createEvoluInput },
     },
   });
-
-  return <TextButton {...keyNavigation} {...props} variant="text" />;
+  return <Button {...keyNavigation} {...props} />;
 };
 
 export const EvoluFilter = () => {
@@ -37,7 +37,6 @@ export const EvoluFilter = () => {
             {example.map((title, i) => (
               <FilterButton
                 key={title}
-                title={title}
                 focusable={i === x}
                 x={i}
                 isLast={i === example.length - 1}
@@ -48,7 +47,9 @@ export const EvoluFilter = () => {
                     ? uniqueId.lastFilterButton
                     : undefined
                 }
-              />
+              >
+                <T v="tb">{title}</T>
+              </FilterButton>
             ))}
           </>
         )}

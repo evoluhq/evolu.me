@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { constVoid } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
 import {
   FC,
@@ -17,20 +18,46 @@ import {
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/useKeyNavigation";
+import { Button } from "./Button";
+import { Link } from "./Link";
 import { Popover } from "./Popover";
 import { Pressable, View } from "./styled";
-import { TextButton, TextButtonProps } from "./TextButton";
+import { T } from "./T";
 
-const EvoluButtonPopoverButton: FC<TextButtonProps & { x: number }> = ({
-  x,
-  ...props
-}) => {
+const EvoluButtonPopoverButtonOrLink: FC<{
+  title: string;
+  focusable: boolean;
+  x: number;
+  onPressOrHref: IO<void> | string;
+  customClassName?: string;
+}> = ({ title, focusable, x, onPressOrHref, customClassName }) => {
   const keyNavigation = useKeyNavigation<RnView>({
     x,
     keys: { ArrowLeft: "previousX", ArrowRight: "nextX" },
   });
 
-  return <TextButton {...props} {...keyNavigation} focusable={x === 0} />;
+  if (typeof onPressOrHref === "string")
+    return (
+      <Link href="/">
+        <T
+          {...keyNavigation}
+          // @ts-expect-error RNfW
+          focusable={focusable}
+          v="a"
+          customClassName={customClassName}
+        >
+          {title}
+        </T>
+      </Link>
+    );
+
+  return (
+    <Button {...keyNavigation} focusable={x === 0}>
+      <T v="tb" customClassName={customClassName}>
+        {title}
+      </T>
+    </Button>
+  );
 };
 
 const EvoluButtonPopover: FC<{
@@ -58,30 +85,28 @@ const EvoluButtonPopover: FC<{
         <KeyboardNavigationProvider maxX={2}>
           {({ x }) => (
             <>
-              <EvoluButtonPopoverButton
+              <EvoluButtonPopoverButtonOrLink
                 title={intl.formatMessage({
                   defaultMessage: "Focus",
                   id: "hsJlm7",
                 })}
-                variant="text"
                 focusable={x === 0}
                 x={0}
-                rounded="l"
+                onPressOrHref={"/"}
               />
-              <EvoluButtonPopoverButton
+              <EvoluButtonPopoverButtonOrLink
                 title="Move"
-                variant="text"
                 focusable={x === 1}
                 x={1}
-                rounded="none"
+                onPressOrHref={constVoid}
+                customClassName="rounded-none"
               />
-              <EvoluButtonPopoverButton
+              <EvoluButtonPopoverButtonOrLink
                 title="Delete"
-                variant="text"
-                onPress={handleDeletePress}
                 focusable={x === 2}
                 x={2}
-                rounded="r"
+                onPressOrHref={handleDeletePress}
+                customClassName="rounded-none rounded-r"
               />
             </>
           )}

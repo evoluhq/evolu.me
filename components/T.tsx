@@ -1,0 +1,65 @@
+import { forwardRef } from "react";
+import { AccessibilityRole, Text as RnText, TextProps } from "react-native";
+import { Text } from "./styled";
+
+export type TProps = Omit<TextProps, "accessibilityLevel"> & {
+  /**
+   * `t` = text
+   * `p` = paragraph
+   * `a` = a
+   * `tb` = text button
+   * `bb` = big button
+   * `h1` = etc.
+   */
+  v?: "t" | "p" | "a" | "tb" | "bb" | "h1" | "h2" | "h3";
+  customClassName?: string;
+};
+
+// RNfW
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const accessibilityRole: Record<NonNullable<TProps["v"]>, AccessibilityRole> = {
+  t: "text",
+  p: "paragraph" as any,
+  a: "link",
+  tb: "" as any, // It's wrapped by Button.
+  bb: "" as any, // It's wrapped by Button.
+  h1: "heading" as any,
+  h2: "heading" as any,
+  h3: "heading" as any,
+};
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+const variants: Record<NonNullable<TProps["v"]> | "default", string> = {
+  default: "text-lg text-gray-900 dark:text-gray-200 dark:antialiased",
+  t: "",
+  p: "mb-4",
+  a: "rounded py-2 px-3 hover:underline focus:outline-none focus-visible:ring-2",
+  tb: "rounded p-2 hover:bg-gray-200 dark:hover:bg-gray-900",
+  bb: "rounded bg-gray-200 p-2 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-900",
+  h1: "mb-4 mt-2 text-3xl",
+  h2: "mb-4 mt-2 text-2xl",
+  h3: "mb-4 mt-2 text-xl",
+};
+
+/**
+ * A text component for all texts.
+ */
+export const T = forwardRef<RnText, TProps>(function T(
+  { v = "t", customClassName, ...props },
+  ref
+) {
+  return (
+    <Text
+      accessibilityRole={accessibilityRole[v]}
+      {...(v.startsWith("h") && { accessibilityLevel: Number(v.slice(1)) })}
+      selectable={v !== "tb" && v !== "bb"}
+      {...props}
+      ref={ref}
+      className={`
+        ${variants.default}
+        ${variants[v]}
+        ${customClassName}
+      `}
+    />
+  );
+});

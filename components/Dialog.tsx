@@ -2,12 +2,12 @@ import { IO } from "fp-ts/IO";
 import { FC, ReactNode } from "react";
 import { useIntl } from "react-intl";
 import { Modal } from "react-native";
+import { Button } from "./Button";
 import { CloseButtonLayer } from "./CloseButtonLayer";
 import { Container } from "./Container";
-import { Heading } from "./Heading";
 import { Ring } from "./Ring";
 import { Pressable, ScrollView, View } from "./styled";
-import { TextButton } from "./TextButton";
+import { T } from "./T";
 
 export type DialogProps = {
   title: string;
@@ -35,10 +35,12 @@ export const Dialog: FC<DialogProps> = ({
           <View className="py-4 px-1">
             <Ring>
               <View className="p-3">
-                <Heading level={1}>{title}</Heading>
+                <T v="h1">{title}</T>
                 {children}
                 <View className="flex-row gap-2">
-                  <TextButton title={closeMessage} onPress={onRequestClose} />
+                  <Button onPress={onRequestClose}>
+                    <T v="bb">{closeMessage}</T>
+                  </Button>
                   {buttons}
                 </View>
               </View>
