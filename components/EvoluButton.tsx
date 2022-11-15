@@ -118,7 +118,7 @@ export const EvoluButton = forwardRef<RnView, EvoluButton>(function EvoluButton(
         <View
           // bg-gray-500 for selection
           className={clsx(
-            "h-3 w-3 rounded-sm bg-gray-200 transition-transform group-focus-visible:ring-2 dark:bg-gray-800",
+            "h-3 w-3 rounded-sm bg-gray-200 transition-transform duration-100 group-focus-visible:ring-2 dark:bg-gray-800",
             popoverIsVisible && "rotate-45"
           )}
         />
