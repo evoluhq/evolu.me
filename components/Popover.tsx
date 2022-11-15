@@ -41,6 +41,7 @@ export const Popover: FC<PopoverProps> = ({
     )
       return;
 
+    // I was lazy to refactor callbacks to Task
     const ownerEl = ownerRef.current as unknown as HTMLElement;
     const viewEl = viewRef.current as unknown as HTMLElement;
 
