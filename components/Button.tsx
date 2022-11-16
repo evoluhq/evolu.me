@@ -13,7 +13,7 @@ export const Button = forwardRef<RnView, ButtonProps>(function Button(
       accessibilityRole="button"
       ref={ref}
       {...props}
-      className="focus:outline-none focus-visible:ring-2 active:brightness-95 dark:active:brightness-90"
+      className="group focus:outline-none active:brightness-95 dark:active:brightness-90"
     />
   );
 });
