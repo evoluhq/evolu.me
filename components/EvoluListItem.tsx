@@ -50,7 +50,7 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
     x,
     keys: {
       ArrowUp: "previousX",
-      ArrowDown: "nextX",
+      ArrowDown: !isLast ? "nextX" : { id: uniqueId.firstEvoluNavItem },
       ArrowRight: "nextY",
     },
   });
