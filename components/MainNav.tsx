@@ -1,35 +1,50 @@
-import { useState } from "react";
+import { FC, ReactNode, useState } from "react";
 import { useIntl } from "react-intl";
-import { View as RnView } from "react-native";
+import { Text, View as RnView } from "react-native";
 import { uniqueId } from "../lib/uniqueId";
-import { useKeyNavigation } from "../lib/useKeyNavigation";
+import {
+  KeyboardNavigationProvider,
+  useKeyNavigation,
+} from "../lib/useKeyNavigation";
 import { Button } from "./Button";
 import { Link } from "./Link";
 import { Popover } from "./Popover";
 import { View } from "./styled";
 import { T } from "./T";
 
-const MainNavLinks = () => {
-  const intl = useIntl();
+const MainNavLink: FC<{
+  children: ReactNode;
+  href: string;
+  x: number;
+}> = ({ children, href, x }) => {
+  const keyNavigation = useKeyNavigation<Text>({
+    x,
+    keys: { ArrowUp: "previousX", ArrowDown: "nextX" },
+  });
 
   return (
-    <>
-      <Link href="/">
-        <T v="a">
-          {intl.formatMessage({ defaultMessage: "Home", id: "ejEGdx" })}
-        </T>
-      </Link>
-      <Link href="/settings">
-        <T v="a">
-          {intl.formatMessage({ defaultMessage: "Settings", id: "D3idYv" })}
-        </T>
-      </Link>
-      <Link href="/about">
-        <T v="a">
-          {intl.formatMessage({ defaultMessage: "About", id: "g5pX+a" })}
-        </T>
-      </Link>
-    </>
+    <Link href={href}>
+      <T v="a" {...keyNavigation}>
+        {children}
+      </T>
+    </Link>
+  );
+};
+
+const MainNavLinks = () => {
+  const intl = useIntl();
+  return (
+    <KeyboardNavigationProvider maxX={2}>
+      <MainNavLink href="/" x={0}>
+        {intl.formatMessage({ defaultMessage: "Home", id: "ejEGdx" })}
+      </MainNavLink>
+      <MainNavLink href="/settings" x={1}>
+        {intl.formatMessage({ defaultMessage: "Settings", id: "D3idYv" })}
+      </MainNavLink>
+      <MainNavLink href="/about" x={2}>
+        {intl.formatMessage({ defaultMessage: "About", id: "g5pX+a" })}
+      </MainNavLink>
+    </KeyboardNavigationProvider>
   );
 };
 

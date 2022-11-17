@@ -26,11 +26,10 @@ import { T } from "./T";
 
 const EvoluButtonPopoverButtonOrLink: FC<{
   title: string;
-  focusable: boolean;
   x: number;
   onPressOrHref: IO<void> | string;
   customClassName?: string;
-}> = ({ title, focusable, x, onPressOrHref, customClassName }) => {
+}> = ({ title, x, onPressOrHref, customClassName }) => {
   const keyNavigation = useKeyNavigation<RnView>({
     x,
     keys: { ArrowLeft: "previousX", ArrowRight: "nextX" },
@@ -38,17 +37,12 @@ const EvoluButtonPopoverButtonOrLink: FC<{
 
   return typeof onPressOrHref === "string" ? (
     <Link href={onPressOrHref}>
-      <T
-        {...keyNavigation}
-        focusable={focusable}
-        v="tb"
-        customClassName={customClassName}
-      >
+      <T {...keyNavigation} v="tb" customClassName={customClassName}>
         {title}
       </T>
     </Link>
   ) : (
-    <Button {...keyNavigation} focusable={x === 0}>
+    <Button {...keyNavigation}>
       <T v="tb" customClassName={customClassName}>
         {title}
       </T>
@@ -79,34 +73,27 @@ const EvoluButtonPopover: FC<{
     >
       <View className="flex-row">
         <KeyboardNavigationProvider maxX={2}>
-          {({ x }) => (
-            <>
-              <EvoluButtonPopoverButtonOrLink
-                title={intl.formatMessage({
-                  defaultMessage: "Focus",
-                  id: "hsJlm7",
-                })}
-                focusable={x === 0}
-                x={0}
-                onPressOrHref={"/#foo"}
-                customClassName="rounded-none rounded-l"
-              />
-              <EvoluButtonPopoverButtonOrLink
-                title="Move"
-                focusable={x === 1}
-                x={1}
-                onPressOrHref={constVoid}
-                customClassName="rounded-none"
-              />
-              <EvoluButtonPopoverButtonOrLink
-                title="Delete"
-                focusable={x === 2}
-                x={2}
-                onPressOrHref={handleDeletePress}
-                customClassName="rounded-none rounded-r"
-              />
-            </>
-          )}
+          <EvoluButtonPopoverButtonOrLink
+            title={intl.formatMessage({
+              defaultMessage: "Focus",
+              id: "hsJlm7",
+            })}
+            x={0}
+            onPressOrHref={"/#foo"}
+            customClassName="rounded-none rounded-l"
+          />
+          <EvoluButtonPopoverButtonOrLink
+            title="Move"
+            x={1}
+            onPressOrHref={constVoid}
+            customClassName="rounded-none"
+          />
+          <EvoluButtonPopoverButtonOrLink
+            title="Delete"
+            x={2}
+            onPressOrHref={handleDeletePress}
+            customClassName="rounded-none rounded-r"
+          />
         </KeyboardNavigationProvider>
       </View>
     </Popover>

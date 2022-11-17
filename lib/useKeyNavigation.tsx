@@ -30,6 +30,7 @@ const useIsomorphicLayoutEffect = IS_SERVER ? useEffect : useLayoutEffect;
 //  - for lists and grids
 //  - and without unnecessary re-renders
 // https://developer.mozilla.org/en-US/docs/Web/Accessibility/Keyboard-navigable_JavaScript_widgets
+// TODO: Add an option for rotation, aka jump from start to end.
 // TODO: useEvent
 // https://github.com/reactjs/rfcs/blob/useevent/text/0000-useevent.md
 // TODO: Release as use-key-navigation
@@ -47,7 +48,9 @@ export interface KeyboardNavigationProviderProps {
   maxY?: number;
   initialX?: number;
   initialY?: number;
-  children: (position: KeyboardNavigationSafePosition) => ReactNode;
+  children:
+    | ReactNode
+    | ((position: KeyboardNavigationSafePosition) => ReactNode);
 }
 
 export type KeyboardNavigationFocusCallback = IO<void>;
@@ -204,7 +207,7 @@ export const KeyboardNavigationProvider: FC<
   return useMemo(
     () => (
       <KeyboardNavigationContext.Provider value={contextValueRef.current}>
-        {children(position)}
+        {typeof children === "function" ? children(position) : children}
       </KeyboardNavigationContext.Provider>
     ),
     [children, position]
