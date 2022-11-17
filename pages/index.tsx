@@ -10,7 +10,14 @@ const Index = () => {
   return (
     <>
       <PageTitle />
-      <Layout waitForData footer={<EvoluFilter />}>
+      <Layout
+        waitForData
+        footer={
+          <ClientOnly>
+            <EvoluFilter />
+          </ClientOnly>
+        }
+      >
         <View
           className="py-[132px]" // 3x44
         >

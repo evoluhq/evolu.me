@@ -1,19 +1,31 @@
-import { FC } from "react";
+import { has, model } from "evolu";
+import { option, readonlyArray } from "fp-ts";
+import { pipe } from "fp-ts/function";
+import { IO } from "fp-ts/IO";
+import { FC, memo, useMemo } from "react";
+import { useIntl } from "react-intl";
 import { View as RnView } from "react-native";
+import { EvoluId, useQuery } from "../lib/db";
+import { locationHashToEvoluIds } from "../lib/locationHashToEvoluIds";
 import { uniqueId } from "../lib/uniqueId";
 import {
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/useKeyNavigation";
-import { Button, ButtonProps } from "./Button";
+import { useLocationHash } from "../lib/useLocationHash";
+import { Button } from "./Button";
+import { Link } from "./Link";
 import { ScrollView } from "./styled";
 import { T } from "./T";
 
-const FilterButton: FC<ButtonProps & { x: number; isLast: boolean }> = ({
-  x,
-  isLast,
-  ...props
-}) => {
+const EvoluFilterLinkOrButton: FC<{
+  focusable: boolean;
+  x: number;
+  isLast: boolean;
+  nativeID: string;
+  title: string;
+  hrefOrOnPress: string | IO<void>;
+}> = ({ focusable, x, isLast, nativeID, title, hrefOrOnPress }) => {
   const keyNavigation = useKeyNavigation<RnView>({
     x,
     keys: {
@@ -22,38 +34,113 @@ const FilterButton: FC<ButtonProps & { x: number; isLast: boolean }> = ({
       ArrowUp: { id: uniqueId.createEvoluInput },
     },
   });
-  return <Button {...keyNavigation} {...props} />;
+  return typeof hrefOrOnPress === "string" ? (
+    <Link href="/">
+      <T v="tb" {...keyNavigation} focusable={focusable} nativeID={nativeID}>
+        {title}
+      </T>
+    </Link>
+  ) : (
+    <Button
+      {...keyNavigation}
+      focusable={focusable}
+      nativeID={nativeID}
+      onPress={hrefOrOnPress}
+    >
+      <T v="tb">{title}</T>
+    </Button>
+  );
 };
 
-export const EvoluFilter = () => {
-  // const example = ["all", "evolu", "dev", "footer", "…"];
-  const example = ["all", "…"];
+// useLocationHash uses useSyncExternalStore which can dispatch
+// the same value twice.
+// https://github.com/facebook/react/issues/25191#issuecomment-1244805920
+const EvoluFilterWorkaround = memo<{ ids: readonly EvoluId[] }>(
+  function EvoluFilterWorkaround({ ids }) {
+    const intl = useIntl();
 
-  return (
-    <ScrollView horizontal>
-      <KeyboardNavigationProvider maxX={example.length - 1}>
-        {({ x }) => (
-          <>
-            {example.map((title, i) => (
-              <FilterButton
-                key={title}
-                focusable={i === x}
-                x={i}
-                isLast={i === example.length - 1}
-                nativeID={
-                  i === 0
-                    ? uniqueId.firstFilterButton
-                    : i === example.length - 1
-                    ? uniqueId.lastFilterButton
-                    : undefined
-                }
-              >
-                <T v="tb">{title}</T>
-              </FilterButton>
-            ))}
-          </>
-        )}
-      </KeyboardNavigationProvider>
-    </ScrollView>
-  );
+    const { rows } = useQuery((db) =>
+      db
+        .selectFrom("evolu")
+        .select(["id", "title"])
+        .where("isDeleted", "is not", model.cast(true))
+        .where("id", "in", ids)
+    );
+
+    // The same order like ids from location hash.
+    const sortedRows = pipe(
+      ids,
+      readonlyArray.filterMap((id) =>
+        option.fromNullable(rows.find((row) => row.id === id))
+      ),
+      readonlyArray.filter(has(["title"]))
+    );
+
+    return (
+      <ScrollView horizontal>
+        <KeyboardNavigationProvider maxX={sortedRows.length + 1}>
+          {({ x }) => (
+            <>
+              <EvoluFilterLinkOrButton
+                focusable={x === 0}
+                x={0}
+                isLast={false}
+                nativeID={uniqueId.firstEvoluNavItem}
+                title={intl.formatMessage({
+                  defaultMessage: "All",
+                  id: "zQvVDJ",
+                })}
+                hrefOrOnPress="/"
+              />
+              {sortedRows.map((row, i) => (
+                <EvoluFilterLinkOrButton
+                  key={row.id}
+                  focusable={x === i + 1}
+                  x={i + 1}
+                  isLast={false}
+                  nativeID={uniqueId.firstEvoluNavItem}
+                  title={row.title}
+                  hrefOrOnPress="/"
+                />
+              ))}
+              <EvoluFilterLinkOrButton
+                focusable={x === sortedRows.length + 1}
+                x={sortedRows.length + 1}
+                isLast={true}
+                nativeID={uniqueId.lastEvoluNavItem}
+                title="…"
+                hrefOrOnPress={() => {
+                  alert("todo");
+                }}
+              />
+              {/* {example.map((title, i) => (
+                <FilterButton
+                  key={title}
+                  focusable={i === x}
+                  x={i}
+                  isLast={i === example.length - 1}
+                  nativeID={
+                    i === 0
+                      ? uniqueId.firstEvoluNavItem
+                      : i === example.length - 1
+                      ? uniqueId.lastEvoluNavItem
+                      : undefined
+                  }
+                >
+                  <T v="tb">{title}</T>
+                </FilterButton>
+              ))} */}
+            </>
+          )}
+        </KeyboardNavigationProvider>
+      </ScrollView>
+    );
+  }
+);
+
+export const EvoluFilter = () => {
+  const hash = useLocationHash();
+  // To have a stable reference.
+  const ids = useMemo(() => locationHashToEvoluIds(hash), [hash]);
+  return <EvoluFilterWorkaround ids={ids} />;
 };

@@ -39,7 +39,7 @@ export const MainNav = () => {
 
   const buttonKeyNavigation = useKeyNavigation<RnView>({
     keys: {
-      ArrowLeft: { id: uniqueId.lastFilterButton },
+      ArrowLeft: { id: uniqueId.lastEvoluNavItem },
       ArrowUp: { id: uniqueId.createEvoluInput },
     },
   });

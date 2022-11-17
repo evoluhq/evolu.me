@@ -36,22 +36,18 @@ const EvoluButtonPopoverButtonOrLink: FC<{
     keys: { ArrowLeft: "previousX", ArrowRight: "nextX" },
   });
 
-  if (typeof onPressOrHref === "string")
-    return (
-      <Link href="/">
-        <T
-          {...keyNavigation}
-          // @ts-expect-error RNfW
-          focusable={focusable}
-          v="tb"
-          customClassName={customClassName}
-        >
-          {title}
-        </T>
-      </Link>
-    );
-
-  return (
+  return typeof onPressOrHref === "string" ? (
+    <Link href={onPressOrHref}>
+      <T
+        {...keyNavigation}
+        focusable={focusable}
+        v="tb"
+        customClassName={customClassName}
+      >
+        {title}
+      </T>
+    </Link>
+  ) : (
     <Button {...keyNavigation} focusable={x === 0}>
       <T v="tb" customClassName={customClassName}>
         {title}
@@ -92,7 +88,7 @@ const EvoluButtonPopover: FC<{
                 })}
                 focusable={x === 0}
                 x={0}
-                onPressOrHref={"/"}
+                onPressOrHref={"/#foo"}
                 customClassName="rounded-none rounded-l"
               />
               <EvoluButtonPopoverButtonOrLink

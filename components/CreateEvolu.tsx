@@ -25,7 +25,7 @@ export const CreateEvolu = memo(function CreateEvolu() {
   const inputKeyNavigation = useKeyNavigation<TextInput>({
     keys: {
       ArrowUp: { id: uniqueId.lastEvoluInput },
-      ArrowDown: { id: uniqueId.firstFilterButton },
+      ArrowDown: { id: uniqueId.firstEvoluNavItem },
       Backspace: [
         { id: uniqueId.lastEvoluInput },
         ({ currentTarget: { selectionStart, selectionEnd } }) =>

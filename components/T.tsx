@@ -2,6 +2,8 @@ import { forwardRef } from "react";
 import { AccessibilityRole, Text as RnText, TextProps } from "react-native";
 import { Text } from "./styled";
 
+type Variants = "t" | "p" | "a" | "tb" | "bb" | "h1" | "h2" | "h3";
+
 export type TProps = Omit<TextProps, "accessibilityLevel"> & {
   /**
    * `t` = text
@@ -11,13 +13,14 @@ export type TProps = Omit<TextProps, "accessibilityLevel"> & {
    * `bb` = big button
    * `h1` = etc.
    */
-  v?: "t" | "p" | "a" | "tb" | "bb" | "h1" | "h2" | "h3";
+  v?: Variants;
   customClassName?: string;
+  focusable?: boolean;
 };
 
 // RNfW
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const accessibilityRole: Record<NonNullable<TProps["v"]>, AccessibilityRole> = {
+const accessibilityRole: Record<Variants, AccessibilityRole> = {
   t: "text",
   p: "paragraph" as any,
   a: "link",
@@ -29,7 +32,7 @@ const accessibilityRole: Record<NonNullable<TProps["v"]>, AccessibilityRole> = {
 };
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
-const variants: Record<NonNullable<TProps["v"]> | "default", string> = {
+const variants: Record<Variants | "default", string> = {
   default: "text-lg text-gray-900 dark:text-gray-200 dark:antialiased",
   t: "",
   p: "mb-4",
