@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { FC, ReactNode, useState } from "react";
 import { useIntl } from "react-intl";
 import { Text, View as RnView } from "react-native";
@@ -21,10 +22,15 @@ const MainNavLink: FC<{
     x,
     keys: { ArrowUp: "previousX", ArrowDown: "nextX" },
   });
+  const isCurrent = href === useRouter().pathname;
 
   return (
     <Link href={href}>
-      <T v="a" {...keyNavigation}>
+      <T
+        v={"a"}
+        customClassName={!isCurrent && "opacity-60"}
+        {...keyNavigation}
+      >
         {children}
       </T>
     </Link>
@@ -33,18 +39,22 @@ const MainNavLink: FC<{
 
 const MainNavLinks = () => {
   const intl = useIntl();
+
   return (
-    <KeyboardNavigationProvider maxX={2}>
+    <>
       <MainNavLink href="/" x={0}>
         {intl.formatMessage({ defaultMessage: "Home", id: "ejEGdx" })}
       </MainNavLink>
       <MainNavLink href="/settings" x={1}>
         {intl.formatMessage({ defaultMessage: "Settings", id: "D3idYv" })}
       </MainNavLink>
-      <MainNavLink href="/about" x={2}>
+      <MainNavLink href="/help" x={2}>
+        {intl.formatMessage({ defaultMessage: "Help", id: "SENRqu" })}
+      </MainNavLink>
+      <MainNavLink href="/about" x={3}>
         {intl.formatMessage({ defaultMessage: "About", id: "g5pX+a" })}
       </MainNavLink>
-    </KeyboardNavigationProvider>
+    </>
   );
 };
 
@@ -76,7 +86,9 @@ export const MainNav = () => {
           position="bottom right to left"
           onRequestClose={() => setPopoverIsVisible(false)}
         >
-          <MainNavLinks />
+          <KeyboardNavigationProvider maxX={3}>
+            <MainNavLinks />
+          </KeyboardNavigationProvider>
         </Popover>
       ) : (
         // SEO
