@@ -14,7 +14,7 @@ export type TProps = Omit<TextProps, "accessibilityLevel"> & {
    * `h1` = etc.
    */
   v?: Variants;
-  customClassName?: string;
+  customClassName?: string | false;
   focusable?: boolean;
 };
 
