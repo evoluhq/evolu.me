@@ -1,3 +1,4 @@
+import { IO } from "fp-ts/IO";
 import { forwardRef } from "react";
 import { AccessibilityRole, Text as RnText, TextProps } from "react-native";
 import { Text } from "./styled";
@@ -15,8 +16,14 @@ export type TProps = Omit<TextProps, "accessibilityLevel"> & {
    */
   v?: Variants;
   customClassName?: string | false;
+  // Supported by RNfW but not by RN types.
   focusable?: boolean;
+  onClick?: IO<void>;
 };
+
+{
+  /* <a onClick={} */
+}
 
 // RNfW
 /* eslint-disable @typescript-eslint/no-explicit-any */

@@ -1,5 +1,6 @@
 import clsx from "clsx";
-import { constVoid } from "fp-ts/function";
+import { readonlyArray } from "fp-ts";
+import { constVoid, pipe } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
 import {
   FC,
@@ -12,12 +13,14 @@ import {
 import { useIntl } from "react-intl";
 import { View as RnView } from "react-native";
 import { EvoluId, useMutation } from "../lib/db";
+import { evoluIdsToLocationHash } from "../lib/evoluIdsToLocationHash";
 import { setSafeTimeout } from "../lib/setSafeTimeout";
 import {
   KeyboardNavigationContext,
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/useKeyNavigation";
+import { useLocationHashEvoluIds } from "../lib/useLocationHashEvoluIds";
 import { Button } from "./Button";
 import { Link } from "./Link";
 import { Popover } from "./Popover";
@@ -29,7 +32,8 @@ const EvoluButtonPopoverButtonOrLink: FC<{
   x: number;
   onPressOrHref: IO<void> | string;
   customClassName?: string;
-}> = ({ title, x, onPressOrHref, customClassName }) => {
+  onRequestClose?: IO<void>;
+}> = ({ title, x, onPressOrHref, customClassName, onRequestClose }) => {
   const keyNavigation = useKeyNavigation<RnView>({
     x,
     keys: { ArrowLeft: "previousX", ArrowRight: "nextX" },
@@ -37,7 +41,12 @@ const EvoluButtonPopoverButtonOrLink: FC<{
 
   return typeof onPressOrHref === "string" ? (
     <Link href={onPressOrHref}>
-      <T {...keyNavigation} v="tb" customClassName={customClassName}>
+      <T
+        {...keyNavigation}
+        onClick={onRequestClose}
+        v="tb"
+        customClassName={customClassName}
+      >
         {title}
       </T>
     </Link>
@@ -65,6 +74,13 @@ const EvoluButtonPopover: FC<{
     });
   };
 
+  const focusHref = pipe(
+    useLocationHashEvoluIds(),
+    readonlyArray.append(id),
+    evoluIdsToLocationHash,
+    (s) => `/#${s}`
+  );
+
   return (
     <Popover
       ownerRef={ownerRef}
@@ -79,8 +95,9 @@ const EvoluButtonPopover: FC<{
               id: "hsJlm7",
             })}
             x={0}
-            onPressOrHref={"/#foo"}
+            onPressOrHref={focusHref}
             customClassName="rounded-none rounded-l"
+            onRequestClose={onRequestClose}
           />
           <EvoluButtonPopoverButtonOrLink
             title="Move"

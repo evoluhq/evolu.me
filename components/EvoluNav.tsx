@@ -2,17 +2,17 @@ import { has, model } from "evolu";
 import { option, readonlyArray } from "fp-ts";
 import { pipe } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
-import { FC, memo, useMemo } from "react";
+import { FC, memo } from "react";
 import { useIntl } from "react-intl";
 import { View as RnView } from "react-native";
 import { EvoluId, useQuery } from "../lib/db";
-import { locationHashToEvoluIds } from "../lib/locationHashToEvoluIds";
+import { evoluIdsToLocationHash } from "../lib/evoluIdsToLocationHash";
 import { uniqueId } from "../lib/uniqueId";
 import {
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/useKeyNavigation";
-import { useLocationHash } from "../lib/useLocationHash";
+import { useLocationHashEvoluIds } from "../lib/useLocationHashEvoluIds";
 import { Button } from "./Button";
 import { Link } from "./Link";
 import { ScrollView } from "./styled";
@@ -35,7 +35,7 @@ const EvoluFilterLinkOrButton: FC<{
     },
   });
   return typeof hrefOrOnPress === "string" ? (
-    <Link href="/">
+    <Link href={hrefOrOnPress}>
       <T v="tb" {...keyNavigation} focusable={focusable} nativeID={nativeID}>
         {title}
       </T>
@@ -100,7 +100,12 @@ const EvoluFilterWorkaround = memo<{ ids: readonly EvoluId[] }>(
                   isLast={false}
                   nativeID={uniqueId.firstEvoluNavItem}
                   title={row.title}
-                  hrefOrOnPress="/"
+                  hrefOrOnPress={`/#${pipe(
+                    sortedRows,
+                    readonlyArray.map((i) => i.id),
+                    readonlyArray.dropRight(sortedRows.length - 1 - i),
+                    evoluIdsToLocationHash
+                  )}`}
                 />
               ))}
               <EvoluFilterLinkOrButton
@@ -113,23 +118,6 @@ const EvoluFilterWorkaround = memo<{ ids: readonly EvoluId[] }>(
                   alert("todo");
                 }}
               />
-              {/* {example.map((title, i) => (
-                <FilterButton
-                  key={title}
-                  focusable={i === x}
-                  x={i}
-                  isLast={i === example.length - 1}
-                  nativeID={
-                    i === 0
-                      ? uniqueId.firstEvoluNavItem
-                      : i === example.length - 1
-                      ? uniqueId.lastEvoluNavItem
-                      : undefined
-                  }
-                >
-                  <T v="tb">{title}</T>
-                </FilterButton>
-              ))} */}
             </>
           )}
         </KeyboardNavigationProvider>
@@ -139,8 +127,6 @@ const EvoluFilterWorkaround = memo<{ ids: readonly EvoluId[] }>(
 );
 
 export const EvoluFilter = () => {
-  const hash = useLocationHash();
-  // To have a stable reference.
-  const ids = useMemo(() => locationHashToEvoluIds(hash), [hash]);
+  const ids = useLocationHashEvoluIds();
   return <EvoluFilterWorkaround ids={ids} />;
 };
