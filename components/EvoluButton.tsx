@@ -51,7 +51,7 @@ const EvoluButtonPopoverButtonOrLink: FC<{
       </T>
     </Link>
   ) : (
-    <Button {...keyNavigation}>
+    <Button {...keyNavigation} onPress={onPressOrHref}>
       <T v="tb" customClassName={customClassName}>
         {title}
       </T>
