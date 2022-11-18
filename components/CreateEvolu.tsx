@@ -11,7 +11,7 @@ import { localStorageKeys } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
 import { setSafeTimeout } from "../lib/setSafeTimeout";
 import { uniqueId } from "../lib/uniqueId";
-import { useKeyNavigation } from "../lib/useKeyNavigation";
+import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
 import { EvoluTextInput } from "./EvoluTextInput";
 import { View } from "./styled";
 

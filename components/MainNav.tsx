@@ -6,7 +6,7 @@ import { uniqueId } from "../lib/uniqueId";
 import {
   KeyboardNavigationProvider,
   useKeyNavigation,
-} from "../lib/useKeyNavigation";
+} from "../lib/hooks/useKeyNavigation";
 import { Button } from "./Button";
 import { Link } from "./Link";
 import { Popover } from "./Popover";

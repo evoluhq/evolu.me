@@ -19,8 +19,8 @@ import {
   KeyboardNavigationContext,
   KeyboardNavigationProvider,
   useKeyNavigation,
-} from "../lib/useKeyNavigation";
-import { useLocationHashEvoluIds } from "../lib/useLocationHashEvoluIds";
+} from "../lib/hooks/useKeyNavigation";
+import { useLocationHashEvoluIds } from "../lib/hooks/useLocationHashEvoluIds";
 import { Button } from "./Button";
 import { Link } from "./Link";
 import { Popover } from "./Popover";

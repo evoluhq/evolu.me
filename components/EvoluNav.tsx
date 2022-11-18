@@ -11,8 +11,8 @@ import { uniqueId } from "../lib/uniqueId";
 import {
   KeyboardNavigationProvider,
   useKeyNavigation,
-} from "../lib/useKeyNavigation";
-import { useLocationHashEvoluIds } from "../lib/useLocationHashEvoluIds";
+} from "../lib/hooks/useKeyNavigation";
+import { useLocationHashEvoluIds } from "../lib/hooks/useLocationHashEvoluIds";
 import { Button } from "./Button";
 import { Link } from "./Link";
 import { ScrollView } from "./styled";

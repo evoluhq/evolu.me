@@ -2,7 +2,7 @@ import { either, readonlyArray, string } from "fp-ts";
 import { flow } from "fp-ts/function";
 import { eqEvoluId, EvoluId } from "./db";
 import { safeParseToEither } from "./safeParseToEither";
-import { LocationHash } from "./useLocationHash";
+import { LocationHash } from "./hooks/useLocationHash";
 
 export const locationHashToEvoluIds: (
   hash: LocationHash

@@ -9,7 +9,7 @@ import {
   focusElementWithId,
   KeyboardNavigationContext,
   useKeyNavigation,
-} from "../lib/useKeyNavigation";
+} from "../lib/hooks/useKeyNavigation";
 import { EvoluButton } from "./EvoluButton";
 import { EvoluTextInput } from "./EvoluTextInput";
 import { View } from "./styled";

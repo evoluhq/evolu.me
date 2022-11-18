@@ -1,7 +1,7 @@
 import { model } from "evolu";
 import { useDeferredValue, useMemo } from "react";
 import { useQuery } from "../lib/db";
-import { KeyboardNavigationProvider } from "../lib/useKeyNavigation";
+import { KeyboardNavigationProvider } from "../lib/hooks/useKeyNavigation";
 import { EvoluListItem } from "./EvoluListItem";
 import { View } from "./styled";
 
