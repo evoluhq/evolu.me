@@ -7,16 +7,16 @@ export const EvoluId = model.id<"evolu">();
 export type EvoluId = model.infer<typeof EvoluId>;
 export const eqEvoluId: Eq<EvoluId> = eqStrict;
 
-export const EvoluRelationId = model.id<"evoluRelation">();
-export type EvoluRelationId = model.infer<typeof EvoluRelationId>;
+export const EvoluEdgeId = model.id<"evoluEdge">();
+export type EvoluEdgeId = model.infer<typeof EvoluEdgeId>;
 
 export const { useQuery, useMutation } = createHooks({
   evolu: {
     id: EvoluId,
     title: String1000,
   },
-  evoluRelation: {
-    id: EvoluRelationId,
+  evoluEdge: {
+    id: EvoluEdgeId,
     a: EvoluId,
     b: EvoluId,
   },

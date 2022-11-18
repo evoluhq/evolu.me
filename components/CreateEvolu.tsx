@@ -14,6 +14,7 @@ import { uniqueId } from "../lib/uniqueId";
 import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
 import { EvoluTextInput } from "./EvoluTextInput";
 import { View } from "./styled";
+import { useLocationHashEvoluIds } from "../lib/hooks/useLocationHashEvoluIds";
 
 const newEvoluTitleAtom = atomWithStorage(localStorageKeys.newEvoluTitle, "");
 
@@ -21,6 +22,7 @@ export const CreateEvolu = memo(function CreateEvolu() {
   const intl = useIntl();
   const [title, setTitle] = useAtom(newEvoluTitleAtom);
   const { mutate } = useMutation();
+  const ids = useLocationHashEvoluIds();
 
   const inputKeyNavigation = useKeyNavigation<TextInput>({
     keys: {
@@ -39,7 +41,7 @@ export const CreateEvolu = memo(function CreateEvolu() {
       String1000.safeParse(title),
       safeParseToEither,
       either.match(constVoid, (title) => {
-        mutate("evolu", { title }, () => {
+        const { id } = mutate("evolu", { title }, () => {
           setTitle("");
           setSafeTimeout(() => {
             // @ts-expect-error RNfW
@@ -47,6 +49,12 @@ export const CreateEvolu = memo(function CreateEvolu() {
               block: "nearest",
             });
           });
+        });
+        ids.forEach((relatedId) => {
+          // The edge direction doesn't matter.
+          // We sort IDs to have always the same edge.
+          const sortedTuple = [id, relatedId].sort();
+          mutate("evoluEdge", { a: sortedTuple[0], b: sortedTuple[1] });
         });
       })
     );

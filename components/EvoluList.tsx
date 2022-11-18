@@ -6,6 +6,12 @@ import { EvoluListItem } from "./EvoluListItem";
 import { View } from "./styled";
 
 export const EvoluList = () => {
+  // const ids = useLocationHashEvoluIds();
+  // const { rows: foo } = useQuery((db) =>
+  //   db.selectFrom("evoluEdge").selectAll()
+  // );
+  // console.log(foo);
+
   const { rows } = useQuery((db) =>
     db
       .selectFrom("evolu")
