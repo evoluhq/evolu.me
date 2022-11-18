@@ -3,9 +3,11 @@ import { Layout } from "../components/Layout";
 import { PageTitle } from "../components/PageTitle";
 import { Text } from "../components/styled";
 import { T } from "../components/T";
-import { appDescription } from "../lib/appDescription";
+import { useAppDescription } from "../lib/hooks/useAppDescription";
 
 const About = () => {
+  const appDescription = useAppDescription();
+
   return (
     <>
       <PageTitle title="About" />
