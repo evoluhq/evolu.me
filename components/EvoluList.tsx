@@ -2,23 +2,31 @@ import { model } from "evolu";
 import { useDeferredValue, useMemo } from "react";
 import { useQuery } from "../lib/db";
 import { KeyboardNavigationProvider } from "../lib/hooks/useKeyNavigation";
+import { useLocationHashEvoluIds } from "../lib/hooks/useLocationHashEvoluIds";
 import { EvoluListItem } from "./EvoluListItem";
 import { View } from "./styled";
 
 export const EvoluList = () => {
-  // const ids = useLocationHashEvoluIds();
-  // const { rows: foo } = useQuery((db) =>
-  //   db.selectFrom("evoluEdge").selectAll()
-  // );
-  // console.log(foo);
+  const ids = useLocationHashEvoluIds();
 
-  const { rows } = useQuery((db) =>
-    db
+  const { rows } = useQuery((db) => {
+    let q = db
       .selectFrom("evolu")
       .select(["id", "title"])
       .orderBy("createdAt")
-      .where("isDeleted", "is not", model.cast(true))
-  );
+      .where("isDeleted", "is not", model.cast(true));
+    if (!ids.length) return q;
+
+    ids.forEach((relatedId) => {
+      q = q.where("id", "in", (qb) =>
+        qb.selectFrom("evoluEdge").select("a").where("b", "=", relatedId).union(
+          // @ts-expect-error https://discord.com/channels/890118421587578920/890118421587578925/1043303441772060702
+          db.selectFrom("evoluEdge").select("b").where("a", "=", relatedId)
+        )
+      );
+    });
+    return q;
+  });
 
   // Ensure the list is rendered at the same time as CreateEvolu setTitle("").
   // https://github.com/reactwg/react-18/discussions/86#discussioncomment-1345270

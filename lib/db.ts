@@ -15,6 +15,7 @@ export const { useQuery, useMutation } = createHooks({
     id: EvoluId,
     title: String1000,
   },
+  // undirected graph
   evoluEdge: {
     id: EvoluEdgeId,
     a: EvoluId,
