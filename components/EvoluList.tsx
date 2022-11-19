@@ -19,10 +19,16 @@ export const EvoluList = () => {
 
     ids.forEach((relatedId) => {
       q = q.where("id", "in", (qb) =>
-        qb.selectFrom("evoluEdge").select("a").where("b", "=", relatedId).union(
-          // @ts-expect-error https://discord.com/channels/890118421587578920/890118421587578925/1043303441772060702
-          db.selectFrom("evoluEdge").select("b").where("a", "=", relatedId)
-        )
+        qb
+          .selectFrom("evoluEdge")
+          .where("b", "=", relatedId)
+          .select("a as id")
+          .union(
+            qb
+              .selectFrom("evoluEdge")
+              .where("a", "=", relatedId)
+              .select("b as id")
+          )
       );
     });
     return q;
