@@ -140,7 +140,7 @@ export const EvoluButton = forwardRef<RnView, EvoluButton>(function EvoluButton(
           defaultMessage: "Show detail",
           id: "z7JWlo",
         })}
-        className="group -ml-2 w-9 items-center justify-center hover:brightness-90 focus:outline-none active:scale-90"
+        className="group -ml-2 w-9 transform-gpu items-center justify-center hover:brightness-90 focus:outline-none active:scale-90"
         onFocus={onFocus}
         // @ts-expect-error RNfW
         onKeyDown={onKeyDown}
@@ -150,8 +150,8 @@ export const EvoluButton = forwardRef<RnView, EvoluButton>(function EvoluButton(
       >
         <View
           className={clsx(
-            "h-3 w-3 rounded-sm bg-gray-200 transition-transform duration-100 group-focus-visible:ring-2 dark:bg-gray-800",
-            popoverIsVisible && "rotate-45 transform-gpu"
+            "h-3 w-3 transform-gpu rounded-sm bg-gray-200 transition-transform duration-100 group-focus-visible:ring-2 dark:bg-gray-800",
+            popoverIsVisible && "rotate-45"
           )}
         />
       </Pressable>
