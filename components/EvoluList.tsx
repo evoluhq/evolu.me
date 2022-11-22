@@ -15,7 +15,6 @@ export const EvoluList = () => {
       .select(["id", "title"])
       .orderBy("createdAt")
       .where("isDeleted", "is not", model.cast(true));
-    if (!ids.length) return q;
 
     ids.forEach((relatedId) => {
       q = q.where("id", "in", (qb) =>
@@ -31,6 +30,7 @@ export const EvoluList = () => {
           )
       );
     });
+
     return q;
   });
 
