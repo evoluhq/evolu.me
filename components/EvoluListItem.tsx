@@ -1,25 +1,29 @@
 import { String1000 } from "evolu";
-import { memo, useCallback, useContext, useState } from "react";
-import { useIntl } from "react-intl";
-import { TextInput as RnTextInput, View as RnView } from "react-native";
+import { IO } from "fp-ts/IO";
+import { pipe } from "fp-ts/function";
+import { memo, useContext } from "react";
+import { TextInput as RnTextInput } from "react-native";
 import { EvoluId, useMutation } from "../lib/db";
-import { setSafeTimeout } from "../lib/setSafeTimeout";
-import { uniqueId } from "../lib/uniqueId";
 import {
   focusElementWithId,
   KeyboardNavigationContext,
   useKeyNavigation,
 } from "../lib/hooks/useKeyNavigation";
-import { EvoluButton } from "./EvoluButton";
-import { EvoluTextInput } from "./EvoluTextInput";
+import { setSafeTimeout } from "../lib/setSafeTimeout";
+import { uniqueId } from "../lib/uniqueId";
+import { Link } from "./Link";
 import { View } from "./styled";
+import { T } from "./T";
+import { useLocationHashEvoluIds } from "../lib/hooks/useLocationHashEvoluIds";
+import { readonlyArray } from "fp-ts";
+import { evoluIdsToLocationHash } from "../lib/evoluIdsToLocationHash";
 
 interface EvoluListItemProps {
   row: {
     id: EvoluId;
-    title: String1000 | null;
+    title: String1000;
   };
-  focusable: false | "button" | "input";
+  focusable: boolean;
   x: number;
   isLast: boolean;
 }
@@ -30,67 +34,34 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
   x,
   isLast,
 }) {
-  const intl = useIntl();
-  const [editTitle, setEditTitle] = useState<string | null>(null);
-  const hasChange = editTitle != null && editTitle !== title;
   const { mutate } = useMutation();
-
-  const handleSubmitEditing = useCallback(() => {
-    if (hasChange) {
-      // `as String1000` because EvoluTextInput maxLength is 1000.
-      mutate("evolu", { id, title: editTitle as String1000 }, () => {
-        setEditTitle(null);
-      });
-    } else {
-      setEditTitle(null);
-    }
-  }, [editTitle, hasChange, id, mutate]);
-
-  const buttonKeyNavigation = useKeyNavigation<RnView>({
-    x,
-    keys: {
-      ArrowUp: "previousX",
-      ArrowDown: !isLast ? "nextX" : { id: uniqueId.firstEvoluNavItem },
-      ArrowRight: "nextY",
-    },
-  });
-
   const { move } = useContext(KeyboardNavigationContext);
 
-  const inputKeyNavigation = useKeyNavigation<RnTextInput>({
+  const deleteItem = (callback: IO<void>) => () => {
+    mutate("evolu", { id, isDeleted: true }, () => {
+      setSafeTimeout(callback);
+    });
+  };
+
+  const href = pipe(
+    useLocationHashEvoluIds(),
+    readonlyArray.append(id),
+    evoluIdsToLocationHash,
+    (s) => `/#${s}`
+  );
+
+  const keyNavigation = useKeyNavigation<RnTextInput>({
     x,
-    y: 1,
     keys: {
       ArrowUp: "previousX",
       ArrowDown: !isLast ? "nextX" : { id: uniqueId.createEvoluInput },
-      ArrowLeft: [
-        "previousY",
-        ({ currentTarget: { selectionStart, selectionEnd } }) =>
-          selectionStart === 0 && selectionEnd === 0,
-      ],
-      Escape: () => {
-        setEditTitle(null);
-      },
-      Backspace: [
-        () => {
-          mutate("evolu", { id, isDeleted: true }, () => {
-            if (x === 0) {
-              if (isLast) focusElementWithId(uniqueId.createEvoluInput);
-              else {
-                setSafeTimeout(() => {
-                  move("current");
-                });
-              }
-            } else move("previousX");
-          });
-        },
-        () => (hasChange ? editTitle.length === 0 : title?.length === 0),
-      ],
-      Enter: [{ id: uniqueId.createEvoluInput }, () => !hasChange],
+      Backspace: deleteItem(
+        isLast && x === 0
+          ? () => focusElementWithId(uniqueId.createEvoluInput)
+          : () => move("current")
+      ),
     },
   });
-
-  if (title == null) return null;
 
   return (
     <View
@@ -98,26 +69,17 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
       // @ts-expect-error RNfW
       accessibilityRole="listitem"
     >
-      <EvoluButton
-        {...buttonKeyNavigation}
-        focusable={focusable === "button"}
-        title={title}
-        id={id}
-      />
-      <EvoluTextInput
-        accessibilityLabel={intl.formatMessage({
-          defaultMessage: "A Evolu item",
-          id: "t2ZKjf",
-        })}
-        value={editTitle != null ? editTitle : title}
-        onChangeText={setEditTitle}
-        hasUnsavedChange={hasChange}
-        onSubmitEditing={handleSubmitEditing}
-        onBlur={handleSubmitEditing}
-        {...inputKeyNavigation}
-        focusable={focusable === "input"}
-        nativeID={isLast ? uniqueId.lastEvoluInput : undefined}
-      />
+      <Link href={href}>
+        <T
+          v="tb"
+          nativeID={isLast ? uniqueId.lastEvoluInput : undefined}
+          {...keyNavigation}
+          focusable={focusable}
+          customClassName="flex-1"
+        >
+          {title}
+        </T>
+      </Link>
     </View>
   );
 });

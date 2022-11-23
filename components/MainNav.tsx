@@ -26,11 +26,7 @@ const MainNavLink: FC<{
 
   return (
     <Link href={href}>
-      <T
-        v={"a"}
-        customClassName={!isCurrent && "opacity-60"}
-        {...keyNavigation}
-      >
+      <T v="a" customClassName={!isCurrent && "opacity-60"} {...keyNavigation}>
         {children}
       </T>
     </Link>

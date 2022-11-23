@@ -1,8 +1,7 @@
 import { ClientOnly } from "../components/ClientOnly";
-import { CreateEvolu } from "../components/CreateEvolu";
 import { EvoluList } from "../components/EvoluList";
-import { EvoluFilter } from "../components/EvoluNav";
 import { Layout } from "../components/Layout";
+import { OmniTextInput } from "../components/OmniTextInput";
 import { PageTitle } from "../components/PageTitle";
 import { View } from "../components/styled";
 
@@ -11,19 +10,19 @@ const Index = () => {
     <>
       <PageTitle />
       <Layout
-        waitForData
+        // waitForData
         footer={
           <ClientOnly>
-            <EvoluFilter />
+            <OmniTextInput />
           </ClientOnly>
         }
       >
         <View
+          // A space for scrolling.
           className="py-[132px]" // 3x44
         >
           <ClientOnly>
             <EvoluList />
-            <CreateEvolu />
           </ClientOnly>
         </View>
       </Layout>

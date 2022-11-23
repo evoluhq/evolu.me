@@ -22,16 +22,20 @@ export const Layout: FC<{
       <Head>
         <meta name="description" content={appDescription}></meta>
       </Head>
-      <View className={clsx("flex-1", isHidden && "hidden")}>
-        <ScrollView centerContent>
-          <Container>{children}</Container>
-        </ScrollView>
-        <Container>
-          <View className="flex-row py-3">
-            <View className="flex-1">{footer}</View>
-            <MainNav />
-          </View>
-        </Container>
+      <View
+        className={clsx("flex-1 justify-center py-3", isHidden && "hidden")}
+      >
+        <View className="max-h-[700px] flex-1">
+          <ScrollView centerContent>
+            <Container>{children}</Container>
+          </ScrollView>
+          <Container>
+            <View className="flex-row">{footer}</View>
+            <View className="flex-row justify-end">
+              <MainNav />
+            </View>
+          </Container>
+        </View>
       </View>
     </>
   );

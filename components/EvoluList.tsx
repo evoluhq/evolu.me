@@ -1,4 +1,4 @@
-import { model } from "evolu";
+import { has, model } from "evolu";
 import { useDeferredValue, useMemo } from "react";
 import { useQuery } from "../lib/db";
 import { KeyboardNavigationProvider } from "../lib/hooks/useKeyNavigation";
@@ -37,29 +37,29 @@ export const EvoluList = () => {
   // Ensure the list is rendered at the same time as CreateEvolu setTitle("").
   // https://github.com/reactwg/react-18/discussions/86#discussioncomment-1345270
   const deferredRows = useDeferredValue(rows);
+  const loadedRows = useMemo(
+    () => deferredRows.filter(has(["title"])),
+    [deferredRows]
+  );
 
   return useMemo(
     () => (
-      <KeyboardNavigationProvider
-        maxX={deferredRows.length - 1}
-        maxY={1}
-        initialY={1}
-      >
-        {({ x, y }) => (
+      <KeyboardNavigationProvider maxX={loadedRows.length - 1}>
+        {({ x }) => (
           <View accessibilityRole="list">
-            {deferredRows.map((row, i) => (
+            {loadedRows.map((row, i) => (
               <EvoluListItem
                 key={row.id}
                 row={row}
                 x={i}
-                focusable={i === x && (y === 0 ? "button" : "input")}
-                isLast={i === deferredRows.length - 1}
+                focusable={i === x}
+                isLast={i === loadedRows.length - 1}
               />
             ))}
           </View>
         )}
       </KeyboardNavigationProvider>
     ),
-    [deferredRows]
+    [loadedRows]
   );
 };
