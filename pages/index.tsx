@@ -10,7 +10,7 @@ const Index = () => {
     <>
       <PageTitle />
       <Layout
-        // waitForData
+        waitForData
         footer={
           <ClientOnly>
             <OmniTextInput />
