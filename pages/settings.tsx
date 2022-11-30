@@ -75,10 +75,7 @@ const Settings = () => {
 
   return (
     <Layout
-      title={intl.formatMessage({
-        defaultMessage: "Settings",
-        id: "D3idYv",
-      })}
+      title={intl.formatMessage({ defaultMessage: "Settings", id: "D3idYv" })}
     >
       <RoundedButtonWithDescription
         title={intl.formatMessage({

@@ -11,10 +11,7 @@ const About = () => {
 
   return (
     <Layout
-      title={intl.formatMessage({
-        defaultMessage: "About",
-        id: "g5pX+a",
-      })}
+      title={intl.formatMessage({ defaultMessage: "About", id: "g5pX+a" })}
       centerContent
     >
       <Text>{appDescription}</Text>
