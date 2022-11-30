@@ -11,13 +11,13 @@ import { localStorageKeys } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
 import { uniqueId } from "../lib/uniqueId";
 import { EvoluTextInput } from "./EvoluTextInput";
-import { View } from "./styled";
+import { View } from "../components/styled";
 
-const newEvoluTitleAtom = atomWithStorage(localStorageKeys.newEvoluTitle, "");
+const newNodeTitleAtom = atomWithStorage(localStorageKeys.newNodeTitle, "");
 
 export const OmniTextInput = () => {
   const intl = useIntl();
-  const [title, setTitle] = useAtom(newEvoluTitleAtom);
+  const [title, setTitle] = useAtom(newNodeTitleAtom);
   const { mutate } = useMutation();
 
   const handleSubmitEditing = () => {
@@ -25,7 +25,7 @@ export const OmniTextInput = () => {
       String1000.safeParse(title),
       safeParseToEither,
       either.match(constVoid, (title) => {
-        mutate("evolu", { title });
+        mutate("node", { title });
         setTitle("");
       })
     );
@@ -33,10 +33,10 @@ export const OmniTextInput = () => {
 
   const keyNavigation = useKeyNavigation<TextInput>({
     keys: {
-      ArrowUp: { id: uniqueId.lastEvoluInput },
+      ArrowUp: { id: uniqueId.lastNodeLink },
       ArrowDown: { id: uniqueId.mainNavButton },
       // Backspace: [
-      //   { id: uniqueId.lastEvoluInput },
+      //   { id: uniqueId.lastNodeLink },
       //   ({ currentTarget: { selectionStart, selectionEnd } }) =>
       //     selectionStart === 0 && selectionEnd === 0,
       // ],
@@ -46,7 +46,7 @@ export const OmniTextInput = () => {
   return (
     <View className="flex-1 px-2">
       <EvoluTextInput
-        nativeID={uniqueId.createEvoluInput}
+        nativeID={uniqueId.createNodeInput}
         value={title}
         {...keyNavigation}
         onChangeText={setTitle}

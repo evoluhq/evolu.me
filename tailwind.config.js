@@ -9,9 +9,7 @@ module.exports = {
   ],
   presets: [nativewind],
   important: "html",
-  theme: {
-    extend: {},
-  },
+  theme: {},
   plugins: [
     plugin(function ({ addVariant }) {
       addVariant("hocus", ["&:hover", "&:focus-visible"]);

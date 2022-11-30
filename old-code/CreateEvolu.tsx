@@ -9,27 +9,27 @@ import { TextInput } from "react-native";
 import { useMutation } from "../lib/db";
 import { localStorageKeys } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
-import { setSafeTimeout } from "../lib/setSafeTimeout";
+import { setSafeTimeout } from "./setSafeTimeout";
 import { uniqueId } from "../lib/uniqueId";
 import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
 import { EvoluTextInput } from "./EvoluTextInput";
-import { View } from "./styled";
-import { useLocationHashEvoluIds } from "../lib/hooks/useLocationHashEvoluIds";
+import { View } from "../components/styled";
+import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 
-const newEvoluTitleAtom = atomWithStorage(localStorageKeys.newEvoluTitle, "");
+const newNodeTitleAtom = atomWithStorage(localStorageKeys.newNodeTitle, "");
 
 export const CreateEvolu = memo(function CreateEvolu() {
   const intl = useIntl();
-  const [title, setTitle] = useAtom(newEvoluTitleAtom);
+  const [title, setTitle] = useAtom(newNodeTitleAtom);
   const { mutate } = useMutation();
-  const ids = useLocationHashEvoluIds();
+  const ids = useLocationHashNodeIds();
 
   const inputKeyNavigation = useKeyNavigation<TextInput>({
     keys: {
-      ArrowUp: { id: uniqueId.lastEvoluInput },
-      ArrowDown: { id: uniqueId.firstEvoluNavItem },
+      ArrowUp: { id: uniqueId.lastNodeLink },
+      ArrowDown: { id: uniqueId.firstAdjacentNodesItem },
       Backspace: [
-        { id: uniqueId.lastEvoluInput },
+        { id: uniqueId.lastNodeLink },
         ({ currentTarget: { selectionStart, selectionEnd } }) =>
           selectionStart === 0 && selectionEnd === 0,
       ],
@@ -41,7 +41,7 @@ export const CreateEvolu = memo(function CreateEvolu() {
       String1000.safeParse(title),
       safeParseToEither,
       either.match(constVoid, (title) => {
-        const { id } = mutate("evolu", { title }, () => {
+        const { id } = mutate("node", { title }, () => {
           setTitle("");
           setSafeTimeout(() => {
             // @ts-expect-error RNfW
@@ -54,7 +54,7 @@ export const CreateEvolu = memo(function CreateEvolu() {
           // The edge direction doesn't matter.
           // We sort IDs to have always the same edge.
           const sortedTuple = [id, relatedId].sort();
-          mutate("evoluEdge", { a: sortedTuple[0], b: sortedTuple[1] });
+          mutate("edge", { a: sortedTuple[0], b: sortedTuple[1] });
         });
       })
     );
@@ -64,7 +64,7 @@ export const CreateEvolu = memo(function CreateEvolu() {
     <View className="flex-row">
       <View className="w-7" />
       <EvoluTextInput
-        nativeID={uniqueId.createEvoluInput}
+        nativeID={uniqueId.createNodeInput}
         value={title}
         {...inputKeyNavigation}
         onChangeText={setTitle}

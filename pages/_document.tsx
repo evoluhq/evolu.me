@@ -3,15 +3,6 @@ import { Children } from "react";
 import { AppRegistry } from "react-native";
 import config from "../app.json";
 
-// Force Next-generated DOM elements to fill their parent's height
-const normalizeNextElements = `
-  #__next {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-`;
-
 export default class MyDocument extends Document {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -21,19 +12,15 @@ export default class MyDocument extends Document {
     // @ts-ignore
     const { getStyleElement } = AppRegistry.getApplication(config.name);
     const page = await renderPage();
-    const styles = [
-      // eslint-disable-next-line react/jsx-key
-      <style dangerouslySetInnerHTML={{ __html: normalizeNextElements }} />,
-      getStyleElement(),
-    ];
+    const styles = [getStyleElement()];
     return { ...page, styles: Children.toArray(styles) };
   }
 
   render() {
     return (
-      <Html lang="en" style={{ height: "100%" }}>
+      <Html lang="en">
         <Head />
-        <body className="h-full overflow-hidden bg-white dark:bg-black">
+        <body className="bg-white dark:bg-black">
           <Main />
           <NextScript />
         </body>

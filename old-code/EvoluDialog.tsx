@@ -1,17 +1,17 @@
 import { IO } from "fp-ts/IO";
 import { FC } from "react";
 import { useIntl } from "react-intl";
-import { EvoluId } from "../lib/db";
-import { Button } from "./Button";
-import { Dialog } from "./Dialog";
-import { Hr } from "./Hr";
+import { NodeId } from "../lib/db";
+import { Button } from "../components/Button";
+import { Dialog } from "../components/Dialog";
+import { Hr } from "../components/Hr";
 import { T } from "./T";
 
 interface EvoluDialogProps {
   onRequestClose: IO<void>;
   onDelete: IO<void>;
   title: string;
-  id: EvoluId;
+  id: NodeId;
 }
 
 export const EvoluDialog: FC<EvoluDialogProps> = ({

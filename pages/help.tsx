@@ -1,24 +1,25 @@
 import { useIntl } from "react-intl";
 import { Layout } from "../components/Layout";
-import { PageTitle } from "../components/PageTitle";
-import { T } from "../components/T";
+import { Text } from "../components/Text";
 
-const About = () => {
+const Help = () => {
   const intl = useIntl();
 
   return (
-    <>
-      <PageTitle title="Help" />
-      <Layout>
-        <T v="p">
-          {intl.formatMessage({
-            defaultMessage: "TODO: How to use it and key navigation.",
-            id: "6KOmUh",
-          })}
-        </T>
-      </Layout>
-    </>
+    <Layout
+      title={intl.formatMessage({
+        defaultMessage: "Help",
+        id: "SENRqu",
+      })}
+    >
+      <Text as="p" className="text-center">
+        {intl.formatMessage({
+          defaultMessage: "Under construction 🚧",
+          id: "Q4maGs",
+        })}
+      </Text>
+    </Layout>
   );
 };
 
-export default About;
+export default Help;

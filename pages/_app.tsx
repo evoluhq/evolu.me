@@ -1,8 +1,23 @@
 import { Provider as JotaiProvider } from "jotai";
 import type { AppProps } from "next/app";
 import Head from "next/head";
+import { FC, ReactNode } from "react";
 import { IntlProvider } from "react-intl";
+import { useAppDescription } from "../lib/hooks/useAppDescription";
 import "../styles/globals.css";
+
+// Because IntlProvider must be the parent.
+const MetaDescription: FC<{ children: ReactNode }> = ({ children }) => {
+  const appDescription = useAppDescription();
+  return (
+    <>
+      <Head>
+        <meta name="description" content={appDescription}></meta>
+      </Head>
+      {children}
+    </>
+  );
+};
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -31,7 +46,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <JotaiProvider>
         <IntlProvider locale="en">
-          <Component {...pageProps} />
+          <MetaDescription>
+            <Component {...pageProps} />
+          </MetaDescription>
         </IntlProvider>
       </JotaiProvider>
     </>

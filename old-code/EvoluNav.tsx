@@ -5,17 +5,17 @@ import { IO } from "fp-ts/IO";
 import { FC, memo } from "react";
 import { useIntl } from "react-intl";
 import { View as RnView } from "react-native";
-import { EvoluId, useQuery } from "../lib/db";
-import { evoluIdsToLocationHash } from "../lib/evoluIdsToLocationHash";
+import { NodeId, useQuery } from "../lib/db";
+import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
 import { uniqueId } from "../lib/uniqueId";
 import {
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/hooks/useKeyNavigation";
-import { useLocationHashEvoluIds } from "../lib/hooks/useLocationHashEvoluIds";
-import { Button } from "./Button";
-import { Link } from "./Link";
-import { ScrollView } from "./styled";
+import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
+import { Button } from "../components/Button";
+import { Link } from "../components/Link";
+import { ScrollView } from "../components/styled";
 import { T } from "./T";
 
 const EvoluFilterLinkOrButton: FC<{
@@ -31,7 +31,7 @@ const EvoluFilterLinkOrButton: FC<{
     keys: {
       ArrowRight: !isLast ? "nextX" : { id: uniqueId.mainNavButton },
       ArrowLeft: "previousX",
-      ArrowUp: { id: uniqueId.createEvoluInput },
+      ArrowUp: { id: uniqueId.createNodeInput },
     },
   });
   return typeof hrefOrOnPress === "string" ? (
@@ -55,13 +55,13 @@ const EvoluFilterLinkOrButton: FC<{
 // useLocationHash uses useSyncExternalStore which can dispatch
 // the same value twice.
 // https://github.com/facebook/react/issues/25191#issuecomment-1244805920
-const EvoluFilterWorkaround = memo<{ ids: readonly EvoluId[] }>(
+const EvoluFilterWorkaround = memo<{ ids: readonly NodeId[] }>(
   function EvoluFilterWorkaround({ ids }) {
     const intl = useIntl();
 
     const { rows } = useQuery((db) =>
       db
-        .selectFrom("evolu")
+        .selectFrom("node")
         .select(["id", "title"])
         .where("isDeleted", "is not", model.cast(true))
         .where("id", "in", ids)
@@ -85,7 +85,7 @@ const EvoluFilterWorkaround = memo<{ ids: readonly EvoluId[] }>(
                 focusable={x === 0}
                 x={0}
                 isLast={false}
-                nativeID={uniqueId.firstEvoluNavItem}
+                nativeID={uniqueId.firstAdjacentNodesItem}
                 title={intl.formatMessage({
                   defaultMessage: "All",
                   id: "zQvVDJ",
@@ -98,13 +98,13 @@ const EvoluFilterWorkaround = memo<{ ids: readonly EvoluId[] }>(
                   focusable={x === i + 1}
                   x={i + 1}
                   isLast={false}
-                  nativeID={uniqueId.firstEvoluNavItem}
+                  nativeID={uniqueId.firstAdjacentNodesItem}
                   title={row.title}
                   hrefOrOnPress={`/#${pipe(
                     sortedRows,
                     readonlyArray.map((i) => i.id),
                     readonlyArray.dropRight(sortedRows.length - 1 - i),
-                    evoluIdsToLocationHash
+                    nodeIdsToLocationHash
                   )}`}
                 />
               ))}
@@ -112,7 +112,7 @@ const EvoluFilterWorkaround = memo<{ ids: readonly EvoluId[] }>(
                 focusable={x === sortedRows.length + 1}
                 x={sortedRows.length + 1}
                 isLast={true}
-                nativeID={uniqueId.lastEvoluNavItem}
+                nativeID={uniqueId.lastAdjacentNodesItem}
                 title="…"
                 hrefOrOnPress={() => {
                   alert("todo");
@@ -127,6 +127,6 @@ const EvoluFilterWorkaround = memo<{ ids: readonly EvoluId[] }>(
 );
 
 export const EvoluFilter = () => {
-  const ids = useLocationHashEvoluIds();
+  const ids = useLocationHashNodeIds();
   return <EvoluFilterWorkaround ids={ids} />;
 };

@@ -1,7 +1,8 @@
+import clsx from "clsx";
 import { IO } from "fp-ts/IO";
 import { forwardRef } from "react";
 import { AccessibilityRole, Text as RnText, TextProps } from "react-native";
-import { Text } from "./styled";
+import { Text } from "../components/styled";
 
 type Variants = "t" | "p" | "a" | "tb" | "bb" | "h1" | "h2" | "h3";
 
@@ -20,10 +21,6 @@ export type TProps = Omit<TextProps, "accessibilityLevel"> & {
   focusable?: boolean;
   onClick?: IO<void>;
 };
-
-{
-  /* <a onClick={} */
-}
 
 // RNfW
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -65,11 +62,7 @@ export const T = forwardRef<RnText, TProps>(function T(
       selectable={v !== "tb" && v !== "bb"}
       {...props}
       ref={ref}
-      className={`
-        ${variants.default}
-        ${variants[v]}
-        ${customClassName}
-      `}
+      className={clsx(variants.default, variants[v], customClassName)}
     />
   );
 });

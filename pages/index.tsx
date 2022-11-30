@@ -1,15 +1,9 @@
-import { ClientOnly } from "../components/ClientOnly";
-import { EvoluList } from "../components/EvoluList";
 import { Layout } from "../components/Layout";
-import { OmniTextInput } from "../components/OmniTextInput";
-import { PageTitle } from "../components/PageTitle";
-import { View } from "../components/styled";
 
 const Index = () => {
   return (
-    <>
-      <PageTitle />
-      <Layout
+    <Layout title="">
+      {/* <Layout
         waitForData
         footer={
           <ClientOnly>
@@ -25,8 +19,8 @@ const Index = () => {
             <EvoluList />
           </ClientOnly>
         </View>
-      </Layout>
-    </>
+      </Layout> */}
+    </Layout>
   );
 };
 

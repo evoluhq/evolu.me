@@ -1,10 +1,7 @@
-import { FC, ReactNode } from "react";
-import { View } from "./styled";
+import { styled } from "nativewind";
+import { View } from "react-native";
 
-export const Ring: FC<{ children: ReactNode }> = ({ children }) => {
-  return (
-    <View className="rounded bg-white ring-1 ring-gray-300 dark:bg-black dark:ring-gray-800">
-      {children}
-    </View>
-  );
-};
+export const Ring = styled(
+  View,
+  "rounded bg-white ring-1 ring-gray-300 dark:bg-black dark:ring-gray-800"
+);

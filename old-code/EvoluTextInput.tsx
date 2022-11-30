@@ -1,7 +1,7 @@
 import { clsx } from "clsx";
 import { forwardRef, KeyboardEvent } from "react";
 import { TextInput as RnTextInput, TextInputProps } from "react-native";
-import { TextInput, View } from "./styled";
+import { TextInput, View } from "../components/styled";
 
 export const EvoluTextInput = forwardRef<
   RnTextInput,

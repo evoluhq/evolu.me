@@ -12,19 +12,19 @@ import {
 } from "react";
 import { useIntl } from "react-intl";
 import { View as RnView } from "react-native";
-import { EvoluId, useMutation } from "../lib/db";
-import { evoluIdsToLocationHash } from "../lib/evoluIdsToLocationHash";
-import { setSafeTimeout } from "../lib/setSafeTimeout";
+import { NodeId, useMutation } from "../lib/db";
+import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
+import { setSafeTimeout } from "./setSafeTimeout";
 import {
   KeyboardNavigationContext,
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/hooks/useKeyNavigation";
-import { useLocationHashEvoluIds } from "../lib/hooks/useLocationHashEvoluIds";
-import { Button } from "./Button";
-import { Link } from "./Link";
-import { Popover } from "./Popover";
-import { Pressable, View } from "./styled";
+import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
+import { Button } from "../components/Button";
+import { Link } from "../components/Link";
+import { Popover } from "../components/Popover";
+import { Pressable, View } from "../components/styled";
 import { T } from "./T";
 
 const EvoluButtonPopoverButtonOrLink: FC<{
@@ -60,7 +60,7 @@ const EvoluButtonPopoverButtonOrLink: FC<{
 };
 
 const EvoluButtonPopover: FC<{
-  id: EvoluId;
+  id: NodeId;
   onRequestClose: IO<void>;
   ownerRef: ForwardedRef<RnView>;
 }> = ({ id, onRequestClose, ownerRef }) => {
@@ -69,22 +69,22 @@ const EvoluButtonPopover: FC<{
   const { move } = useContext(KeyboardNavigationContext);
 
   const handleDeletePress = () => {
-    mutate("evolu", { id, isDeleted: true }, () => {
+    mutate("node", { id, isDeleted: true }, () => {
       setSafeTimeout(() => move("current"));
     });
   };
 
   const focusHref = pipe(
-    useLocationHashEvoluIds(),
+    useLocationHashNodeIds(),
     readonlyArray.append(id),
-    evoluIdsToLocationHash,
+    nodeIdsToLocationHash,
     (s) => `/#${s}`
   );
 
   return (
     <Popover
       ownerRef={ownerRef}
-      position="bottom right to right"
+      position="bottom left to bottom right"
       onRequestClose={onRequestClose}
     >
       <View className="flex-row">
@@ -121,7 +121,7 @@ export interface EvoluButton {
   focusable: boolean;
   onFocus: IO<void>;
   onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
-  id: EvoluId;
+  id: NodeId;
   title: string;
 }
 

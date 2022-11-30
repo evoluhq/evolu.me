@@ -3,22 +3,22 @@ import { Eq, eqStrict } from "fp-ts/Eq";
 
 // config.log = true;
 
-export const EvoluId = model.id<"evolu">();
-export type EvoluId = model.infer<typeof EvoluId>;
-export const eqEvoluId: Eq<EvoluId> = eqStrict;
+export const NodeId = model.id<"Node">();
+export type NodeId = model.infer<typeof NodeId>;
+export const eqNodeId: Eq<NodeId> = eqStrict;
 
-export const EvoluEdgeId = model.id<"evoluEdge">();
-export type EvoluEdgeId = model.infer<typeof EvoluEdgeId>;
+export const EdgeId = model.id<"Edge">();
+export type EdgeId = model.infer<typeof EdgeId>;
 
 export const { useQuery, useMutation } = createHooks({
-  evolu: {
-    id: EvoluId,
+  node: {
+    id: NodeId,
     title: String1000,
   },
   // undirected graph
-  evoluEdge: {
-    id: EvoluEdgeId,
-    a: EvoluId,
-    b: EvoluId,
+  edge: {
+    id: EdgeId,
+    a: NodeId,
+    b: NodeId,
   },
 });

@@ -13,7 +13,10 @@ import { Ring } from "./Ring";
 
 export type PopoverProps = {
   ownerRef: ForwardedRef<View>;
-  position: "bottom right to left" | "bottom right to right";
+  position:
+    | "bottom right to bottom right"
+    | "bottom left to bottom right"
+    | "top right to top right";
   onRequestClose: IO<void>;
   children: ReactNode;
 };
@@ -49,16 +52,28 @@ export const Popover: FC<PopoverProps> = ({
 
     const handleChange = () => {
       const ownerRect = ownerEl.getBoundingClientRect();
-      const xy =
-        position === "bottom right to left"
-          ? {
+
+      const getXY = (): XY => {
+        switch (position) {
+          case "bottom right to bottom right":
+            return {
               x: ownerRect.left - viewEl.offsetWidth + ownerRect.width,
               y: ownerRect.top - viewEl.offsetHeight + ownerRect.height,
-            }
-          : {
+            };
+          case "bottom left to bottom right":
+            return {
               x: ownerRect.left + ownerRect.width,
               y: ownerRect.top - viewEl.offsetHeight + ownerRect.height,
             };
+          case "top right to top right":
+            return {
+              x: ownerRect.left - viewEl.offsetWidth + ownerRect.width,
+              y: ownerRect.top - ownerRect.height + ownerRect.height,
+            };
+        }
+      };
+
+      const xy = getXY();
       setXY((previous) => {
         if (previous && xy.x === previous.x && xy.y === previous.y)
           return previous;
@@ -79,15 +94,15 @@ export const Popover: FC<PopoverProps> = ({
 
   return (
     <Modal transparent onRequestClose={onRequestClose} visible>
-      <View
+      <Ring
         ref={viewRef}
         style={{
           position: "absolute",
           ...(!xy ? { opacity: 0 } : { left: xy.x, top: xy.y }),
         }}
       >
-        <Ring>{children}</Ring>
-      </View>
+        {children}
+      </Ring>
       <CloseButtonLayer onPress={onRequestClose} />
     </Modal>
   );

@@ -1,38 +1,34 @@
 /* eslint-disable formatjs/no-literal-string-in-jsx */
+import { useIntl } from "react-intl";
 import { Layout } from "../components/Layout";
-import { PageTitle } from "../components/PageTitle";
-import { Text } from "../components/styled";
-import { T } from "../components/T";
+import { View } from "../components/styled";
+import { Text } from "../components/Text";
 import { useAppDescription } from "../lib/hooks/useAppDescription";
 
 const About = () => {
+  const intl = useIntl();
   const appDescription = useAppDescription();
 
   return (
-    <>
-      <PageTitle title="About" />
-      <Layout>
-        <T v="p">{appDescription}</T>
-        <T v="p">
-          <Text
-            // @ts-expect-errors RNfW
-            href="https://twitter.com/steida"
-            hrefAttrs={{ target: "blank" }}
-            className="opacity-60"
-          >
-            Twitter
-          </Text>{" "}
-          <Text
-            // @ts-expect-errors RNfW
-            href="https://github.com/evoluhq/evolu.me"
-            hrefAttrs={{ target: "blank" }}
-            className="opacity-60"
-          >
-            GitHub
-          </Text>
-        </T>
-      </Layout>
-    </>
+    <Layout
+      title={intl.formatMessage({
+        defaultMessage: "About",
+        id: "g5pX+a",
+      })}
+    >
+      <Text as="p">{appDescription}</Text>
+      <View className="flex-row">
+        <Text
+          as="a"
+          // @ts-expect-errors RNfW
+          href="https://github.com/evoluhq/evolu.me"
+          hrefAttrs={{ target: "blank" }}
+          className="opacity-60"
+        >
+          GitHub
+        </Text>
+      </View>
+    </Layout>
   );
 };
 

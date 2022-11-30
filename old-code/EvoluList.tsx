@@ -2,16 +2,16 @@ import { has, model } from "evolu";
 import { useDeferredValue, useMemo } from "react";
 import { useQuery } from "../lib/db";
 import { KeyboardNavigationProvider } from "../lib/hooks/useKeyNavigation";
-import { useLocationHashEvoluIds } from "../lib/hooks/useLocationHashEvoluIds";
+import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { EvoluListItem } from "./EvoluListItem";
-import { View } from "./styled";
+import { View } from "../components/styled";
 
 export const EvoluList = () => {
-  const ids = useLocationHashEvoluIds();
+  const ids = useLocationHashNodeIds();
 
   const { rows } = useQuery((db) => {
     let q = db
-      .selectFrom("evolu")
+      .selectFrom("node")
       .select(["id", "title"])
       .orderBy("createdAt")
       .where("isDeleted", "is not", model.cast(true));
@@ -19,14 +19,11 @@ export const EvoluList = () => {
     ids.forEach((relatedId) => {
       q = q.where("id", "in", (qb) =>
         qb
-          .selectFrom("evoluEdge")
+          .selectFrom("edge")
           .where("b", "=", relatedId)
           .select("a as id")
           .union(
-            qb
-              .selectFrom("evoluEdge")
-              .where("a", "=", relatedId)
-              .select("b as id")
+            qb.selectFrom("edge").where("a", "=", relatedId).select("b as id")
           )
       );
     });

@@ -7,7 +7,7 @@ import { CloseButtonLayer } from "./CloseButtonLayer";
 import { Container } from "./Container";
 import { Ring } from "./Ring";
 import { Pressable, ScrollView, View } from "./styled";
-import { T } from "./T";
+import { Text } from "./Text";
 
 export type DialogProps = {
   title: string;
@@ -32,20 +32,18 @@ export const Dialog: FC<DialogProps> = ({
     <Modal transparent onRequestClose={onRequestClose} visible>
       <ScrollView centerContent>
         <Container>
-          <View className="py-4 px-1">
-            <Ring>
-              <View className="p-3">
-                <T v="h1">{title}</T>
-                {children}
-                <View className="flex-row gap-2">
-                  <Button onPress={onRequestClose}>
-                    <T v="bb">{closeMessage}</T>
-                  </Button>
-                  {buttons}
-                </View>
+          <Ring className="py-4 px-1">
+            <View className="p-3">
+              <Text as="h1">{title}</Text>
+              {children}
+              <View className="flex-row gap-2">
+                <Button onPress={onRequestClose}>
+                  <Text as="roundedButton">{closeMessage}</Text>
+                </Button>
+                {buttons}
               </View>
-            </Ring>
-          </View>
+            </View>
+          </Ring>
         </Container>
         <CloseButtonLayer withBg onPress={onRequestClose} />
         <Pressable

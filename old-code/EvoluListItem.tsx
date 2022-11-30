@@ -3,24 +3,24 @@ import { IO } from "fp-ts/IO";
 import { pipe } from "fp-ts/function";
 import { memo, useContext } from "react";
 import { TextInput as RnTextInput } from "react-native";
-import { EvoluId, useMutation } from "../lib/db";
+import { NodeId, useMutation } from "../lib/db";
 import {
   focusElementWithId,
   KeyboardNavigationContext,
   useKeyNavigation,
 } from "../lib/hooks/useKeyNavigation";
-import { setSafeTimeout } from "../lib/setSafeTimeout";
+import { setSafeTimeout } from "./setSafeTimeout";
 import { uniqueId } from "../lib/uniqueId";
-import { Link } from "./Link";
-import { View } from "./styled";
+import { Link } from "../components/Link";
+import { View } from "../components/styled";
 import { T } from "./T";
-import { useLocationHashEvoluIds } from "../lib/hooks/useLocationHashEvoluIds";
+import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { readonlyArray } from "fp-ts";
-import { evoluIdsToLocationHash } from "../lib/evoluIdsToLocationHash";
+import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
 
 interface EvoluListItemProps {
   row: {
-    id: EvoluId;
+    id: NodeId;
     title: String1000;
   };
   focusable: boolean;
@@ -38,15 +38,15 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
   const { move } = useContext(KeyboardNavigationContext);
 
   const deleteItem = (callback: IO<void>) => () => {
-    mutate("evolu", { id, isDeleted: true }, () => {
+    mutate("node", { id, isDeleted: true }, () => {
       setSafeTimeout(callback);
     });
   };
 
   const href = pipe(
-    useLocationHashEvoluIds(),
+    useLocationHashNodeIds(),
     readonlyArray.append(id),
-    evoluIdsToLocationHash,
+    nodeIdsToLocationHash,
     (s) => `/#${s}`
   );
 
@@ -54,10 +54,10 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
     x,
     keys: {
       ArrowUp: "previousX",
-      ArrowDown: !isLast ? "nextX" : { id: uniqueId.createEvoluInput },
+      ArrowDown: !isLast ? "nextX" : { id: uniqueId.createNodeInput },
       Backspace: deleteItem(
         isLast && x === 0
-          ? () => focusElementWithId(uniqueId.createEvoluInput)
+          ? () => focusElementWithId(uniqueId.createNodeInput)
           : () => move("current")
       ),
     },
@@ -72,7 +72,7 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
       <Link href={href}>
         <T
           v="tb"
-          nativeID={isLast ? uniqueId.lastEvoluInput : undefined}
+          nativeID={isLast ? uniqueId.lastNodeLink : undefined}
           {...keyNavigation}
           focusable={focusable}
           customClassName="flex-1"

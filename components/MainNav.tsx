@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { FC, ReactNode, useState } from "react";
 import { useIntl } from "react-intl";
-import { Text, View as RnView } from "react-native";
+import { Text as RnText, View as RnView } from "react-native";
 import { uniqueId } from "../lib/uniqueId";
 import {
   KeyboardNavigationProvider,
@@ -11,14 +11,14 @@ import { Button } from "./Button";
 import { Link } from "./Link";
 import { Popover } from "./Popover";
 import { View } from "./styled";
-import { T } from "./T";
+import { Text } from "../components/Text";
 
 const MainNavLink: FC<{
   children: ReactNode;
   href: string;
   x: number;
 }> = ({ children, href, x }) => {
-  const keyNavigation = useKeyNavigation<Text>({
+  const keyNavigation = useKeyNavigation<RnText>({
     x,
     keys: { ArrowUp: "previousX", ArrowDown: "nextX" },
   });
@@ -26,9 +26,9 @@ const MainNavLink: FC<{
 
   return (
     <Link href={href}>
-      <T v="a" customClassName={!isCurrent && "opacity-60"} {...keyNavigation}>
+      <Text as="a" className={isCurrent ? "" : "opacity-60"} {...keyNavigation}>
         {children}
-      </T>
+      </Text>
     </Link>
   );
 };
@@ -60,8 +60,8 @@ export const MainNav = () => {
 
   const buttonKeyNavigation = useKeyNavigation<RnView>({
     keys: {
-      ArrowLeft: { id: uniqueId.lastEvoluNavItem },
-      ArrowUp: { id: uniqueId.createEvoluInput },
+      ArrowLeft: { id: uniqueId.lastAdjacentNodesItem },
+      ArrowUp: { id: uniqueId.createNodeInput },
     },
   });
 
@@ -72,14 +72,14 @@ export const MainNav = () => {
         {...buttonKeyNavigation}
         nativeID={uniqueId.mainNavButton}
       >
-        <T v="tb">
+        <Text as="button">
           {intl.formatMessage({ defaultMessage: "⋮", id: "Z/OE6b" })}
-        </T>
+        </Text>
       </Button>
       {popoverIsVisible ? (
         <Popover
           ownerRef={buttonKeyNavigation.ref}
-          position="bottom right to left"
+          position="top right to top right"
           onRequestClose={() => setPopoverIsVisible(false)}
         >
           <KeyboardNavigationProvider maxX={3}>
