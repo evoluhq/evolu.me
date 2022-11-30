@@ -15,12 +15,14 @@ const RoundedButtonWithDescription: FC<
 > = ({ title, description, ...props }) => {
   return (
     <View className="mb-3">
-      <View className="mb-1 flex-row">
+      <View className="flex-row">
         <Button {...props}>
           <Text as="roundedButton">{title}</Text>
         </Button>
       </View>
-      <Text as="p">{description}</Text>
+      <Text as="p" size="small" className="p-2">
+        {description}
+      </Text>
     </View>
   );
 };

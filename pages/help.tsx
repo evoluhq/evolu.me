@@ -11,8 +11,9 @@ const Help = () => {
         defaultMessage: "Help",
         id: "SENRqu",
       })}
+      centerContent
     >
-      <Text as="p" className="text-center">
+      <Text className="bg-red-700 text-center">
         {intl.formatMessage({
           defaultMessage: "Under construction 🚧",
           id: "Q4maGs",

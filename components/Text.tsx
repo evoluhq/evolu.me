@@ -3,10 +3,11 @@ import { Text as RnText } from "react-native";
 
 export const Text = styled(
   RnText,
-  "text-lg text-gray-900 dark:text-gray-200 dark:antialiased",
+  "text-gray-900 dark:text-gray-200 dark:antialiased",
   {
     variants: {
       as: {
+        t: "",
         p: "mb-4",
         a: "py-2 px-3 focus:outline-none hocus:underline",
         button:
@@ -17,9 +18,14 @@ export const Text = styled(
         h2: "mb-4 mt-2 text-2xl",
         h3: "mb-4 mt-2 text-xl",
       },
+      size: {
+        medium: "text-lg",
+        small: "text-base",
+      },
     },
     defaultProps: {
-      as: "p",
+      as: "t",
+      size: "medium",
     },
   }
 );

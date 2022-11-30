@@ -15,8 +15,9 @@ const About = () => {
         defaultMessage: "About",
         id: "g5pX+a",
       })}
+      centerContent
     >
-      <Text as="p">{appDescription}</Text>
+      <Text>{appDescription}</Text>
       <View className="flex-row">
         <Text
           as="a"
