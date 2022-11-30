@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@formatjs/cli': ^5.1.3
+  '@formatjs/cli': ^5.1.4
   '@next/bundle-analyzer': ^13.0.5
   '@types/node': ^18.11.9
   '@types/react': ^18.0.25
@@ -10,14 +10,14 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.45.0
   '@typescript-eslint/parser': ^5.45.0
   autoprefixer: ^10.4.13
-  babel-plugin-formatjs: ^10.3.31
+  babel-plugin-formatjs: ^10.3.32
   babel-plugin-module-resolver: ^4.1.0
   babel-plugin-react-native-web: ^0.18.10
   clsx: ^1.2.1
   cross-env: ^7.0.3
   eslint: ^8.28.0
   eslint-config-next: ^13.0.5
-  eslint-plugin-formatjs: ^4.3.4
+  eslint-plugin-formatjs: ^4.3.5
   evolu: ^0.5.1
   fp-ts: ^2.13.1
   jotai: ^1.10.0
@@ -29,7 +29,7 @@ specifiers:
   prettier-plugin-tailwindcss: ^0.2.0
   react: ^18.2.0
   react-dom: ^18.2.0
-  react-intl: ^6.2.1
+  react-intl: ^6.2.2
   react-native-web: ^0.18.10
   tailwindcss: ^3.2.4
   typescript: ^4.9.3
@@ -41,18 +41,18 @@ dependencies:
   cross-env: 7.0.3
   evolu: 0.5.1_v5r4n2jb3k2g2w5cerv7q4c2x4
   fp-ts: 2.13.1
-  jotai: 1.10.0_zavbqmrropwrojvx6ojaa4s7im
+  jotai: 1.10.0_otspjrsspon4ofp37rshhlhp2y
   nativewind: 3.0.0-next.31_dpx3ezyh7vrtb4aufvxbx6obrq
-  next: 13.0.5_672uxklweod7ene3nqtsh262ca
+  next: 13.0.5_qtpcxnaaarbm4ws7ughq6oxfve
   openpgp: 5.5.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
-  react-intl: 6.2.1_eetduzquwu67aqoq5644t6dxzu
+  react-intl: 6.2.2_eetduzquwu67aqoq5644t6dxzu
   react-native-web: 0.18.10_biqbaboplfbrettd7655fr4n2y
   zod: 3.19.1
 
 devDependencies:
-  '@formatjs/cli': 5.1.3
+  '@formatjs/cli': 5.1.4
   '@types/node': 18.11.9
   '@types/react': 18.0.25
   '@types/react-dom': 18.0.9
@@ -60,12 +60,12 @@ devDependencies:
   '@typescript-eslint/eslint-plugin': 5.45.0_czs5uoqkd3podpy6vgtsxfc7au
   '@typescript-eslint/parser': 5.45.0_hsf322ms6xhhd4b5ne6lb74y4a
   autoprefixer: 10.4.13_postcss@8.4.19
-  babel-plugin-formatjs: 10.3.31
+  babel-plugin-formatjs: 10.3.32
   babel-plugin-module-resolver: 4.1.0
   babel-plugin-react-native-web: 0.18.10
   eslint: 8.28.0
   eslint-config-next: 13.0.5_hsf322ms6xhhd4b5ne6lb74y4a
-  eslint-plugin-formatjs: 4.3.4_eslint@8.28.0
+  eslint-plugin-formatjs: 4.3.5_eslint@8.28.0
   postcss: 8.4.19
   prettier: 2.8.0
   prettier-plugin-tailwindcss: 0.2.0_prettier@2.8.0
@@ -141,6 +141,7 @@ packages:
       semver: 6.3.0
     transitivePeerDependencies:
       - supports-color
+    dev: true
 
   /@babel/generator/7.20.5:
     resolution: {integrity: sha512-jl7JY2Ykn9S0yj4DQP82sYvPU+T3g0HFcWTqDLqiuA9tGRNIj9VfbtXGAYTTkyNEnQk1jkMGOdYka8aG/lulCA==}
@@ -174,6 +175,7 @@ packages:
       '@babel/helper-validator-option': 7.18.6
       browserslist: 4.21.4
       semver: 6.3.0
+    dev: true
 
   /@babel/helper-environment-visitor/7.18.9:
     resolution: {integrity: sha512-3r/aACDJ3fhQ/EVgFy0hpj8oHyHpQc+LPtJoY9SzTThAsStm4Ptegq92vqKoE3vD706ZVFWITnMnxucw+S9Ipg==}
@@ -405,8 +407,8 @@ packages:
     resolution: {integrity: sha512-Doz2bfiPndXYFPMRwPyGa1k5QaKDVpY806UJj570epIiMzWaYyCtobasyfC++qfIXVb5Ocy7r3tP9d62hAQ7IQ==}
     dev: false
 
-  /@formatjs/cli/5.1.3:
-    resolution: {integrity: sha512-g8QW6nUNTxO3Nk/l1BCUC5iy3kAL5+YQbePEovs9W/24+Kzihr5l9qQBz4n/OesQIQXt9Uzb9r9PSSn7b25+Pw==}
+  /@formatjs/cli/5.1.4:
+    resolution: {integrity: sha512-N9EiLc16pBf7E90ZqiFiYeiNLr6BpU3YSsy70WBU/cIvLpXq1fYs6p9IZz/iYM92bIn7ix81I+42Q3tfqvMejA==}
     engines: {node: '>= 16.5.0'}
     hasBin: true
     peerDependencies:
@@ -416,8 +418,8 @@ packages:
         optional: true
     dev: true
 
-  /@formatjs/ecma402-abstract/1.13.0:
-    resolution: {integrity: sha512-CQ8Ykd51jYD1n05dtoX6ns6B9n/+6ZAxnWUAonvHC4kkuAemROYBhHkEB4tm1uVrRlE7gLDqXkAnY51Y0pRCWQ==}
+  /@formatjs/ecma402-abstract/1.14.0:
+    resolution: {integrity: sha512-o1RDlkxcLzi0ZcoaovQooZC+0M3Ox0/DKZ+YTdUU9DHgWFeEZbYXEqM9k7JHdN7VyRi4wprTVPqrK+zR/9mo8Q==}
     dependencies:
       '@formatjs/intl-localematcher': 0.2.31
       tslib: 2.4.0
@@ -428,31 +430,31 @@ packages:
       tslib: 2.4.0
     dev: false
 
-  /@formatjs/icu-messageformat-parser/2.1.10:
-    resolution: {integrity: sha512-KkRMxhifWkRC45dhM9tqm0GXbb6NPYTGVYY3xx891IKc6p++DQrZTnmkVSNNO47OEERLfuP2KkPFPJBuu8z/wg==}
+  /@formatjs/icu-messageformat-parser/2.1.11:
+    resolution: {integrity: sha512-g2OET65sDI0F3RUNXcyQPlxn+h+zQ6RkFIZZnOo70LtMEHTyDbgaMvauRlkBX52kqEe9eI99I3RaLvaM8pEcEg==}
     dependencies:
-      '@formatjs/ecma402-abstract': 1.13.0
-      '@formatjs/icu-skeleton-parser': 1.3.14
+      '@formatjs/ecma402-abstract': 1.14.0
+      '@formatjs/icu-skeleton-parser': 1.3.15
       tslib: 2.4.0
 
-  /@formatjs/icu-skeleton-parser/1.3.14:
-    resolution: {integrity: sha512-7bv60HQQcBb3+TSj+45tOb/CHV5z1hOpwdtS50jsSBXfB+YpGhnoRsZxSRksXeCxMy6xn6tA6VY2601BrrK+OA==}
+  /@formatjs/icu-skeleton-parser/1.3.15:
+    resolution: {integrity: sha512-/x7qBaswEGLEBm0vY8HmYy764py0FmD+pSzBNH5llgp1d0NFAIo+lTfsKFxPDk+iNNnL3f7ZH0KOyUtAResZ5Q==}
     dependencies:
-      '@formatjs/ecma402-abstract': 1.13.0
+      '@formatjs/ecma402-abstract': 1.14.0
       tslib: 2.4.0
 
-  /@formatjs/intl-displaynames/6.1.4:
-    resolution: {integrity: sha512-sEbziGLsWQo6nA8ZUBcsDRlZzPg+uMVjDmbTalgGqRWLbdXuxMldTYdaCK+UptyJhkmNVM/erz3csTiyqamXHQ==}
+  /@formatjs/intl-displaynames/6.2.0:
+    resolution: {integrity: sha512-gZCZBi7zYzkloVlzjNSS5XAZ0LNx51xHSzZhkqtkOnh1sWGP2Ciz/IcQQ/81SNzIk0kSCHx0n/VrisO7RLHkZQ==}
     dependencies:
-      '@formatjs/ecma402-abstract': 1.13.0
+      '@formatjs/ecma402-abstract': 1.14.0
       '@formatjs/intl-localematcher': 0.2.31
       tslib: 2.4.0
     dev: false
 
-  /@formatjs/intl-listformat/7.1.3:
-    resolution: {integrity: sha512-rs0Kxl78PeRCedx2cmFoBqcun2Kf0bCQrF8ycna54sfePpDhMskvODWeI4G/xBioW01FjK7CJSvtJJ87hrr79A==}
+  /@formatjs/intl-listformat/7.1.4:
+    resolution: {integrity: sha512-hSUbhmNEcjtVcN7IkSpkFlectb3354sk+0RMa30H16LvBuLL+uXOt3RlwEWEDG7DjU5bcDqMuEu3fvoCKHpSvQ==}
     dependencies:
-      '@formatjs/ecma402-abstract': 1.13.0
+      '@formatjs/ecma402-abstract': 1.14.0
       '@formatjs/intl-localematcher': 0.2.31
       tslib: 2.4.0
     dev: false
@@ -462,33 +464,33 @@ packages:
     dependencies:
       tslib: 2.4.0
 
-  /@formatjs/intl/2.5.1_typescript@4.9.3:
-    resolution: {integrity: sha512-P01ZGuDDlcN8bHHBCEHspJPvs8WJeO8SXlUIcVGWhS3IN5vUgz0QKUXcKBFnJbEHhONJ+azlObVwvlDKsE+kUg==}
+  /@formatjs/intl/2.6.0_typescript@4.9.3:
+    resolution: {integrity: sha512-pMrNpqNGj7QnQewIBe8Dh52teZ24hQpP4w4S4UzB0BZmTJ3KkIi05oJoL2Cagzsli4j1pXR0V39LD7+lnWhgCg==}
     peerDependencies:
       typescript: ^4.7
     peerDependenciesMeta:
       typescript:
         optional: true
     dependencies:
-      '@formatjs/ecma402-abstract': 1.13.0
+      '@formatjs/ecma402-abstract': 1.14.0
       '@formatjs/fast-memoize': 1.2.6
-      '@formatjs/icu-messageformat-parser': 2.1.10
-      '@formatjs/intl-displaynames': 6.1.4
-      '@formatjs/intl-listformat': 7.1.3
-      intl-messageformat: 10.2.1
+      '@formatjs/icu-messageformat-parser': 2.1.11
+      '@formatjs/intl-displaynames': 6.2.0
+      '@formatjs/intl-listformat': 7.1.4
+      intl-messageformat: 10.2.2
       tslib: 2.4.0
       typescript: 4.9.3
     dev: false
 
-  /@formatjs/ts-transformer/3.11.1:
-    resolution: {integrity: sha512-mZw3cgok/4zdqR3KAKayncy7IvTypwzJeENq6N+Tcx7rc2NtyihfPFVDn2W2AGRjVH9GRFibkNiu4nVI9xF0Og==}
+  /@formatjs/ts-transformer/3.11.2:
+    resolution: {integrity: sha512-OceEkHsGL/558+4N0fYv1h+Qr9evKuY1t7wTs0H0YsO4thv/TMpGYVEoBAA6j3LDFlgpQS83cyD0pcRlplnffw==}
     peerDependencies:
       ts-jest: '>=27'
     peerDependenciesMeta:
       ts-jest:
         optional: true
     dependencies:
-      '@formatjs/icu-messageformat-parser': 2.1.10
+      '@formatjs/icu-messageformat-parser': 2.1.11
       '@types/json-stable-stringify': 1.0.34
       '@types/node': 17.0.45
       chalk: 4.1.2
@@ -1134,7 +1136,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.4
-      caniuse-lite: 1.0.30001434
+      caniuse-lite: 1.0.30001435
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -1151,16 +1153,16 @@ packages:
     resolution: {integrity: sha512-Td525n+iPOOyUQIeBfcASuG6uJsDOITl7Mds5gFyerkWiX7qhUTdYUBlSgNMyVqtSJqwpt1kXGLdUt6SykLMRA==}
     dev: true
 
-  /babel-plugin-formatjs/10.3.31:
-    resolution: {integrity: sha512-zdtWGbHHPlLB2305Uea3etfOwt3jAp5/JxcgDchF+XgWZCjjZ5VT5aXsm3mxxO4kUTZF5nuUG7E811Cm0FJRkQ==}
+  /babel-plugin-formatjs/10.3.32:
+    resolution: {integrity: sha512-mPYLLS43TcOScbhMwPY8BoTxAIQJDMYkZGPivJx6ouqz/WInc54brQOiSsw48FlcrbsxASDXtcwl+zerb3jNwA==}
     dependencies:
       '@babel/core': 7.20.5
       '@babel/helper-plugin-utils': 7.20.2
       '@babel/plugin-syntax-jsx': 7.18.6_@babel+core@7.20.5
       '@babel/traverse': 7.20.5
       '@babel/types': 7.20.5
-      '@formatjs/icu-messageformat-parser': 2.1.10
-      '@formatjs/ts-transformer': 3.11.1
+      '@formatjs/icu-messageformat-parser': 2.1.11
+      '@formatjs/ts-transformer': 3.11.2
       '@types/babel__core': 7.1.20
       '@types/babel__helper-plugin-utils': 7.10.0
       '@types/babel__traverse': 7.18.3
@@ -1235,7 +1237,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001434
+      caniuse-lite: 1.0.30001435
       electron-to-chromium: 1.4.284
       node-releases: 2.0.6
       update-browserslist-db: 1.0.10_browserslist@4.21.4
@@ -1256,8 +1258,8 @@ packages:
     resolution: {integrity: sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==}
     engines: {node: '>= 6'}
 
-  /caniuse-lite/1.0.30001434:
-    resolution: {integrity: sha512-aOBHrLmTQw//WFa2rcF1If9fa3ypkC1wzqqiKHgfdrXTWcU8C4gKVZT77eQAPWN1APys3+uQ0Df07rKauXGEYA==}
+  /caniuse-lite/1.0.30001435:
+    resolution: {integrity: sha512-kdCkUTjR+v4YAJelyiDTqiu82BDr4W4CP5sgTA0ZBmqn30XfS2ZghPLMowik9TPhS+psWJiUNxsqLyurDbmutA==}
 
   /chalk/2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -1376,11 +1378,11 @@ packages:
       hyphenate-style-name: 1.0.4
     dev: false
 
-  /css-tree/2.2.1:
-    resolution: {integrity: sha512-OA0mILzGc1kCOCSJerOeqDxDQ4HOh+G8NbOJFOTgOCzpw7fCBubk0fEyxp8AgOL/jvLgYA/uV0cMbe43ElF1JA==}
+  /css-tree/2.3.0:
+    resolution: {integrity: sha512-1rg0LiK2MFi4R3/lVvnRokEWTZb30ljSAe5x+0HHkZ+OqZaAeiP8g8Eh91VmkyCtQn9vMgQRiaTDYgLBt+2Qyw==}
     engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0, npm: '>=7.0.0'}
     dependencies:
-      mdn-data: 2.0.28
+      mdn-data: 2.0.30
       source-map-js: 1.0.2
     dev: false
 
@@ -1649,13 +1651,13 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-formatjs/4.3.4_eslint@8.28.0:
-    resolution: {integrity: sha512-0dQKl3pxwCJMBWHaPMC0mqgM5tRpQt4/l162hiNX4h3Po+Mx0L0KHMiGWk5HoKRvO4m/738TPSWdDGhmLKYzFw==}
+  /eslint-plugin-formatjs/4.3.5_eslint@8.28.0:
+    resolution: {integrity: sha512-1wzOkxu72sDwrIYQbWPZItJlK9swf2bO+ZGzibGxUxVVH085K4mMUbrhbW5BuiHyRnvFYvVrGIt5n9zQD/7QyQ==}
     peerDependencies:
       eslint: 7 || 8
     dependencies:
-      '@formatjs/icu-messageformat-parser': 2.1.10
-      '@formatjs/ts-transformer': 3.11.1
+      '@formatjs/icu-messageformat-parser': 2.1.11
+      '@formatjs/ts-transformer': 3.11.2
       '@types/eslint': 8.4.10
       '@types/picomatch': 2.3.0
       '@typescript-eslint/typescript-estree': 5.45.0_typescript@4.9.3
@@ -2270,12 +2272,12 @@ packages:
       side-channel: 1.0.4
     dev: true
 
-  /intl-messageformat/10.2.1:
-    resolution: {integrity: sha512-1lrJG2qKzcC1TVzYu1VuB1yiY68LU5rwpbHa2THCzA67Vutkz7+1lv5U20K3Lz5RAiH78zxNztMEtchokMWv8A==}
+  /intl-messageformat/10.2.2:
+    resolution: {integrity: sha512-iiaDjsEZNe92Vb8UIf46hT/3uVdcrL4x4GLjwFSVz/uC6ancQDUtyLVETX13wyTw78kBo3ONBMgiHoCtWN8ioQ==}
     dependencies:
-      '@formatjs/ecma402-abstract': 1.13.0
+      '@formatjs/ecma402-abstract': 1.14.0
       '@formatjs/fast-memoize': 1.2.6
-      '@formatjs/icu-messageformat-parser': 2.1.10
+      '@formatjs/icu-messageformat-parser': 2.1.11
       tslib: 2.4.0
     dev: false
 
@@ -2397,7 +2399,7 @@ packages:
   /isexe/2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
-  /jotai/1.10.0_zavbqmrropwrojvx6ojaa4s7im:
+  /jotai/1.10.0_otspjrsspon4ofp37rshhlhp2y:
     resolution: {integrity: sha512-3Q8kQU3Ktds+80Ku4dVcvnwSXEcK0Fg0b6mC1+4wz3rmF64lOGNUySKXQ4njvYCWodR8bw2HygOKYSYkHxQQmA==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
@@ -2434,7 +2436,7 @@ packages:
       jotai-zustand:
         optional: true
     dependencies:
-      '@babel/core': 7.20.5
+      '@babel/core': 7.19.6
       react: 18.2.0
     dev: false
 
@@ -2578,8 +2580,8 @@ packages:
       semver: 6.3.0
     dev: false
 
-  /mdn-data/2.0.28:
-    resolution: {integrity: sha512-aylIc7Z9y4yzHYAJNuESG3hfhC+0Ibp/MAMiaOZgNv4pmEdFyfZhhhny4MNiAfWdBQ1RQ2mfDWmM1x8SvGyp8g==}
+  /mdn-data/2.0.30:
+    resolution: {integrity: sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==}
     dev: false
 
   /merge2/1.4.1:
@@ -2653,7 +2655,7 @@ packages:
       '@babel/core': 7.19.6
       '@babel/helper-module-imports': 7.18.6
       '@expo/config': 7.0.3
-      css-tree: 2.2.1
+      css-tree: 2.3.0
       find-cache-dir: 3.3.2
       micromatch: 4.0.5
       postcss: 8.4.19
@@ -2674,7 +2676,7 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
 
-  /next/13.0.5_672uxklweod7ene3nqtsh262ca:
+  /next/13.0.5_qtpcxnaaarbm4ws7ughq6oxfve:
     resolution: {integrity: sha512-awpc3DkphyKydwCotcBnuKwh6hMqkT5xdiBK4OatJtOZurDPBYLP62jtM2be/4OunpmwIbsS0Eyv+ZGU97ciEg==}
     engines: {node: '>=14.6.0'}
     hasBin: true
@@ -2694,11 +2696,11 @@ packages:
     dependencies:
       '@next/env': 13.0.5
       '@swc/helpers': 0.4.14
-      caniuse-lite: 1.0.30001434
+      caniuse-lite: 1.0.30001435
       postcss: 8.4.14
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      styled-jsx: 5.1.0_zavbqmrropwrojvx6ojaa4s7im
+      styled-jsx: 5.1.0_otspjrsspon4ofp37rshhlhp2y
     optionalDependencies:
       '@next/swc-android-arm-eabi': 13.0.5
       '@next/swc-android-arm64': 13.0.5
@@ -3089,8 +3091,8 @@ packages:
       scheduler: 0.23.0
     dev: false
 
-  /react-intl/6.2.1_eetduzquwu67aqoq5644t6dxzu:
-    resolution: {integrity: sha512-hYxcSamgoA3Mvc55nwhTF1v15T0NUSkaV/EScMNVZXg0kRyaMAoNHkCi9/9H+TnXWNiWrcWH9bjlMlJwrG2V7g==}
+  /react-intl/6.2.2_eetduzquwu67aqoq5644t6dxzu:
+    resolution: {integrity: sha512-SW0BjtqyoxasdZYtoKLmPYjryqeN2vgtbOYc6J3PmJb/WHUih1X9LPjuL3Ap0Qen1sHLtUbwgJjRSWedGtibjg==}
     peerDependencies:
       react: ^16.6.0 || 17 || 18
       typescript: ^4.7
@@ -3098,15 +3100,15 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@formatjs/ecma402-abstract': 1.13.0
-      '@formatjs/icu-messageformat-parser': 2.1.10
-      '@formatjs/intl': 2.5.1_typescript@4.9.3
-      '@formatjs/intl-displaynames': 6.1.4
-      '@formatjs/intl-listformat': 7.1.3
+      '@formatjs/ecma402-abstract': 1.14.0
+      '@formatjs/icu-messageformat-parser': 2.1.11
+      '@formatjs/intl': 2.6.0_typescript@4.9.3
+      '@formatjs/intl-displaynames': 6.2.0
+      '@formatjs/intl-listformat': 7.1.4
       '@types/hoist-non-react-statics': 3.3.1
       '@types/react': 18.0.25
       hoist-non-react-statics: 3.3.2
-      intl-messageformat: 10.2.1
+      intl-messageformat: 10.2.2
       react: 18.2.0
       tslib: 2.4.0
       typescript: 4.9.3
@@ -3384,7 +3386,7 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /styled-jsx/5.1.0_zavbqmrropwrojvx6ojaa4s7im:
+  /styled-jsx/5.1.0_otspjrsspon4ofp37rshhlhp2y:
     resolution: {integrity: sha512-/iHaRJt9U7T+5tp6TRelLnqBqiaIT0HsO0+vgyj8hK2KUk7aejFqRrumqPUlAqDwAj8IbS/1hk3IhBAAK/FCUQ==}
     engines: {node: '>= 12.0.0'}
     peerDependencies:
@@ -3397,7 +3399,7 @@ packages:
       babel-plugin-macros:
         optional: true
     dependencies:
-      '@babel/core': 7.20.5
+      '@babel/core': 7.19.6
       client-only: 0.0.1
       react: 18.2.0
     dev: false
