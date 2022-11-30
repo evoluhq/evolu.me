@@ -13,7 +13,7 @@ const Help = () => {
       })}
       centerContent
     >
-      <Text className="bg-red-700 text-center">
+      <Text className="text-center">
         {intl.formatMessage({
           defaultMessage: "Under construction 🚧",
           id: "Q4maGs",
