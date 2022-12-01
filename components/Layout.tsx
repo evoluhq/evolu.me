@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { useEvoluFirstDataAreLoaded } from "evolu";
 import { FC, ReactNode } from "react";
+import { accessibility } from "../lib/accessibility";
 import { Container } from "./Container";
 import { MainNav } from "./MainNav";
 import { PageTitle } from "./PageTitle";
@@ -11,15 +12,15 @@ const Header: FC<{ title: string }> = ({ title }) => {
   return (
     <Container
       className={clsx(
-        "absolute left-0 right-0 z-10",
+        "absolute inset-x-0 z-10",
         "bg-white/[.85] backdrop-blur-md",
         "dark:bg-black/[.65] dark:backdrop-blur-md"
       )}
     >
       <View className="flex-row">
-        <View className="flex-1">
-          <Text as="button">{title}</Text>
-        </View>
+        <Text className="flex-1 p-2" {...accessibility.heading(1)}>
+          {title}
+        </Text>
         <MainNav />
       </View>
     </Container>
@@ -48,7 +49,7 @@ export const Layout: FC<{
               {children}
             </Container>
           </ScrollView>
-          {footer && <Container>{footer}</Container>}
+          {footer}
         </View>
       </View>
     </>
