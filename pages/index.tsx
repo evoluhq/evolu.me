@@ -12,7 +12,7 @@ const Footer: FC = () => {
   const intl = useIntl();
 
   return (
-    <Container className="absolute inset-x-0 bottom-0" backdrop>
+    <Container className="absolute inset-x-0 bottom-0 pb-0" backdrop>
       <Editor />
       <View className="flex-row justify-evenly">
         <Text as="button">
