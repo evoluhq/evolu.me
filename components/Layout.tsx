@@ -12,7 +12,7 @@ const Header: FC<{ title: string }> = ({ title }) => {
   return (
     <Container className="absolute inset-x-0 z-10" backdrop>
       <View className="flex-row">
-        <Text className="flex-1 p-2" {...accessibility.heading(1)}>
+        <Text as="button" className="flex-1" {...accessibility.heading(1)}>
           {title}
         </Text>
         <MainNav />
