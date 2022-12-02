@@ -12,6 +12,6 @@ module.exports = {
   theme: {},
   plugins: [hocusPlugin],
   future: {
-    // hoverOnlyWhenSupported: true,
+    hoverOnlyWhenSupported: true,
   },
 };
