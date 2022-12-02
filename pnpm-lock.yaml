@@ -34,6 +34,7 @@ specifiers:
   react-intl: ^6.2.4
   react-native-web: ^0.18.10
   tailwindcss: ^3.2.4
+  tailwindcss-hocus: ^0.0.5
   typescript: ^4.9.3
   zod: ^3.19.1
 
@@ -74,6 +75,7 @@ devDependencies:
   prettier: 2.8.0
   prettier-plugin-tailwindcss: 0.2.0_prettier@2.8.0
   tailwindcss: 3.2.4_postcss@8.4.19
+  tailwindcss-hocus: 0.0.5_tailwindcss@3.2.4
   typescript: 4.9.3
 
 packages:
@@ -3739,6 +3741,14 @@ packages:
     dependencies:
       '@pkgr/utils': 2.3.1
       tslib: 2.4.1
+    dev: true
+
+  /tailwindcss-hocus/0.0.5_tailwindcss@3.2.4:
+    resolution: {integrity: sha512-A3XY5E590ISC9eTLKfaWAng/E6KcCdIYZU4sRGx7nAQwgYMAEZenoNX3ytQojgYIoeUZjf2iC9XfY5Y4qyITcw==}
+    peerDependencies:
+      tailwindcss: ^3.0.0
+    dependencies:
+      tailwindcss: 3.2.4_postcss@8.4.19
     dev: true
 
   /tailwindcss/3.2.4_postcss@8.4.19:

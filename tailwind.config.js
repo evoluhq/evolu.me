@@ -1,5 +1,5 @@
 const nativewind = require("nativewind/tailwind");
-const plugin = require("tailwindcss/plugin");
+const hocusPlugin = require("tailwindcss-hocus");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -10,15 +10,7 @@ module.exports = {
   presets: [nativewind],
   important: "html",
   theme: {},
-  plugins: [
-    plugin(function ({ addVariant }) {
-      addVariant("hocus", ["&:hover", "&:focus-visible"]);
-      addVariant("group-hocus", [
-        ":merge(.group):hover &",
-        ":merge(.group):focus-visible &",
-      ]);
-    }),
-  ],
+  plugins: [hocusPlugin],
   future: {
     hoverOnlyWhenSupported: true,
   },

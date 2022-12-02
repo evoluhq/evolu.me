@@ -29,6 +29,9 @@ export const NodeList = () => {
       <Pressable className="hocus:bg-red-400">
         <Text>hocus:bg-red-400</Text>
       </Pressable>
+      <Pressable className="hocus-visible:bg-red-400">
+        <Text>hocus-visible:bg-red-400</Text>
+      </Pressable>
       {/* <Text className="text-center">
         {intl.formatMessage({
           defaultMessage: "Here will be your thoughts, organized.",
