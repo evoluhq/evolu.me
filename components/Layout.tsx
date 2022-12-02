@@ -10,13 +10,7 @@ import { Text } from "./Text";
 
 const Header: FC<{ title: string }> = ({ title }) => {
   return (
-    <Container
-      className={clsx(
-        "absolute inset-x-0 z-10",
-        "bg-white/[.85] backdrop-blur-md",
-        "dark:bg-black/[.65] dark:backdrop-blur-md"
-      )}
-    >
+    <Container className="absolute inset-x-0 z-10" backdrop>
       <View className="flex-row">
         <Text className="flex-1 p-2" {...accessibility.heading(1)}>
           {title}

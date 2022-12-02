@@ -2,6 +2,7 @@ import { FC } from "react";
 import { useIntl } from "react-intl";
 import { ClientOnly } from "../components/ClientOnly";
 import { Container } from "../components/Container";
+import { Editor } from "../components/Editor";
 import { Layout } from "../components/Layout";
 import { NodeList } from "../components/NodeList";
 import { View } from "../components/styled";
@@ -11,8 +12,8 @@ const Footer: FC = () => {
   const intl = useIntl();
 
   return (
-    <Container className="absolute inset-x-0 bottom-0">
-      {/* <Editor /> */}
+    <Container className="absolute inset-x-0 bottom-0" backdrop>
+      <Editor />
       <View className="flex-row justify-evenly">
         <Text as="button">
           {intl.formatMessage({

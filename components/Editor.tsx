@@ -16,6 +16,9 @@ const initialConfig: InitialConfigType = {
     // eslint-disable-next-line no-console
     console.log(error);
   },
+  theme: {
+    root: "outline-none",
+  },
 };
 
 export const Editor = () => {
@@ -29,7 +32,7 @@ export const Editor = () => {
   };
 
   return (
-    <Text as="h1">
+    <Text className="rounded bg-gray-100 px-3 py-2 dark:bg-gray-900">
       <LexicalComposer initialConfig={initialConfig}>
         <PlainTextPlugin
           contentEditable={<ContentEditable />}
