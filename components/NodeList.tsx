@@ -20,6 +20,9 @@ export const NodeList = () => {
       <Pressable className="focus:bg-red-400">
         <Text>focus:bg-red-400</Text>
       </Pressable>
+      <Pressable className="focus-visible:bg-red-400">
+        <Text>focus-visible:bg-red-400</Text>
+      </Pressable>
       <Pressable className="hover:bg-red-400">
         <Text>hover:bg-red-400</Text>
       </Pressable>
