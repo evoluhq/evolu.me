@@ -1,4 +1,4 @@
-import { createHooks, model, String1000 } from "evolu";
+import { createHooks, model, NonEmptyString1000 } from "evolu";
 import { Eq, eqStrict } from "fp-ts/Eq";
 
 // config.log = true;
@@ -13,7 +13,7 @@ export type EdgeId = model.infer<typeof EdgeId>;
 export const { useQuery, useMutation } = createHooks({
   node: {
     id: NodeId,
-    title: String1000,
+    title: NonEmptyString1000,
   },
   // undirected graph
   edge: {
