@@ -40,8 +40,8 @@ export const CreateEvolu = memo(function CreateEvolu() {
     pipe(
       String1000.safeParse(title),
       safeParseToEither,
-      either.match(constVoid, (title) => {
-        const { id } = mutate("node", { title }, () => {
+      either.match(constVoid, () => {
+        const { id } = mutate("node", {}, () => {
           setTitle("");
           setSafeTimeout(() => {
             // @ts-expect-error RNfW

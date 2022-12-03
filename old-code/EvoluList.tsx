@@ -47,6 +47,8 @@ export const EvoluList = () => {
             {loadedRows.map((row, i) => (
               <EvoluListItem
                 key={row.id}
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore-error
                 row={row}
                 x={i}
                 focusable={i === x}

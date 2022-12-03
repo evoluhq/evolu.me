@@ -24,8 +24,8 @@ export const OmniTextInput = () => {
     pipe(
       String1000.safeParse(title),
       safeParseToEither,
-      either.match(constVoid, (title) => {
-        mutate("node", { title });
+      either.match(constVoid, () => {
+        mutate("node", {});
         setTitle("");
       })
     );
