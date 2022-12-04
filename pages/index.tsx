@@ -5,9 +5,11 @@ import { ClientOnly } from "../components/ClientOnly";
 import { Container } from "../components/Container";
 import { Editor } from "../components/Editor";
 import { Layout } from "../components/Layout";
+import { Link } from "../components/Link";
 import { NodeList } from "../components/NodeList";
 import { View } from "../components/styled";
 import { Text } from "../components/Text";
+import { useMutation } from "../lib/db";
 
 // TODO: Persist new state into local storage.
 // const newNodeTitleAtom = atomWithStorage(localStorageKeys.newNodeTitle, "");
@@ -15,22 +17,27 @@ import { Text } from "../components/Text";
 
 const Footer: FC = () => {
   const intl = useIntl();
+  const { mutate } = useMutation();
 
-  const handleSubmit = useCallback((value: NonEmptyString1000) => {
-    // eslint-disable-next-line no-console
-    console.log(value);
-  }, []);
+  const handleSubmit = useCallback(
+    (value: NonEmptyString1000) => {
+      mutate("node", { title: value });
+    },
+    [mutate]
+  );
 
   return (
     <Container className="absolute inset-x-0 bottom-0 pb-0" backdrop>
       <Editor onSubmit={handleSubmit} />
       <View className="flex-row justify-evenly">
-        <Text as="button">
-          {intl.formatMessage({
-            defaultMessage: "All",
-            id: "zQvVDJ",
-          })}
-        </Text>
+        <Link href="/">
+          <Text as="a">
+            {intl.formatMessage({
+              defaultMessage: "All",
+              id: "zQvVDJ",
+            })}
+          </Text>
+        </Link>
         <Text as="button">
           {intl.formatMessage({
             defaultMessage: "Search",
@@ -45,7 +52,8 @@ const Footer: FC = () => {
 const Index = () => {
   return (
     <Layout
-      // waitForData
+      waitForData
+      // TODO: Add adjacent nodes as links as Header?
       title=""
       centerContent
       footer={
