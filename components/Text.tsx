@@ -4,7 +4,7 @@ import { Text as RnText } from "react-native";
 
 export const Text = styled(
   RnText,
-  "text-gray-900 dark:text-gray-200 dark:antialiased",
+  "text-gray-900 dark:text-gray-100 dark:antialiased",
   {
     variants: {
       as: {
