@@ -85,7 +85,7 @@ const SubmitOnEnterPlugin: FC<{
   return null;
 };
 
-export const Editor = memo<{
+export const NodeEditor = memo<{
   onSubmit: (value: NonEmptyString1000) => void;
   initialValue?: string;
 }>(function Editor({ onSubmit, initialValue }) {
