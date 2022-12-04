@@ -3,7 +3,7 @@ import { FC, useCallback } from "react";
 import { useIntl } from "react-intl";
 import { ClientOnly } from "../components/ClientOnly";
 import { Container } from "../components/Container";
-import { Editor } from "../components/Editor";
+import { NodeEditor } from "../components/NodeEditor";
 import { Layout } from "../components/Layout";
 import { Link } from "../components/Link";
 import { NodeList } from "../components/NodeList";
@@ -28,7 +28,7 @@ const Footer: FC = () => {
 
   return (
     <Container className="absolute inset-x-0 bottom-0 pb-0" backdrop>
-      <Editor onSubmit={handleSubmit} />
+      <NodeEditor onSubmit={handleSubmit} />
       <View className="flex-row justify-evenly">
         <Link href="/">
           <Text as="a">

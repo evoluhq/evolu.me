@@ -132,7 +132,7 @@ export const NodeListItemButton = forwardRef<RnView, NodeListItemButton>(
             defaultMessage: "Show detail",
             id: "z7JWlo",
           })}
-          className="group top-[1px] w-8 transform-gpu items-center justify-center hover:brightness-90 focus:outline-none active:scale-90"
+          className="group top-[17px] w-9 items-center hover:brightness-90 focus:outline-none active:scale-90"
           onFocus={onFocus}
           // @ts-expect-error RNfW
           onKeyDown={onKeyDown}
@@ -142,7 +142,7 @@ export const NodeListItemButton = forwardRef<RnView, NodeListItemButton>(
         >
           <View
             className={clsx(
-              "h-3 w-3 transform-gpu rounded-sm bg-gray-200 transition-transform duration-100 group-focus-visible:ring-2 dark:bg-gray-800",
+              "h-3 w-3 rounded-sm bg-gray-200 transition-transform duration-100 group-focus-visible:ring-2 dark:bg-gray-800",
               popoverIsVisible && "rotate-45"
             )}
           />
