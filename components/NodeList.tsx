@@ -49,7 +49,7 @@ export const NodeList = () => {
   return (
     <View
       accessibilityRole="list"
-      className="py-[132px]" // A space for scrolling, 3x44
+      className="py-[88px]" // A space for scrolling, 2x44
     >
       {loadedRows.map((row) => (
         <NodeListItem
