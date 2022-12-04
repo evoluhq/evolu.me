@@ -10,7 +10,7 @@ export const Text = styled(
       as: {
         t: "",
         p: "mb-4",
-        a: "py-2 px-3 hover:underline focus:outline-none focus-visible:ring",
+        a: "rounded py-2 px-3 hover:underline focus:outline-none focus-visible:ring",
         button: clsx(
           "select-none rounded p-2 group-hover:bg-gray-200 group-focus-visible:ring",
           "dark:group-hover:bg-gray-900"
