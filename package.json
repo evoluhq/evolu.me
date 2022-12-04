@@ -39,7 +39,7 @@
     "babel-plugin-formatjs": "^10.3.35",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-react-native-web": "^0.18.10",
-    "eslint": "^8.28.0",
+    "eslint": "^8.29.0",
     "eslint-config-next": "^13.0.6",
     "eslint-plugin-formatjs": "^4.3.8",
     "postcss": "^8.4.19",
