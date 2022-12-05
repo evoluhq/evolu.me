@@ -8,22 +8,9 @@ import { PageTitle } from "./PageTitle";
 import { ScrollView, View } from "./styled";
 import { Text } from "./Text";
 
-const Header: FC<{ title: string }> = ({ title }) => {
-  return (
-    <Container className="absolute inset-x-0 z-10" backdrop>
-      <View className="flex-row">
-        <Text as="button" className="flex-1" {...accessibility.heading(1)}>
-          {title}
-        </Text>
-        <MainNav />
-      </View>
-    </Container>
-  );
-};
-
 export const Layout: FC<{
   children: ReactNode;
-  title: string;
+  title: string | JSX.Element;
   waitForData?: boolean;
   footer?: ReactNode;
   centerContent?: boolean;
@@ -31,13 +18,29 @@ export const Layout: FC<{
   // React Suspense would be better, but we are not there yet.
   const dataAreLoaded = useEvoluFirstDataAreLoaded();
   const isHidden = waitForData ? !dataAreLoaded : false;
+  const titleIsString = typeof title === "string";
 
   return (
     <>
-      <PageTitle title={title} />
+      {titleIsString && <PageTitle title={title} />}
       <View className={clsx("flex-1 justify-center", isHidden && "hidden")}>
         <View className="max-h-[700px] flex-1">
-          <Header title={title} />
+          <Container className="absolute inset-x-0 z-10" backdrop>
+            <View className="flex-row">
+              {titleIsString ? (
+                <Text
+                  p="base"
+                  className="flex-1 pl-0"
+                  {...accessibility.heading(1)}
+                >
+                  {title}
+                </Text>
+              ) : (
+                title
+              )}
+              <MainNav />
+            </View>
+          </Container>
           <ScrollView centerContent={centerContent}>
             <Container className={clsx(!centerContent && "pt-24")}>
               {children}

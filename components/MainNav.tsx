@@ -12,6 +12,7 @@ import { Link } from "./Link";
 import { Popover } from "./Popover";
 import { View } from "./styled";
 import { Text } from "../components/Text";
+import clsx from "clsx";
 
 const MainNavLink: FC<{
   children: ReactNode;
@@ -26,7 +27,12 @@ const MainNavLink: FC<{
 
   return (
     <Link href={href}>
-      <Text as="a" className={isCurrent ? "" : "opacity-60"} {...keyNavigation}>
+      <Text
+        as="link"
+        p="base"
+        className={clsx("px-3", !isCurrent && "opacity-60")}
+        {...keyNavigation}
+      >
         {children}
       </Text>
     </Link>

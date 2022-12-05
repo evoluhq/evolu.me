@@ -5,7 +5,6 @@ export const PageTitle = memo<{ title?: string }>(function PageTitle({
   title,
 }) {
   const fullTitle = `${title ? title + " - " : ""}Evolu Me`;
-
   return (
     <Head>
       <title>{fullTitle}</title>

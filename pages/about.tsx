@@ -14,14 +14,15 @@ const About = () => {
       title={intl.formatMessage({ defaultMessage: "About", id: "g5pX+a" })}
       centerContent
     >
-      <Text>{appDescription}</Text>
+      <Text mb="base">{appDescription}</Text>
       <View className="flex-row">
         <Text
-          as="a"
+          as="link"
+          mb="base"
+          className="opacity-60"
           // @ts-expect-errors RNfW
           href="https://github.com/evoluhq/evolu.me"
           hrefAttrs={{ target: "blank" }}
-          className="opacity-60"
         >
           GitHub
         </Text>

@@ -8,9 +8,8 @@ export const Text = styled(
   {
     variants: {
       as: {
-        t: "",
-        p: "mb-4",
-        a: "rounded py-2 px-3 hover:underline focus:outline-none focus-visible:ring",
+        text: "",
+        link: "rounded hover:underline focus:outline-none focus-visible:ring",
         button: clsx(
           "select-none rounded p-2 group-hover:bg-gray-200 group-focus-visible:ring",
           "dark:group-hover:bg-gray-900"
@@ -21,19 +20,20 @@ export const Text = styled(
         ),
       },
       size: {
-        medium: "text-lg",
-        small: "text-base",
+        sm: "text-base",
+        base: "text-lg",
         big: "text-xl",
       },
-      margin: {
-        none: "text-lg",
-        medium: "mb-4 mt-2",
+      p: {
+        base: "p-2",
+      },
+      mb: {
+        base: "mb-4",
       },
     },
     defaultProps: {
-      as: "t",
-      size: "medium",
-      margin: "none",
+      as: "text",
+      size: "base",
     },
   }
 );

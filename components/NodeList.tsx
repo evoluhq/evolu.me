@@ -19,6 +19,7 @@ export const NodeList = () => {
       .orderBy("createdAt")
       .where("isDeleted", "is not", model.cast(true));
 
+    // https://inviqa.com/blog/storing-graphs-database-sql-meets-social-network
     ids.forEach((relatedId) => {
       q = q.where("id", "in", (qb) =>
         qb
@@ -35,6 +36,8 @@ export const NodeList = () => {
   });
 
   const loadedRows = useMemo(() => rows.filter(has(["title"])), [rows]);
+
+  // console.log(loadedRows);
 
   if (loadedRows.length === 0)
     return ids.length === 0 ? (

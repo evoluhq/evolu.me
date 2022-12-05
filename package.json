@@ -18,7 +18,7 @@
     "fp-ts": "^2.13.1",
     "jotai": "^1.11.0",
     "lexical": "^0.6.4",
-    "nativewind": "3.0.0-next.33",
+    "nativewind": "3.0.0-next.34",
     "next": "^13.0.6",
     "openpgp": "^5.5.0",
     "react": "^18.2.0",

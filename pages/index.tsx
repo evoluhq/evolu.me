@@ -1,15 +1,15 @@
-import { NonEmptyString1000 } from "evolu";
-import { FC, useCallback } from "react";
+import { FC } from "react";
 import { useIntl } from "react-intl";
+import { AdjacentNodes } from "../components/AdjacentNodes";
 import { ClientOnly } from "../components/ClientOnly";
 import { Container } from "../components/Container";
-import { NodeEditor } from "../components/NodeEditor";
 import { Layout } from "../components/Layout";
 import { Link } from "../components/Link";
+import { NodeEditor } from "../components/NodeEditor";
 import { NodeList } from "../components/NodeList";
 import { View } from "../components/styled";
 import { Text } from "../components/Text";
-import { useMutation } from "../lib/db";
+import { useAddNodeMutation } from "../lib/hooks/useAddNodeMutation";
 
 // TODO: Persist new state into local storage.
 // const newNodeTitleAtom = atomWithStorage(localStorageKeys.newNodeTitle, "");
@@ -17,21 +17,14 @@ import { useMutation } from "../lib/db";
 
 const Footer: FC = () => {
   const intl = useIntl();
-  const { mutate } = useMutation();
-
-  const handleSubmit = useCallback(
-    (value: NonEmptyString1000) => {
-      mutate("node", { title: value });
-    },
-    [mutate]
-  );
+  const addNodeMutation = useAddNodeMutation();
 
   return (
     <Container className="absolute inset-x-0 bottom-0 pb-0" backdrop>
-      <NodeEditor onSubmit={handleSubmit} />
+      <NodeEditor onSubmit={addNodeMutation} />
       <View className="flex-row justify-evenly">
         <Link href="/">
-          <Text as="a">
+          <Text as="link" p="base">
             {intl.formatMessage({
               defaultMessage: "All",
               id: "zQvVDJ",
@@ -53,8 +46,11 @@ const Index = () => {
   return (
     <Layout
       waitForData
-      // TODO: Add adjacent nodes as links as Header?
-      title=""
+      title={
+        <ClientOnly>
+          <AdjacentNodes />
+        </ClientOnly>
+      }
       centerContent
       footer={
         <ClientOnly>

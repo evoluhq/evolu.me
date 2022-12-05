@@ -2,6 +2,7 @@ import { useIntl } from "react-intl";
 import { Layout } from "../components/Layout";
 import { Text } from "../components/Text";
 
+// TODO: Explain adjacents, key navigation (with browser back too), etc.
 const Help = () => {
   const intl = useIntl();
 

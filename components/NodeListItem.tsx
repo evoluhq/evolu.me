@@ -1,5 +1,5 @@
 import { NonEmptyString1000 } from "evolu";
-import { constVoid } from "fp-ts/lib/function";
+import { constVoid } from "fp-ts/function";
 import { memo } from "react";
 import { NodeId } from "../lib/db";
 import { Link } from "./Link";
@@ -29,7 +29,7 @@ export const NodeListItem = memo<NodeListItemProps>(function NodeListItem({
         title={title}
       />
       <Link href={`/#${id}`}>
-        <Text as="a" className="pl-0">
+        <Text as="link" p="base" className="pl-0">
           {title}
         </Text>
       </Link>
