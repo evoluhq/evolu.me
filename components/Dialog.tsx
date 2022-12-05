@@ -2,6 +2,7 @@ import { IO } from "fp-ts/IO";
 import { FC, ReactNode } from "react";
 import { useIntl } from "react-intl";
 import { Modal } from "react-native";
+import { accessibility } from "../lib/accessibility";
 import { Button } from "./Button";
 import { CloseButtonLayer } from "./CloseButtonLayer";
 import { Container } from "./Container";
@@ -34,7 +35,9 @@ export const Dialog: FC<DialogProps> = ({
         <Container>
           <Ring className="py-4 px-1">
             <View className="p-3">
-              <Text as="h1">{title}</Text>
+              <Text size="big" margin="medium" {...accessibility.heading(1)}>
+                {title}
+              </Text>
               {children}
               <View className="flex-row gap-2">
                 <Button onPress={onRequestClose}>

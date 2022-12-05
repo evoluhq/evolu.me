@@ -19,18 +19,21 @@ export const Text = styled(
           "select-none rounded bg-gray-200 p-2 group-hover:bg-gray-300 group-focus-visible:ring",
           "dark:bg-gray-800 dark:group-hover:bg-gray-900"
         ),
-        h1: "mb-4 mt-2 text-3xl",
-        h2: "mb-4 mt-2 text-2xl",
-        h3: "mb-4 mt-2 text-xl",
       },
       size: {
         medium: "text-lg",
         small: "text-base",
+        big: "text-xl",
+      },
+      margin: {
+        none: "text-lg",
+        medium: "mb-4 mt-2",
       },
     },
     defaultProps: {
       as: "t",
       size: "medium",
+      margin: "none",
     },
   }
 );
