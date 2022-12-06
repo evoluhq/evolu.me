@@ -30,6 +30,9 @@ export const Text = styled(
       mb: {
         base: "mb-4",
       },
+      transparent: {
+        true: "opacity-60",
+      },
     },
     defaultProps: {
       as: "text",
