@@ -29,7 +29,7 @@ export const NodeListItem = memo<NodeListItemProps>(function NodeListItem({
         title={title}
       />
       <Link href={`/#${id}`}>
-        <Text as="link" p className="pl-0">
+        <Text as="link" p className="flex-1 pl-0">
           {title}
         </Text>
       </Link>
