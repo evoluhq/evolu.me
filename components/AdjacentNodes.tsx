@@ -1,19 +1,20 @@
+import clsx from "clsx";
 import { has, model } from "evolu";
 import { option, readonlyArray } from "fp-ts";
 import { pipe } from "fp-ts/function";
 import { FC, memo } from "react";
+import { Text as RnText } from "react-native";
 import { NodeId, useQuery } from "../lib/db";
 import {
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/hooks/useKeyNavigation";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
+import { truncate } from "../lib/truncate";
 import { Link } from "./Link";
 import { PageTitle } from "./PageTitle";
 import { ScrollView } from "./styled";
-import { Text as RnText } from "react-native";
 import { Text } from "./Text";
-import clsx from "clsx";
 
 const AdjacentNodesLink: FC<{
   focusable: boolean;
@@ -21,7 +22,7 @@ const AdjacentNodesLink: FC<{
   title: string;
   id: NodeId;
   isFirst: boolean;
-}> = ({ x, title, isFirst }) => {
+}> = ({ x, title, id, isFirst }) => {
   const keyNavigation = useKeyNavigation<RnText>({
     x,
     keys: {
@@ -30,8 +31,9 @@ const AdjacentNodesLink: FC<{
       //   ArrowUp: { id: uniqueId.createNodeInput },
     },
   });
+
   return (
-    <Link href={"/"}>
+    <Link href={`/#${id}`}>
       <Text
         as="link"
         p="base"
@@ -46,7 +48,7 @@ const AdjacentNodesLink: FC<{
   );
 };
 
-const AdjacentNodes2 = memo<{ ids: readonly NodeId[] }>(
+const AdjacentNodesWithIds = memo<{ ids: readonly NodeId[] }>(
   function AdjacentNodesLinks({ ids }) {
     const { rows } = useQuery((db) =>
       db
@@ -56,22 +58,32 @@ const AdjacentNodes2 = memo<{ ids: readonly NodeId[] }>(
         .where("id", "in", ids)
     );
 
-    // The same order like ids from location hash.
-    const sortedRows = pipe(
-      ids,
+    const sortedRowsWithTruncatedTitle = pipe(
+      ids, // The same order like ids from location hash.
       readonlyArray.filterMap((id) =>
         option.fromNullable(rows.find((row) => row.id === id))
       ),
-      readonlyArray.filter(has(["title"]))
+      readonlyArray.filter(has(["title"])),
+      readonlyArray.map((a) => ({
+        ...a,
+        title: truncate(a.title)({ maxLength: 21 }).text,
+      }))
     );
+
+    const title = pipe(
+      sortedRowsWithTruncatedTitle,
+      readonlyArray.map((i) => i.title)
+    ).join(" | ");
 
     return (
       <>
-        <PageTitle title="wtf" />
+        <PageTitle title={title} />
         <ScrollView horizontal>
-          <KeyboardNavigationProvider maxX={sortedRows.length}>
+          <KeyboardNavigationProvider
+            maxX={sortedRowsWithTruncatedTitle.length}
+          >
             {({ x }) =>
-              sortedRows.map((row, i) => (
+              sortedRowsWithTruncatedTitle.map((row, i) => (
                 <AdjacentNodesLink
                   key={row.id}
                   focusable={x === i}
@@ -102,5 +114,5 @@ export const AdjacentNodes = () => {
   // the same value twice. That's why we isolate it from useQuery.
   // https://github.com/facebook/react/issues/25191#issuecomment-1244805920
   const ids = useLocationHashNodeIds();
-  return <AdjacentNodes2 ids={ids} />;
+  return <AdjacentNodesWithIds ids={ids} />;
 };
