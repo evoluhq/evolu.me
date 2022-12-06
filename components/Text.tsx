@@ -25,10 +25,10 @@ export const Text = styled(
         big: "text-xl",
       },
       p: {
-        base: "p-2",
+        true: "p-2",
       },
       mb: {
-        base: "mb-4",
+        true: "mb-4",
       },
       transparent: {
         true: "opacity-60",

@@ -28,7 +28,7 @@ const MainNavLink: FC<{
     <Link href={href}>
       <Text
         as="link"
-        p="base"
+        p
         transparent={!isCurrent}
         className="px-3"
         {...keyNavigation}

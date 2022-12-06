@@ -36,7 +36,7 @@ const AdjacentNodesLink: FC<{
     <Link href={`/#${id}`}>
       <Text
         as="link"
-        p="base"
+        p
         className={clsx(isFirst && "pl-0")}
         {...keyNavigation}
         // focusable={focusable}

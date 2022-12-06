@@ -28,11 +28,7 @@ export const Layout: FC<{
           <Container className="absolute inset-x-0 z-10" backdrop>
             <View className="flex-row">
               {titleIsString ? (
-                <Text
-                  p="base"
-                  className="flex-1 pl-0"
-                  {...accessibility.heading(1)}
-                >
+                <Text p className="flex-1 pl-0" {...accessibility.heading(1)}>
                   {title}
                 </Text>
               ) : (

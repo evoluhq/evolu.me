@@ -20,7 +20,7 @@ const RoundedButtonWithDescription: FC<
           <Text as="roundedButton">{title}</Text>
         </Button>
       </View>
-      <Text size="sm" mb="base" p="base">
+      <Text size="sm" mb p>
         {description}
       </Text>
     </View>
@@ -51,7 +51,7 @@ const DownloadLink = () => {
   });
 
   return (
-    <Text mb="base">
+    <Text mb>
       {!url ? (
         intl.formatMessage({ defaultMessage: "Preparing…", id: "Ob8gKI" })
       ) : (
@@ -101,7 +101,7 @@ const Settings = () => {
           })}
           onRequestClose={() => setMnemonic(null)}
         >
-          <Text mb="base">{mnemonic}</Text>
+          <Text mb>{mnemonic}</Text>
         </Dialog>
       )}
       <RoundedButtonWithDescription

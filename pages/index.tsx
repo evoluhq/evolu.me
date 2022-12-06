@@ -24,7 +24,7 @@ const Footer: FC = () => {
       <NodeEditor onSubmit={addNodeMutation} />
       <View className="flex-row justify-evenly">
         <Link href="/">
-          <Text as="link" p="base">
+          <Text as="link" p>
             {intl.formatMessage({
               defaultMessage: "All",
               id: "zQvVDJ",

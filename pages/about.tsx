@@ -14,11 +14,11 @@ const About = () => {
       title={intl.formatMessage({ defaultMessage: "About", id: "g5pX+a" })}
       centerContent
     >
-      <Text mb="base">{appDescription}</Text>
+      <Text mb>{appDescription}</Text>
       <View className="flex-row">
         <Text
           as="link"
-          mb="base"
+          mb
           transparent
           // @ts-expect-errors RNfW
           href="https://github.com/evoluhq/evolu.me"
