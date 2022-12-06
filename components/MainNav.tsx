@@ -2,17 +2,16 @@ import { useRouter } from "next/router";
 import { FC, ReactNode, useState } from "react";
 import { useIntl } from "react-intl";
 import { Text as RnText, View as RnView } from "react-native";
-import { uniqueId } from "../lib/uniqueId";
+import { Text } from "../components/Text";
 import {
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/hooks/useKeyNavigation";
+import { uniqueId } from "../lib/uniqueId";
 import { Button } from "./Button";
 import { Link } from "./Link";
 import { Popover } from "./Popover";
 import { View } from "./styled";
-import { Text } from "../components/Text";
-import clsx from "clsx";
 
 const MainNavLink: FC<{
   children: ReactNode;
@@ -30,7 +29,8 @@ const MainNavLink: FC<{
       <Text
         as="link"
         p="base"
-        className={clsx("px-3", !isCurrent && "opacity-60")}
+        transparent={!isCurrent}
+        className="px-3"
         {...keyNavigation}
       >
         {children}

@@ -19,7 +19,7 @@ const About = () => {
         <Text
           as="link"
           mb="base"
-          className="opacity-60"
+          transparent
           // @ts-expect-errors RNfW
           href="https://github.com/evoluhq/evolu.me"
           hrefAttrs={{ target: "blank" }}
