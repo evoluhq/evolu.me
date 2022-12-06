@@ -1,9 +1,10 @@
 /* eslint-disable formatjs/no-literal-string-in-jsx */
 import { has, model } from "evolu";
-import { useMemo } from "react";
+import { useLayoutEffect, useMemo } from "react";
 import { useIntl } from "react-intl";
 import { useQuery } from "../lib/db";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
+import { layoutScroll } from "../lib/layoutScroll";
 import { NodeListItem } from "./NodeListItem";
 import { View } from "./styled";
 import { Text } from "./Text";
@@ -12,7 +13,7 @@ export const NodeList = () => {
   const intl = useIntl();
   const ids = useLocationHashNodeIds();
 
-  const { rows } = useQuery((db) => {
+  const { rows, isLoaded } = useQuery((db) => {
     let q = db
       .selectFrom("node")
       .select(["id", "title"])
@@ -37,7 +38,16 @@ export const NodeList = () => {
 
   const loadedRows = useMemo(() => rows.filter(has(["title"])), [rows]);
 
-  // console.log(loadedRows);
+  useLayoutEffect(() => layoutScroll.scrollToEndAnimatedIfRequested());
+
+  const idsString = ids.join();
+  useLayoutEffect(() => {
+    if (!isLoaded) return;
+    layoutScroll.restoreScroll(idsString);
+    return () => {
+      layoutScroll.storeScroll(idsString);
+    };
+  }, [idsString, isLoaded]);
 
   if (loadedRows.length === 0)
     return ids.length === 0 ? (

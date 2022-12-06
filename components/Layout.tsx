@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { useEvoluFirstDataAreLoaded } from "evolu";
 import { FC, ReactNode } from "react";
 import { accessibility } from "../lib/accessibility";
+import { layoutScroll } from "../lib/layoutScroll";
 import { Container } from "./Container";
 import { MainNav } from "./MainNav";
 import { PageTitle } from "./PageTitle";
@@ -37,7 +38,12 @@ export const Layout: FC<{
               <MainNav />
             </View>
           </Container>
-          <ScrollView centerContent={centerContent}>
+          <ScrollView
+            centerContent={centerContent}
+            scrollEventThrottle={0}
+            onScroll={layoutScroll.onScroll}
+            ref={layoutScroll.onRef}
+          >
             <Container className={clsx(!centerContent && "pt-24")}>
               {children}
             </Container>
