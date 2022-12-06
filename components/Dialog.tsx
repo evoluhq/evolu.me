@@ -35,7 +35,7 @@ export const Dialog: FC<DialogProps> = ({
         <Container>
           <Ring className="py-4 px-1">
             <View className="p-3">
-              <Text size="big" mb="base" {...accessibility.heading(1)}>
+              <Text size="big" mb {...accessibility.heading(1)}>
                 {title}
               </Text>
               {children}
@@ -52,7 +52,7 @@ export const Dialog: FC<DialogProps> = ({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={closeMessage}
-          className="absolute inset-0 -z-10 cursor-default bg-white opacity-80 focus:outline-none dark:bg-black"
+          className="absolute inset-0 -z-10 cursor-default bg-white opacity-20 focus:outline-none dark:bg-black"
           onPress={onRequestClose}
           focusable={false}
         />
