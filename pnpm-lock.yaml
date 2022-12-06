@@ -8,7 +8,7 @@ specifiers:
   '@types/node': ^18.11.11
   '@types/react': ^18.0.26
   '@types/react-dom': ^18.0.9
-  '@types/react-native': ^0.70.7
+  '@types/react-native': ^0.70.8
   '@typescript-eslint/eslint-plugin': ^5.45.1
   '@typescript-eslint/parser': ^5.45.1
   autoprefixer: ^10.4.13
@@ -22,7 +22,7 @@ specifiers:
   eslint-plugin-formatjs: ^4.3.8
   evolu: ^0.5.1
   fp-ts: ^2.13.1
-  jotai: ^1.11.0
+  jotai: ^1.11.1
   lexical: ^0.6.5
   nativewind: 3.0.0-next.34
   next: ^13.0.6
@@ -46,7 +46,7 @@ dependencies:
   cross-env: 7.0.3
   evolu: 0.5.1_v5r4n2jb3k2g2w5cerv7q4c2x4
   fp-ts: 2.13.1
-  jotai: 1.11.0_otspjrsspon4ofp37rshhlhp2y
+  jotai: 1.11.1_otspjrsspon4ofp37rshhlhp2y
   lexical: 0.6.5
   nativewind: 3.0.0-next.34_dpx3ezyh7vrtb4aufvxbx6obrq
   next: 13.0.6_qtpcxnaaarbm4ws7ughq6oxfve
@@ -62,7 +62,7 @@ devDependencies:
   '@types/node': 18.11.11
   '@types/react': 18.0.26
   '@types/react-dom': 18.0.9
-  '@types/react-native': 0.70.7
+  '@types/react-native': 0.70.8
   '@typescript-eslint/eslint-plugin': 5.45.1_tdm6ms4ntwhlpozn7kjqrhum74
   '@typescript-eslint/parser': 5.45.1_s5ps7njkmjlaqajutnox5ntcla
   autoprefixer: 10.4.13_postcss@8.4.19
@@ -1054,8 +1054,8 @@ packages:
       '@types/react': 18.0.26
     dev: true
 
-  /@types/react-native/0.70.7:
-    resolution: {integrity: sha512-hBzeUWwk8sfj3vDfwEXb4hbjWjl0jb5CvWlu2gLrOUJyFHVzJ+x6Y9ilO2eVtJW7l5QmmNLILE1PkVfKRkqYuQ==}
+  /@types/react-native/0.70.8:
+    resolution: {integrity: sha512-jvs5QMOrlyi0ScfT5Brha2roDoOWtbIOadNkp0jsueVen5+pH4SQAYtzL6xu0+dIcx3J/5LtZ/JYby2C1/zUug==}
     dependencies:
       '@types/react': 18.0.26
     dev: true
@@ -2632,8 +2632,8 @@ packages:
     resolution: {integrity: sha512-PIeMbHqMt4DnUP3MA/Flc0HElYjMXArsw1qwJZcm9sqR8mq3l8NYizFMty0pWwE/tzIGH3EKK5+jes5mAr85yw==}
     dev: false
 
-  /jotai/1.11.0_otspjrsspon4ofp37rshhlhp2y:
-    resolution: {integrity: sha512-8OzJmRxcTZoAOJSz6uTnmofmjAOgNOdAOy26rvyw3OBxt6XIoklNnfUTCm8wgp84SSLJbPZA01VS5O/SUz+QYg==}
+  /jotai/1.11.1_otspjrsspon4ofp37rshhlhp2y:
+    resolution: {integrity: sha512-pHpaZUdvIpcS12ryMCrwtvmT/IovZAbicfrlll/Rb9394rwhqKoDFsDs0kv4oWtBy/XHHNv7iSZnQFmntiQj+w==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
       '@babel/core': '*'
@@ -2761,8 +2761,8 @@ packages:
     resolution: {integrity: sha512-DV4/lw/CX5XLJ2qdHurkn/KjjvMw83EJidvH7Os/ub61yoaffMQxovPvsfzyOHSZ3/V+GBFCGF2hLAaaB1s37g==}
     dev: false
 
-  /lib0/0.2.56:
-    resolution: {integrity: sha512-sPr0jyPrxxD72gpN87KOwIAQ0fDQkgskeziSIRerOnEjfPBTtMRRc31lhMzwmsF1CdpLfrJb9qiFJiJ99y3QvA==}
+  /lib0/0.2.58:
+    resolution: {integrity: sha512-6ovqPaYfOKU7GkkVxz/wjMR0zsqmNsISLvH+h9Lx5YNtWDZey69aYsTGXaSVpUPpJ+ZFtIvcZHsTGL3MbwOM8A==}
     engines: {node: '>=14'}
     dependencies:
       isomorphic.js: 0.2.5
@@ -3998,7 +3998,7 @@ packages:
   /yjs/13.5.43:
     resolution: {integrity: sha512-NJqWuiDOseYjkhnSVo55z+FZD6TsOJBZfMbH2I4OCm5vsgY7TESUjUGb7Pt1lljvvdSfBVj8CxQqZAnVxe5Iyg==}
     dependencies:
-      lib0: 0.2.56
+      lib0: 0.2.58
     dev: false
 
   /yocto-queue/0.1.0:
