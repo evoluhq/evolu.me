@@ -58,6 +58,7 @@ const NodeListItemButtonPopover: FC<{
     });
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const focusHref = pipe(
     useLocationHashNodeIds(),
     readonlyArray.append(id),
