@@ -8,7 +8,7 @@ import { View as RnView } from "react-native";
 import { Button } from "../components/Button";
 import { Link } from "../components/Link";
 import { Popover } from "../components/Popover";
-import { Pressable, View } from "../components/styled";
+import { View } from "../components/styled";
 import { NodeId, useMutation } from "../lib/db";
 import {
   KeyboardNavigationProvider,
@@ -126,13 +126,13 @@ export const NodeListItemButton = forwardRef<RnView, NodeListItemButton>(
 
     return (
       <>
-        <Pressable
-          accessibilityRole="button"
+        <Button
           accessibilityLabel={intl.formatMessage({
-            defaultMessage: "Show detail",
-            id: "z7JWlo",
+            defaultMessage: "Show popover",
+            id: "opkU9o",
           })}
-          className="group top-[17px] w-9 items-center hover:brightness-90 focus:outline-none active:scale-90"
+          // "dark:bg-gray-800 dark:group-hover:bg-gray-900"
+          className="group top-[17px] w-9 items-center"
           onFocus={onFocus}
           // @ts-expect-error RNfW
           onKeyDown={onKeyDown}
@@ -146,7 +146,7 @@ export const NodeListItemButton = forwardRef<RnView, NodeListItemButton>(
               popoverIsVisible && "rotate-45"
             )}
           />
-        </Pressable>
+        </Button>
         {popoverIsVisible && (
           <NodeListItemButtonPopover
             id={id}

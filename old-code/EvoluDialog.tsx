@@ -4,7 +4,7 @@ import { useIntl } from "react-intl";
 import { NodeId } from "../lib/db";
 import { Button } from "../components/Button";
 import { Dialog } from "../components/Dialog";
-import { Hr } from "../components/Hr";
+import { Hr } from "./Hr";
 import { T } from "./T";
 
 interface EvoluDialogProps {

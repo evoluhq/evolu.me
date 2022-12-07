@@ -1,19 +1,11 @@
-import { forwardRef } from "react";
-import { PressableProps, View as RnView } from "react-native";
-import { Pressable } from "./styled";
+import { styled } from "nativewind";
+import { Pressable, PressableProps } from "react-native";
 
-export type ButtonProps = PressableProps;
+export type ButtonProps = PressableProps & {
+  className?: string | undefined;
+};
 
-export const Button = forwardRef<RnView, ButtonProps>(function Button(
-  props,
-  ref
-) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      ref={ref}
-      {...props}
-      className="group focus:outline-none active:brightness-95 dark:active:brightness-90"
-    />
-  );
-});
+export const Button = styled(
+  Pressable,
+  "group focus:outline-none active:brightness-95 dark:active:brightness-90"
+);
