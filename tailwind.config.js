@@ -1,4 +1,5 @@
 const nativewind = require("nativewind/tailwind");
+const hocusPlugin = require("tailwindcss-hocus");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -7,6 +8,7 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   presets: [nativewind],
+  plugins: [hocusPlugin],
   important: "html",
   theme: {},
   future: {

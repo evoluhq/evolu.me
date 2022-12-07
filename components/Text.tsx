@@ -9,7 +9,7 @@ export const Text = styled(
     variants: {
       as: {
         text: "",
-        link: "rounded hover:underline focus:outline-none focus-visible:ring",
+        link: "rounded focus:outline-none hocus-visible:underline",
         button: clsx(
           "select-none rounded p-2 group-hover:bg-gray-200 group-focus-visible:ring",
           "dark:group-hover:bg-gray-900"

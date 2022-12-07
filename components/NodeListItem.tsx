@@ -82,7 +82,7 @@ export const NodeListItem = memo<NodeListItemProps>(function NodeListItem({
           focusable={focusable === "input"}
           as="link"
           p
-          className="flex-1 pl-0"
+          className="pl-0"
         >
           {title}
         </Text>
