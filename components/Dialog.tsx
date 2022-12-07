@@ -7,7 +7,7 @@ import { Button } from "./Button";
 import { CloseButtonLayer } from "./CloseButtonLayer";
 import { Container } from "./Container";
 import { Ring } from "./Ring";
-import { Pressable, ScrollView, View } from "./styled";
+import { ScrollView, View } from "./styled";
 import { Text } from "./Text";
 
 export type DialogProps = {
