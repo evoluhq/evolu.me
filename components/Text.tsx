@@ -11,11 +11,14 @@ export const Text = styled(
         text: "",
         link: "rounded focus:outline-none hocus-visible:underline",
         button: clsx(
-          "select-none rounded px-2 py-1 my-1 group-hover:bg-gray-200 group-focus-visible:ring",
-          "dark:group-hover:bg-gray-900"
+          "select-none rounded px-2 py-1 my-1",
+          "ring-current group-focus-visible:ring-1",
+          "group-hover:bg-gray-200 dark:group-hover:bg-gray-900"
         ),
         roundedButton: clsx(
-          "select-none rounded bg-gray-200 px-2 py-1 my-1 group-hover:bg-gray-300 group-focus-visible:ring",
+          "select-none rounded px-2 py-1 my-1",
+          "ring-current group-focus-visible:ring-2",
+          "bg-gray-200 group-hover:bg-gray-300",
           "dark:bg-gray-800 dark:group-hover:bg-gray-900"
         ),
       },
