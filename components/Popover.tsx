@@ -17,6 +17,7 @@ export type PopoverProps = {
     | "bottom right to bottom right"
     | "bottom left to bottom right"
     | "top right to top right";
+  yOffset?: number;
   onRequestClose: IO<void>;
   children: ReactNode;
 };
@@ -27,10 +28,11 @@ interface XY {
 }
 
 export const Popover: FC<PopoverProps> = ({
+  ownerRef,
+  position,
+  yOffset,
   onRequestClose,
   children,
-  position,
-  ownerRef,
 }) => {
   const viewRef = useRef<View>(null);
   const [xy, setXY] = useState<XY | null>(null);
@@ -74,6 +76,7 @@ export const Popover: FC<PopoverProps> = ({
       };
 
       const xy = getXY();
+      if (yOffset != null) xy.y += yOffset;
       setXY((previous) => {
         if (previous && xy.x === previous.x && xy.y === previous.y)
           return previous;
@@ -90,7 +93,7 @@ export const Popover: FC<PopoverProps> = ({
       window.visualViewport?.removeEventListener("resize", handleChange);
       subscription.remove();
     };
-  }, [ownerRef, position]);
+  }, [ownerRef, position, yOffset]);
 
   return (
     <Modal transparent onRequestClose={onRequestClose} visible>
