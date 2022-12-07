@@ -49,13 +49,6 @@ export const Dialog: FC<DialogProps> = ({
           </Ring>
         </Container>
         <CloseButtonLayer withBg onPress={onRequestClose} />
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={closeMessage}
-          className="absolute inset-0 -z-10 cursor-default bg-white opacity-20 focus:outline-none dark:bg-black"
-          onPress={onRequestClose}
-          focusable={false}
-        />
       </ScrollView>
     </Modal>
   );
