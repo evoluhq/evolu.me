@@ -3,6 +3,7 @@ import { has, model } from "evolu";
 import { useLayoutEffect, useMemo } from "react";
 import { useIntl } from "react-intl";
 import { useQuery } from "../lib/db";
+import { KeyboardNavigationProvider } from "../lib/hooks/useKeyNavigation";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { layoutScroll } from "../lib/layoutScroll";
 import { NodeListItem } from "./NodeListItem";
@@ -64,15 +65,23 @@ export const NodeList = () => {
       accessibilityRole="list"
       className="py-[88px]" // A space for scrolling, 2x44
     >
-      {loadedRows.map((row) => (
-        <NodeListItem
-          key={row.id}
-          row={row}
-          // x={i}
-          // focusable={i === x}
-          // isLast={i === loadedRows.length - 1}
-        />
-      ))}
+      <KeyboardNavigationProvider
+        maxX={loadedRows.length - 1}
+        maxY={1}
+        initialY={1}
+      >
+        {({ x, y }) =>
+          loadedRows.map((row, i) => (
+            <NodeListItem
+              key={row.id}
+              row={row}
+              x={i}
+              focusable={i === x && (y === 0 ? "button" : "input")}
+              // isLast={i === loadedRows.length - 1}
+            />
+          ))
+        }
+      </KeyboardNavigationProvider>
     </View>
   );
 };
