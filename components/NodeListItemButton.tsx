@@ -1,12 +1,11 @@
 import clsx from "clsx";
 import { readonlyArray } from "fp-ts";
-import { constVoid, pipe } from "fp-ts/function";
+import { pipe } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
 import { FC, ForwardedRef, forwardRef, KeyboardEvent, useState } from "react";
 import { useIntl } from "react-intl";
 import { View as RnView } from "react-native";
 import { Button } from "../components/Button";
-import { Link } from "../components/Link";
 import { Popover } from "../components/Popover";
 import { View } from "../components/styled";
 import { NodeId, useMutation } from "../lib/db";
@@ -18,34 +17,25 @@ import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
 import { Text } from "./Text";
 
-const NodeListItemButtonPopoverButtonOrLink: FC<{
+const NodeListItemButtonPopoverButton: FC<{
   title: string;
   x: number;
-  onPressOrHref: IO<void> | string;
-  customClassName?: string;
+  onPress: IO<void>;
+  className?: string;
   onRequestClose?: IO<void>;
-}> = ({ title, x, onPressOrHref /*customClassName, onRequestClose*/ }) => {
+}> = ({ title, x, onPress, className /*onRequestClose*/ }) => {
   const keyNavigation = useKeyNavigation<RnView>({
     x,
     keys: { ArrowLeft: "previousX", ArrowRight: "nextX" },
   });
 
-  return typeof onPressOrHref === "string" ? (
-    <Link href={onPressOrHref}>
+  return (
+    <Button {...keyNavigation} onPress={onPress}>
       <Text
-        {...keyNavigation}
-        // onClick={onRequestClose}
-        // v="tb"
-        // customClassName={customClassName}
-      >
-        {title}
-      </Text>
-    </Link>
-  ) : (
-    <Button {...keyNavigation} onPress={onPressOrHref}>
-      <Text
-      // v="tb"
-      //  customClassName={customClassName}
+        as="button"
+        // py-1 my-1
+        className={clsx("my-0 py-2", className)}
+        //  customClassName={customClassName}
       >
         {title}
       </Text>
@@ -79,31 +69,44 @@ const NodeListItemButtonPopover: FC<{
     <Popover
       ownerRef={ownerRef}
       position="bottom left to bottom right"
+      yOffset={-4}
       onRequestClose={onRequestClose}
     >
       <View className="flex-row">
         <KeyboardNavigationProvider maxX={2}>
-          <NodeListItemButtonPopoverButtonOrLink
+          {/* <NodeListItemButtonPopoverButton
             title={intl.formatMessage({
               defaultMessage: "Focus",
               id: "hsJlm7",
             })}
             x={0}
-            onPressOrHref={focusHref}
+            onPress={focusHref}
             customClassName="rounded-none rounded-l"
             onRequestClose={onRequestClose}
-          />
-          <NodeListItemButtonPopoverButtonOrLink
+          /> */}
+          {/* <NodeListItemButtonPopoverButton
             title="Move"
             x={1}
-            onPressOrHref={constVoid}
+            onPress={constVoid}
             customClassName="rounded-none"
+          /> */}
+          <NodeListItemButtonPopoverButton
+            title={intl.formatMessage({
+              defaultMessage: "Delete",
+              id: "K3r6DQ",
+            })}
+            x={0}
+            onPress={handleDeletePress}
+            className="rounded-none rounded-l"
           />
-          <NodeListItemButtonPopoverButtonOrLink
-            title="Delete"
-            x={2}
-            onPressOrHref={handleDeletePress}
-            customClassName="rounded-none rounded-r"
+          <NodeListItemButtonPopoverButton
+            title={intl.formatMessage({
+              defaultMessage: "Edit",
+              id: "wEQDC6",
+            })}
+            x={1}
+            onPress={handleDeletePress}
+            className="rounded-none rounded-r"
           />
         </KeyboardNavigationProvider>
       </View>
@@ -131,8 +134,7 @@ export const NodeListItemButton = forwardRef<RnView, NodeListItemButton>(
             defaultMessage: "Show popover",
             id: "opkU9o",
           })}
-          // "dark:bg-gray-800 dark:group-hover:bg-gray-900"
-          className="group top-[17px] w-9 items-center"
+          className="group w-9 items-center"
           onFocus={onFocus}
           // @ts-expect-error RNfW
           onKeyDown={onKeyDown}
@@ -142,7 +144,9 @@ export const NodeListItemButton = forwardRef<RnView, NodeListItemButton>(
         >
           <View
             className={clsx(
-              "h-3 w-3 rounded-sm bg-gray-200 transition-transform duration-100 group-focus-visible:ring-2 dark:bg-gray-800",
+              "top-[17px] h-3 w-3 rounded-sm ring-current group-focus-visible:ring-1",
+              "bg-gray-200 group-hover:bg-gray-300",
+              "dark:bg-gray-800 dark:group-hover:bg-gray-900",
               popoverIsVisible && "rotate-45"
             )}
           />
