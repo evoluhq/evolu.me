@@ -17,7 +17,7 @@ export const Text = styled(
         ),
         roundedButton: clsx(
           "select-none rounded px-2 py-1 my-1",
-          "ring-current group-focus-visible:ring-2",
+          "ring-current group-focus-visible:ring-1",
           "bg-gray-200 group-hover:bg-gray-300",
           "dark:bg-gray-800 dark:group-hover:bg-gray-900"
         ),
