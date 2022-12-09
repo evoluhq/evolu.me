@@ -11,6 +11,7 @@ import {
   RefCallback,
   useCallback,
   useContext,
+  useEffect,
   useReducer,
   useRef,
 } from "react";
@@ -36,11 +37,11 @@ interface Focusable {
   focus: IO<void>;
 }
 
-type Register = (position: Position, focusable: Focusable) => void;
-
-type Unregister = (position: Position) => void;
+type Register = (position: Position, focusable: Focusable) => IO<void>;
 
 type OnFocus = (position: Position) => void;
+
+type OnBlur = () => void;
 
 type MoveDirection = "nextX" | "previousX" | "nextY" | "previousY" | "current";
 
@@ -48,15 +49,15 @@ type Move = (direction: MoveDirection) => void;
 
 interface ContextType {
   register: Register;
-  unregister: Unregister;
   onFocus: OnFocus;
+  onBlur: OnBlur;
   move: Move;
 }
 
 export const KeyboardNavigationContext = createContext<ContextType>({
   register: () => constVoid,
-  unregister: () => constVoid,
-  onFocus: () => constVoid,
+  onFocus: constVoid,
+  onBlur: constVoid,
   move: constVoid,
 });
 
@@ -83,8 +84,17 @@ export interface KeyboardNavigationProviderProps {
   maxY?: number;
   initialX?: number;
   initialY?: number;
-  children: ReactNode | ((position: BoundedPosition) => ReactNode);
+  children:
+    | ReactNode
+    | ((state: { x: number; y: number; hasFocus: boolean }) => ReactNode);
 }
+
+interface State {
+  position: BoundedPosition;
+  hasFocus: boolean;
+}
+
+type Action = { type: "onFocus"; position: Position } | { type: "onBlur" };
 
 type SparseArray<T> = (T | undefined)[];
 
@@ -92,24 +102,24 @@ export const KeyboardNavigationProvider: FC<
   KeyboardNavigationProviderProps
 > = ({ maxX, maxY = 0, initialX = 0, initialY = 0, children }) => {
   // https://twitter.com/dan_abramov/status/1102010979611746304
-  const reducer: Reducer<
-    BoundedPosition,
-    { type: "onFocus"; position: Position }
-  > = (state, action) => {
-    let nextState;
+  const reducer: Reducer<State, Action> = (state, action) => {
     switch (action.type) {
       case "onFocus":
-        nextState = createSafePosition({ ...action.position, maxX, maxY });
+        return {
+          ...state,
+          position: createSafePosition({ ...action.position, maxX, maxY }),
+          hasFocus: true,
+        };
+      case "onBlur":
+        return { ...state, hasFocus: false };
         break;
     }
-    return nextState.x === state.x && nextState.y === state.y
-      ? state
-      : nextState;
   };
 
-  const [position, dispatch] = useReducer(reducer, null, () =>
-    createSafePosition({ x: initialX, y: initialY, maxX, maxY })
-  );
+  const [{ position, hasFocus }, dispatch] = useReducer(reducer, null, () => ({
+    position: createSafePosition({ x: initialX, y: initialY, maxX, maxY }),
+    hasFocus: false,
+  }));
 
   const focusablesRef = useRef<SparseArray<SparseArray<Focusable>>>();
   const getFocusables = () => {
@@ -117,41 +127,44 @@ export const KeyboardNavigationProvider: FC<
     return focusablesRef.current;
   };
 
-  const register: Register = useCallback(({ x, y }, focusable) => {
+  const register = useCallback<Register>(({ x, y }, focusable) => {
     const focusables = getFocusables();
     const yFocusables = focusables[x] || (focusables[x] = []);
     yFocusables[y] = focusable;
+    return () => {
+      delete yFocusables[y];
+    };
   }, []);
 
-  const unregister: Unregister = useCallback(({ x, y }) => {
-    const focusables = getFocusables();
-    const yFocusables = focusables[x] || (focusables[x] = []);
-    delete yFocusables[y];
-  }, []);
-
-  const onFocus: OnFocus = useCallback(
+  const onFocus = useCallback<OnFocus>(
     (position) => dispatch({ type: "onFocus", position }),
     []
   );
 
-  const move: Move = useEvent((direction) => {
+  const onBlur = useCallback<OnBlur>(() => dispatch({ type: "onBlur" }), []);
+
+  const move = useEvent<Move>((direction) => {
+    const focusables = getFocusables();
+
     if (direction === "current") {
-      const focusable = getFocusables()[position.x]?.[position.y];
+      const focusable = focusables[position.x]?.[position.y];
       if (focusable) {
         focusable.focus();
         return;
       }
     }
+
     const isX = direction === "nextX" || direction === "previousX";
     const isNext = direction === "nextX" || direction === "nextY";
     const increment = isNext ? 1 : -1;
+
     for (
       let i = (isX ? position.x : position.y) + increment;
       isNext ? i <= (isX ? maxX : maxY) : i >= 0;
       i += increment
     ) {
       const focusable =
-        getFocusables()[isX ? i : position.x]?.[isX ? position.y : i];
+        focusables[isX ? i : position.x]?.[isX ? position.y : i];
       if (focusable) {
         focusable.focus();
         break;
@@ -161,14 +174,16 @@ export const KeyboardNavigationProvider: FC<
 
   const contextValueRef = useRef<ContextType>({
     register,
-    unregister,
     onFocus,
+    onBlur,
     move,
   });
 
   return (
     <KeyboardNavigationContext.Provider value={contextValueRef.current}>
-      {typeof children === "function" ? children(position) : children}
+      {typeof children === "function"
+        ? children({ ...position, hasFocus })
+        : children}
     </KeyboardNavigationContext.Provider>
   );
 };
@@ -200,6 +215,7 @@ export const focusElementWithId = (id: string) => {
 interface KeyNavigation<E extends HTMLElement> {
   ref: RefCallback<Focusable>;
   onFocus: IO<void>;
+  onBlur: IO<void>;
   onKeyDown: KeyDownHandler<E>;
 }
 
@@ -212,18 +228,27 @@ export const useKeyNavigation = <E extends HTMLElement>({
   y?: number;
   keys: Keys<E>;
 }): KeyNavigation<E> => {
-  const { register, unregister, onFocus, move } = useContext(
+  const { register, onFocus, onBlur, move } = useContext(
     KeyboardNavigationContext
   );
 
-  // https://beta.reactjs.org/learn/manipulating-the-dom-with-refs#how-to-manage-a-list-of-refs-using-a-ref-callback
-  // https://tkdodo.eu/blog/avoiding-use-effect-with-callback-refs
-  const ref = useEvent<RefCallback<Focusable>>((focusable) => {
-    if (focusable) register({ x, y }, focusable);
-    else unregister({ x, y });
-  });
+  const focusableRef = useRef<Focusable | null>(null);
+
+  // We need RefCallback because MutableRefObject don't work with Focusable type.
+  // The ref is stable for better performance and more straightforward reasoning.
+  const ref = useCallback<RefCallback<Focusable>>((focusable) => {
+    focusableRef.current = focusable;
+  }, []);
+
+  // I don't think we need useLayoutEffect.
+  useEffect(() => {
+    if (!focusableRef.current) return;
+    return register({ x, y }, focusableRef.current);
+  }, [register, x, y]);
 
   const handleOnFocus = useEvent(() => onFocus({ x, y }));
+
+  const handleOnBlur = useEvent(onBlur);
 
   const handleKeyDown = useEvent<KeyDownHandler<E>>((e) => {
     pipe(
@@ -248,13 +273,10 @@ export const useKeyNavigation = <E extends HTMLElement>({
     );
   });
 
-  const keyNavigationRef = useRef<KeyNavigation<E>>();
-  if (!keyNavigationRef.current)
-    keyNavigationRef.current = {
-      ref,
-      onFocus: handleOnFocus,
-      onKeyDown: handleKeyDown,
-    };
-
-  return keyNavigationRef.current;
+  return {
+    ref,
+    onFocus: handleOnFocus,
+    onBlur: handleOnBlur,
+    onKeyDown: handleKeyDown,
+  };
 };
