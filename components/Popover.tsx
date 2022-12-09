@@ -1,7 +1,7 @@
 import { IO } from "fp-ts/IO";
 import {
   FC,
-  ForwardedRef,
+  MutableRefObject,
   ReactNode,
   useLayoutEffect,
   useRef,
@@ -12,7 +12,7 @@ import { CloseButtonLayer } from "./CloseButtonLayer";
 import { Ring } from "./Ring";
 
 export type PopoverProps = {
-  ownerRef: ForwardedRef<View>;
+  ownerRef: MutableRefObject<View | null>;
   position:
     | "bottom right to bottom right"
     | "bottom left to bottom right"
@@ -37,17 +37,11 @@ export const Popover: FC<PopoverProps> = ({
   const viewRef = useRef<View>(null);
   const [xy, setXY] = useState<XY | null>(null);
 
-  // This is web only for now.
   useLayoutEffect(() => {
-    if (
-      ownerRef == null ||
-      typeof ownerRef === "function" ||
-      ownerRef.current == null ||
-      viewRef.current == null
-    )
-      return;
+    if (ownerRef.current == null || viewRef.current == null) return;
 
-    // Refactor measureInWindow callbacks to Task would be better,
+    // This is web only for now.
+    // Refactoring measureInWindow callbacks to Task would be better,
     // but this is good enough for now.
     const ownerEl = ownerRef.current as unknown as HTMLElement;
     const viewEl = viewRef.current as unknown as HTMLElement;
@@ -99,10 +93,8 @@ export const Popover: FC<PopoverProps> = ({
     <Modal transparent onRequestClose={onRequestClose} visible>
       <Ring
         ref={viewRef}
-        style={{
-          position: "absolute",
-          ...(!xy ? { opacity: 0 } : { left: xy.x, top: xy.y }),
-        }}
+        className="absolute"
+        style={xy ? { left: xy.x, top: xy.y } : { opacity: 0 }}
       >
         {children}
       </Ring>

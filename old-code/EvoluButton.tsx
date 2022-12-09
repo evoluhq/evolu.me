@@ -34,7 +34,7 @@ const EvoluButtonPopoverButtonOrLink: FC<{
   customClassName?: string;
   onRequestClose?: IO<void>;
 }> = ({ title, x, onPressOrHref, customClassName, onRequestClose }) => {
-  const keyNavigation = useKeyNavigation<RnView>({
+  const keyNavigation = useKeyNavigation({
     x,
     keys: { ArrowLeft: "previousX", ArrowRight: "nextX" },
   });
@@ -83,6 +83,7 @@ const EvoluButtonPopover: FC<{
 
   return (
     <Popover
+      // @ts-expect-error asdfas
       ownerRef={ownerRef}
       position="bottom left to bottom right"
       onRequestClose={onRequestClose}

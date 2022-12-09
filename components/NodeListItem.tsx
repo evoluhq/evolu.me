@@ -6,7 +6,6 @@ import { Link } from "./Link";
 import { NodeListItemButton } from "./NodeListItemButton";
 import { View } from "./styled";
 import { Text } from "./Text";
-import { View as RnView, Text as RnText } from "react-native";
 
 interface NodeListItemProps {
   row: {
@@ -23,16 +22,7 @@ export const NodeListItem = memo<NodeListItemProps>(function NodeListItem({
   focusable,
   x,
 }) {
-  const buttonKeyNavigation = useKeyNavigation<RnView>({
-    x,
-    keys: {
-      ArrowUp: "previousX",
-      ArrowDown: "nextX",
-      ArrowRight: "nextY",
-    },
-  });
-
-  const inputKeyNavigation = useKeyNavigation<RnText>({
+  const linkKeyNavigation = useKeyNavigation({
     x,
     y: 1,
     keys: {
@@ -69,20 +59,15 @@ export const NodeListItem = memo<NodeListItemProps>(function NodeListItem({
 
   return (
     <View className="flex-row" accessibilityRole={"listitem" as "list"}>
-      <NodeListItemButton
-        {...buttonKeyNavigation}
-        focusable={focusable === "button"}
-        id={id}
-        title={title}
-      />
+      <NodeListItemButton focusable={focusable === "button"} id={id} x={x} />
       <Link href={`/#${id}`}>
         <Text
-          {...inputKeyNavigation}
-          // @ts-expect-error RNfW
-          focusable={focusable === "input"}
+          {...linkKeyNavigation}
           as="link"
           p
           className="pl-0"
+          // @ts-expect-error RNfW
+          focusable={focusable === "input"}
         >
           {title}
         </Text>

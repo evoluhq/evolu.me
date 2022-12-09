@@ -1,22 +1,21 @@
 import { String1000 } from "evolu";
-import { IO } from "fp-ts/IO";
+import { readonlyArray } from "fp-ts";
 import { pipe } from "fp-ts/function";
+import { IO } from "fp-ts/IO";
 import { memo, useContext } from "react";
-import { TextInput as RnTextInput } from "react-native";
+import { Link } from "../components/Link";
+import { View } from "../components/styled";
 import { NodeId, useMutation } from "../lib/db";
 import {
   focusElementWithId,
   KeyboardNavigationContext,
   useKeyNavigation,
 } from "../lib/hooks/useKeyNavigation";
-import { setSafeTimeout } from "./setSafeTimeout";
-import { uniqueId } from "../lib/uniqueId";
-import { Link } from "../components/Link";
-import { View } from "../components/styled";
-import { T } from "./T";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
-import { readonlyArray } from "fp-ts";
 import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
+import { uniqueId } from "../lib/uniqueId";
+import { setSafeTimeout } from "./setSafeTimeout";
+import { T } from "./T";
 
 interface EvoluListItemProps {
   row: {
@@ -50,7 +49,7 @@ export const EvoluListItem = memo<EvoluListItemProps>(function EvoluListItem({
     (s) => `/#${s}`
   );
 
-  const keyNavigation = useKeyNavigation<RnTextInput>({
+  const keyNavigation = useKeyNavigation({
     x,
     keys: {
       ArrowUp: "previousX",

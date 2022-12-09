@@ -2,12 +2,11 @@ import clsx from "clsx";
 import { readonlyArray } from "fp-ts";
 import { pipe } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
-import { FC, ForwardedRef, forwardRef, KeyboardEvent, useState } from "react";
+import { FC, MutableRefObject, useRef, useState } from "react";
 import { useIntl } from "react-intl";
-import { View as RnView } from "react-native";
+import useEvent from "react-use-event-hook";
 import { Button } from "../components/Button";
 import { Popover } from "../components/Popover";
-import { View } from "../components/styled";
 import { NodeId, useMutation } from "../lib/db";
 import {
   KeyboardNavigationProvider,
@@ -15,6 +14,7 @@ import {
 } from "../lib/hooks/useKeyNavigation";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
+import { View } from "./styled";
 import { Text } from "./Text";
 
 const NodeListItemButtonPopoverButton: FC<{
@@ -24,7 +24,7 @@ const NodeListItemButtonPopoverButton: FC<{
   className?: string;
   onRequestClose?: IO<void>;
 }> = ({ title, x, onPress, className /*onRequestClose*/ }) => {
-  const keyNavigation = useKeyNavigation<RnView>({
+  const keyNavigation = useKeyNavigation({
     x,
     keys: { ArrowLeft: "previousX", ArrowRight: "nextX" },
   });
@@ -46,13 +46,14 @@ const NodeListItemButtonPopoverButton: FC<{
 const NodeListItemButtonPopover: FC<{
   id: NodeId;
   onRequestClose: IO<void>;
-  ownerRef: ForwardedRef<RnView>;
+  ownerRef: MutableRefObject<View | null>;
 }> = ({ id, onRequestClose, ownerRef }) => {
   const intl = useIntl();
   const { mutate } = useMutation();
   //   const { move } = useContext(KeyboardNavigationContext);
 
   const handleDeletePress = () => {
+    // TODO: Tohle musi fungovat i bez callbacku. OK.
     mutate("node", { id, isDeleted: true }, () => {
       //   setSafeTimeout(() => move("current"));
     });
@@ -117,49 +118,62 @@ const NodeListItemButtonPopover: FC<{
 
 export interface NodeListItemButton {
   focusable: boolean;
-  onFocus: IO<void>;
-  onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
   id: NodeId;
-  title: string;
+  x: number;
 }
 
-export const NodeListItemButton = forwardRef<RnView, NodeListItemButton>(
-  function NodeListItemButton({ focusable, onFocus, onKeyDown, id }, ref) {
-    const intl = useIntl();
-    const [popoverIsVisible, setPopoverIsVisible] = useState(false);
+export const NodeListItemButton: FC<NodeListItemButton> = ({
+  focusable,
+  id,
+  x,
+}) => {
+  const intl = useIntl();
+  const [popoverIsVisible, setPopoverIsVisible] = useState(false);
 
-    return (
-      <>
-        <Button
-          accessibilityLabel={intl.formatMessage({
-            defaultMessage: "Show popover",
-            id: "opkU9o",
-          })}
-          className="group w-9 items-center"
-          onFocus={onFocus}
-          // @ts-expect-error RNfW
-          onKeyDown={onKeyDown}
-          focusable={focusable}
-          ref={ref}
-          onPress={() => setPopoverIsVisible(true)}
-        >
-          <View
-            className={clsx(
-              "top-[17px] h-3 w-3 rounded-sm ring-current group-focus-visible:ring-1",
-              "bg-gray-200 group-hover:bg-gray-300",
-              "dark:bg-gray-800 dark:group-hover:bg-gray-900",
-              popoverIsVisible && "rotate-45"
-            )}
-          />
-        </Button>
-        {popoverIsVisible && (
-          <NodeListItemButtonPopover
-            id={id}
-            onRequestClose={() => setPopoverIsVisible(false)}
-            ownerRef={ref}
-          />
-        )}
-      </>
-    );
-  }
-);
+  const buttonKeyNavigation = useKeyNavigation({
+    x,
+    keys: {
+      ArrowUp: "previousX",
+      ArrowDown: "nextX",
+      ArrowRight: "nextY",
+    },
+  });
+
+  const buttonRef = useRef<View | null>(null);
+  const handleRef = useEvent((view: View | null) => {
+    buttonKeyNavigation.ref(view);
+    buttonRef.current = view;
+  });
+
+  return (
+    <>
+      <Button
+        accessibilityLabel={intl.formatMessage({
+          defaultMessage: "Show popover",
+          id: "opkU9o",
+        })}
+        className="group w-9 items-center"
+        {...buttonKeyNavigation}
+        ref={handleRef}
+        onPress={() => setPopoverIsVisible(true)}
+        focusable={focusable}
+      >
+        <View
+          className={clsx(
+            "top-[17px] h-3 w-3 rounded-sm ring-current group-focus-visible:ring-1",
+            "bg-gray-200 group-hover:bg-gray-300",
+            "dark:bg-gray-800 dark:group-hover:bg-gray-900",
+            popoverIsVisible && "rotate-45"
+          )}
+        />
+      </Button>
+      {popoverIsVisible && (
+        <NodeListItemButtonPopover
+          id={id}
+          onRequestClose={() => setPopoverIsVisible(false)}
+          ownerRef={buttonRef}
+        />
+      )}
+    </>
+  );
+};

@@ -8,7 +8,16 @@ import {
 } from "react-native";
 
 export const Pressable = styled(RnPressable);
+// export type Pressable = RnPressable;
+
 export const ScrollView = styled(RnScrollView);
+export type ScrollView = RnScrollView;
+
 export const Text = styled(RnText);
+export type Text = RnText;
+
 export const TextInput = styled(RnTextInput);
+export type TextInput = RnTextInput;
+
 export const View = styled(RnView);
+export type View = RnView;

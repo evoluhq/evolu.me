@@ -3,7 +3,6 @@ import { has, model } from "evolu";
 import { option, readonlyArray } from "fp-ts";
 import { pipe } from "fp-ts/function";
 import { FC, memo } from "react";
-import { Text as RnText } from "react-native";
 import { NodeId, useQuery } from "../lib/db";
 import {
   KeyboardNavigationProvider,
@@ -23,7 +22,7 @@ const AdjacentNodesLink: FC<{
   id: NodeId;
   isFirst: boolean;
 }> = ({ x, title, id, isFirst }) => {
-  const keyNavigation = useKeyNavigation<RnText>({
+  const keyNavigation = useKeyNavigation({
     x,
     keys: {
       //   ArrowRight: !isLast ? "nextX" : { id: uniqueId.mainNavButton },

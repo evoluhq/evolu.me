@@ -5,16 +5,15 @@ import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { memo } from "react";
 import { useIntl } from "react-intl";
-import { TextInput } from "react-native";
+import { View } from "../components/styled";
 import { useMutation } from "../lib/db";
+import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
+import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { localStorageKeys } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
-import { setSafeTimeout } from "./setSafeTimeout";
 import { uniqueId } from "../lib/uniqueId";
-import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
 import { EvoluTextInput } from "./EvoluTextInput";
-import { View } from "../components/styled";
-import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
+import { setSafeTimeout } from "./setSafeTimeout";
 
 const newNodeTitleAtom = atomWithStorage(localStorageKeys.newNodeTitle, "");
 
@@ -24,15 +23,15 @@ export const CreateEvolu = memo(function CreateEvolu() {
   const { mutate } = useMutation();
   const ids = useLocationHashNodeIds();
 
-  const inputKeyNavigation = useKeyNavigation<TextInput>({
+  const inputKeyNavigation = useKeyNavigation({
     keys: {
       ArrowUp: { id: uniqueId.lastNodeLink },
       ArrowDown: { id: uniqueId.firstAdjacentNodesItem },
-      Backspace: [
-        { id: uniqueId.lastNodeLink },
-        ({ currentTarget: { selectionStart, selectionEnd } }) =>
-          selectionStart === 0 && selectionEnd === 0,
-      ],
+      // Backspace: [
+      //   { id: uniqueId.lastNodeLink },
+      //   ({ currentTarget: { selectionStart, selectionEnd } }) =>
+      //     selectionStart === 0 && selectionEnd === 0,
+      // ],
     },
   });
 

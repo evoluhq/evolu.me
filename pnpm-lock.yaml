@@ -34,6 +34,7 @@ specifiers:
   react-dom: ^18.2.0
   react-intl: ^6.2.5
   react-native-web: ^0.18.10
+  react-use-event-hook: ^0.9.3
   tailwindcss: ^3.2.4
   tailwindcss-hocus: ^0.0.7
   typescript: ^4.9.4
@@ -56,6 +57,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-intl: 6.2.5_o77wnou4wwnegu5woljtklrzru
   react-native-web: 0.18.10_biqbaboplfbrettd7655fr4n2y
+  react-use-event-hook: 0.9.3_react@18.2.0
   zod: 3.19.1
 
 devDependencies:
@@ -3406,6 +3408,14 @@ packages:
       styleq: 0.1.2
     transitivePeerDependencies:
       - encoding
+    dev: false
+
+  /react-use-event-hook/0.9.3_react@18.2.0:
+    resolution: {integrity: sha512-8edWglTZ9Z5kfl31EuRjr4MDkTcEczHvrbo2EG1WVrX/a1B2sP3S9RCXjtSwrEnYRw29ldErlvDQNbTOxHNcmQ==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react/18.2.0:

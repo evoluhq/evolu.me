@@ -4,18 +4,17 @@ import { pipe } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
 import { FC, memo } from "react";
 import { useIntl } from "react-intl";
-import { View as RnView } from "react-native";
+import { Button } from "../components/Button";
+import { Link } from "../components/Link";
+import { ScrollView } from "../components/styled";
 import { NodeId, useQuery } from "../lib/db";
-import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
-import { uniqueId } from "../lib/uniqueId";
 import {
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/hooks/useKeyNavigation";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
-import { Button } from "../components/Button";
-import { Link } from "../components/Link";
-import { ScrollView } from "../components/styled";
+import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
+import { uniqueId } from "../lib/uniqueId";
 import { T } from "./T";
 
 const EvoluFilterLinkOrButton: FC<{
@@ -26,7 +25,7 @@ const EvoluFilterLinkOrButton: FC<{
   title: string;
   hrefOrOnPress: string | IO<void>;
 }> = ({ focusable, x, isLast, nativeID, title, hrefOrOnPress }) => {
-  const keyNavigation = useKeyNavigation<RnView>({
+  const keyNavigation = useKeyNavigation({
     x,
     keys: {
       ArrowRight: !isLast ? "nextX" : { id: uniqueId.mainNavButton },

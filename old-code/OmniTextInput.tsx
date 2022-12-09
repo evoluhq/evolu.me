@@ -4,14 +4,13 @@ import { constVoid, pipe } from "fp-ts/function";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { useIntl } from "react-intl";
-import { TextInput } from "react-native";
+import { View } from "../components/styled";
 import { useMutation } from "../lib/db";
 import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
 import { localStorageKeys } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
 import { uniqueId } from "../lib/uniqueId";
 import { EvoluTextInput } from "./EvoluTextInput";
-import { View } from "../components/styled";
 
 const newNodeTitleAtom = atomWithStorage(localStorageKeys.newNodeTitle, "");
 
@@ -31,7 +30,7 @@ export const OmniTextInput = () => {
     );
   };
 
-  const keyNavigation = useKeyNavigation<TextInput>({
+  const keyNavigation = useKeyNavigation({
     keys: {
       ArrowUp: { id: uniqueId.lastNodeLink },
       ArrowDown: { id: uniqueId.mainNavButton },

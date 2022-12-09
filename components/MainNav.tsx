@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode, useRef, useState } from "react";
 import { useIntl } from "react-intl";
-import { Text as RnText, View as RnView } from "react-native";
+import useEvent from "react-use-event-hook";
 import { Text } from "../components/Text";
 import {
   KeyboardNavigationProvider,
@@ -18,7 +18,7 @@ const MainNavLink: FC<{
   href: string;
   x: number;
 }> = ({ children, href, x }) => {
-  const keyNavigation = useKeyNavigation<RnText>({
+  const keyNavigation = useKeyNavigation({
     x,
     keys: { ArrowUp: "previousX", ArrowDown: "nextX" },
   });
@@ -64,11 +64,17 @@ export const MainNav = () => {
   const intl = useIntl();
   const [popoverIsVisible, setPopoverIsVisible] = useState(false);
 
-  const buttonKeyNavigation = useKeyNavigation<RnView>({
+  const buttonKeyNavigation = useKeyNavigation({
     keys: {
-      ArrowLeft: { id: uniqueId.lastAdjacentNodesItem },
-      ArrowUp: { id: uniqueId.createNodeInput },
+      // ArrowLeft: { id: uniqueId.lastAdjacentNodesItem },
+      // ArrowUp: { id: uniqueId.createNodeInput },
     },
+  });
+
+  const buttonRef = useRef<View | null>(null);
+  const handleRef = useEvent((view: View | null) => {
+    buttonKeyNavigation.ref(view);
+    buttonRef.current = view;
   });
 
   return (
@@ -76,6 +82,7 @@ export const MainNav = () => {
       <Button
         onPress={() => setPopoverIsVisible(true)}
         {...buttonKeyNavigation}
+        ref={handleRef}
         nativeID={uniqueId.mainNavButton}
       >
         <Text as="button">
@@ -84,7 +91,7 @@ export const MainNav = () => {
       </Button>
       {popoverIsVisible ? (
         <Popover
-          ownerRef={buttonKeyNavigation.ref}
+          ownerRef={buttonRef}
           position="top right to top right"
           onRequestClose={() => setPopoverIsVisible(false)}
         >
