@@ -5,7 +5,7 @@ specifiers:
   '@lexical/html': ^0.6.5
   '@lexical/react': ^0.6.5
   '@next/bundle-analyzer': ^13.0.6
-  '@types/node': ^18.11.11
+  '@types/node': ^18.11.12
   '@types/react': ^18.0.26
   '@types/react-dom': ^18.0.9
   '@types/react-native': ^0.70.8
@@ -29,7 +29,7 @@ specifiers:
   openpgp: ^5.5.0
   postcss: ^8.4.19
   prettier: ^2.8.1
-  prettier-plugin-tailwindcss: ^0.2.0
+  prettier-plugin-tailwindcss: ^0.2.1
   react: ^18.2.0
   react-dom: ^18.2.0
   react-intl: ^6.2.5
@@ -60,7 +60,7 @@ dependencies:
 
 devDependencies:
   '@formatjs/cli': 5.1.7
-  '@types/node': 18.11.11
+  '@types/node': 18.11.12
   '@types/react': 18.0.26
   '@types/react-dom': 18.0.9
   '@types/react-native': 0.70.8
@@ -75,7 +75,7 @@ devDependencies:
   eslint-plugin-formatjs: 4.3.8_eslint@8.29.0
   postcss: 8.4.19
   prettier: 2.8.1
-  prettier-plugin-tailwindcss: 0.2.0_prettier@2.8.1
+  prettier-plugin-tailwindcss: 0.2.1_prettier@2.8.1
   tailwindcss: 3.2.4_postcss@8.4.19
   tailwindcss-hocus: 0.0.7_tailwindcss@3.2.4
   typescript: 4.9.4
@@ -1039,8 +1039,8 @@ packages:
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
     dev: true
 
-  /@types/node/18.11.11:
-    resolution: {integrity: sha512-KJ021B1nlQUBLopzZmPBVuGU9un7WJd/W4ya7Ih02B4Uwky5Nja0yGYav2EfYIk0RR2Q9oVhf60S2XR1BCWJ2g==}
+  /@types/node/18.11.12:
+    resolution: {integrity: sha512-FgD3NtTAKvyMmD44T07zz2fEf+OKwutgBCEVM8GcvMGVGaDktiLNTDvPwC/LUe3PinMW+X6CuLOF2Ui1mAlSXg==}
     dev: true
 
   /@types/picomatch/2.3.0:
@@ -1367,7 +1367,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.4
-      caniuse-lite: 1.0.30001436
+      caniuse-lite: 1.0.30001439
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -1468,7 +1468,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001436
+      caniuse-lite: 1.0.30001439
       electron-to-chromium: 1.4.284
       node-releases: 2.0.6
       update-browserslist-db: 1.0.10_browserslist@4.21.4
@@ -1489,8 +1489,8 @@ packages:
     resolution: {integrity: sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==}
     engines: {node: '>= 6'}
 
-  /caniuse-lite/1.0.30001436:
-    resolution: {integrity: sha512-ZmWkKsnC2ifEPoWUvSAIGyOYwT+keAaaWPHiQ9DfMqS1t6tfuyFYoWR78TeZtznkEQ64+vGXH9cZrElwR2Mrxg==}
+  /caniuse-lite/1.0.30001439:
+    resolution: {integrity: sha512-1MgUzEkoMO6gKfXflStpYgZDlFM7M/ck/bgfVCACO5vnAf0fXoNVHdWtqGU+MYca+4bL9Z5bpOVmR33cWW9G2A==}
 
   /chalk/2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -2949,7 +2949,7 @@ packages:
     dependencies:
       '@next/env': 13.0.6
       '@swc/helpers': 0.4.14
-      caniuse-lite: 1.0.30001436
+      caniuse-lite: 1.0.30001439
       postcss: 8.4.14
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -3293,8 +3293,8 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier-plugin-tailwindcss/0.2.0_prettier@2.8.1:
-    resolution: {integrity: sha512-Ruqig/mdWCSpqdq9WK44nrmqM4BFWTzBPhPGwC5NK3coV9eZntEQPB84MGZbjAg0XQU02jVRHXNRPREBzxvM+A==}
+  /prettier-plugin-tailwindcss/0.2.1_prettier@2.8.1:
+    resolution: {integrity: sha512-aIO8IguumORyRsmT+E7JfJ3A9FEoyhqZR7Au7TBOege3VZkgMvHJMkufeYp4zjnDK2iq4ktkvGMNOQR9T8lisQ==}
     engines: {node: '>=12.17.0'}
     peerDependencies:
       prettier: '>=2.2.0'
