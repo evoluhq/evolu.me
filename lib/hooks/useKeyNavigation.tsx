@@ -11,6 +11,7 @@ import {
   RefCallback,
   useCallback,
   useContext,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useReducer,
@@ -18,6 +19,11 @@ import {
 } from "react";
 import useEvent from "react-use-event-hook";
 import { BRAND } from "zod";
+
+export const IS_SERVER = typeof window === "undefined" || "Deno" in window;
+export const useIsomorphicLayoutEffect = IS_SERVER
+  ? useEffect
+  : useLayoutEffect;
 
 // React Hook for keyboard navigation via Roving tabindex
 //  - fast, flexible, minimal
@@ -44,9 +50,15 @@ type OnFocus = (position: Position) => void;
 
 type OnBlur = () => void;
 
-type MoveDirection = "nextX" | "previousX" | "nextY" | "previousY" | "current";
+// TODO: Add Position.
+export type Direction =
+  | "nextX"
+  | "previousX"
+  | "nextY"
+  | "previousY"
+  | "current";
 
-type Move = (direction: MoveDirection) => void;
+type Move = (direction: Direction) => void;
 
 interface ContextType {
   register: Register;
@@ -196,7 +208,7 @@ type Key =
   | "Enter";
 
 type KeyAction<E extends HTMLElement> =
-  | MoveDirection
+  | Direction
   | { id: string }
   | ((e: KeyboardEvent<E>) => void);
 
@@ -238,7 +250,7 @@ export const useKeyNavigation = <E extends HTMLElement>({
     focusableRef.current = focusable;
   }, []);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!focusableRef.current) return;
     return register({ x, y }, focusableRef.current);
   }, [register, x, y]);
