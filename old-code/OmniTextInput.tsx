@@ -33,7 +33,7 @@ export const OmniTextInput = () => {
   const keyNavigation = useKeyNavigation({
     keys: {
       ArrowUp: { id: uniqueId.lastNodeLink },
-      ArrowDown: { id: uniqueId.mainNavButton },
+      // ArrowDown: { id: uniqueId.mainNavButton },
       // Backspace: [
       //   { id: uniqueId.lastNodeLink },
       //   ({ currentTarget: { selectionStart, selectionEnd } }) =>

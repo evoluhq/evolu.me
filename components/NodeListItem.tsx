@@ -2,6 +2,7 @@ import { NonEmptyString1000 } from "evolu";
 import { memo } from "react";
 import { NodeId } from "../lib/db";
 import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
+import { uniqueId } from "../lib/uniqueId";
 import { Link } from "./Link";
 import { NodeListItemButton } from "./NodeListItemButton";
 import { View } from "./styled";
@@ -14,46 +15,22 @@ interface NodeListItemProps {
   };
   focusable: false | "button" | "input";
   x: number;
-  // isLast: boolean;
+  isLast: boolean;
 }
 
 export const NodeListItem = memo<NodeListItemProps>(function NodeListItem({
   row: { id, title },
   focusable,
   x,
+  isLast,
 }) {
   const linkKeyNavigation = useKeyNavigation({
     x,
     y: 1,
     keys: {
       ArrowUp: "previousX",
-      ArrowDown: "nextX",
+      ArrowDown: !isLast ? "nextX" : { id: uniqueId.createNodeInput },
       ArrowLeft: "previousY",
-      // ArrowDown: !isLast ? "nextX" : { id: uniqueId.createEvoluInput },
-      // ArrowLeft: [
-      //   "previousY",
-      //   ({ currentTarget: { selectionStart, selectionEnd } }) =>
-      //     selectionStart === 0 && selectionEnd === 0,
-      // ],
-      // Escape: () => {
-      //   setEditTitle(null);
-      // },
-      // Backspace: [
-      //   () => {
-      //     mutate("evolu", { id, isDeleted: true }, () => {
-      //       if (x === 0) {
-      //         if (isLast) focusElementWithId(uniqueId.createEvoluInput);
-      //         else {
-      //           setSafeTimeout(() => {
-      //             move("current");
-      //           });
-      //         }
-      //       } else move("previousX");
-      //     });
-      //   },
-      //   () => (hasChange ? editTitle.length === 0 : title?.length === 0),
-      // ],
-      // Enter: [{ id: uniqueId.createEvoluInput }, () => !hasChange],
     },
   });
 
@@ -68,6 +45,7 @@ export const NodeListItem = memo<NodeListItemProps>(function NodeListItem({
           className="pl-0"
           // @ts-expect-error RNfW
           focusable={focusable === "input"}
+          nativeID={isLast ? uniqueId.lastNodeLink : undefined}
         >
           {title}
         </Text>

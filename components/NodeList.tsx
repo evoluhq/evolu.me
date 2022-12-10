@@ -80,7 +80,7 @@ export const NodeList = () => {
                 row={row}
                 x={i}
                 focusable={i === x && (y === 0 ? "button" : "input")}
-                // isLast={i === loadedRows.length - 1}
+                isLast={i === loadedRows.length - 1}
               />
             ))}
           </>

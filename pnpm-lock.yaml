@@ -4,6 +4,7 @@ specifiers:
   '@formatjs/cli': ^5.1.7
   '@lexical/html': ^0.7.0
   '@lexical/react': ^0.7.0
+  '@lexical/utils': ^0.7.0
   '@next/bundle-analyzer': ^13.0.6
   '@types/node': ^18.11.12
   '@types/react': ^18.0.26
@@ -43,6 +44,7 @@ specifiers:
 dependencies:
   '@lexical/html': 0.7.0_lexical@0.7.0
   '@lexical/react': 0.7.0_dbzhifg2tbcmezshmq5vugog7u
+  '@lexical/utils': 0.7.0_lexical@0.7.0
   '@next/bundle-analyzer': 13.0.6
   clsx: 1.2.1
   cross-env: 7.0.3

@@ -8,13 +8,17 @@ import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
+import { mergeRegister } from "@lexical/utils";
 import { NonEmptyString1000 } from "evolu";
 import { either, option } from "fp-ts";
 import { constFalse, constVoid, flow, pipe } from "fp-ts/function";
 import {
   $getRoot,
+  $getSelection,
+  $isRangeSelection,
   COMMAND_PRIORITY_LOW,
   EditorState,
+  KEY_ARROW_UP_COMMAND,
   KEY_ENTER_COMMAND,
 } from "lexical";
 import {
@@ -25,7 +29,9 @@ import {
   useEffect,
   useRef,
 } from "react";
+import { focusElementWithId } from "../lib/hooks/useKeyNavigation";
 import { safeParseToEither } from "../lib/safeParseToEither";
+import { uniqueId } from "../lib/uniqueId";
 import { Text } from "./Text";
 
 const initialConfig: InitialConfigType = {
@@ -52,33 +58,51 @@ const SubmitOnEnterPlugin: FC<{
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
-    return editor.registerCommand(
-      KEY_ENTER_COMMAND,
-      flow(
-        option.fromNullable,
-        option.filter((e) => !e.shiftKey),
-        option.match(constFalse, (e) => {
-          // Lexical rich text plugin uses only preventDefault 🤷‍♂️
-          // event.stopPropagation();
-          // event.stopImmediatePropagation()
-          e.preventDefault();
+    return mergeRegister(
+      editor.registerCommand(
+        KEY_ENTER_COMMAND,
+        flow(
+          option.fromNullable,
+          option.filter((e) => !e.shiftKey),
+          option.match(constFalse, (e) => {
+            // Lexical rich text plugin uses only preventDefault 🤷‍♂️
+            // event.stopPropagation();
+            // event.stopImmediatePropagation()
+            e.preventDefault();
 
-          pipe(
-            NonEmptyString1000.safeParse(editorTextRef.current),
-            safeParseToEither,
-            // TODO: Alert "too long text, it's x length, max is y"
-            either.match(constVoid, (value) => {
-              // https://lexical.dev/docs/faq#how-do-i-clear-the-contents-of-the-editor
-              editor.update(() => {
-                $getRoot().clear();
-              });
-              onSubmit(value);
-            })
-          );
-          return true;
-        })
+            pipe(
+              NonEmptyString1000.safeParse(editorTextRef.current),
+              safeParseToEither,
+              // TODO: Alert "too long text, it's x length, max is y"
+              either.match(constVoid, (value) => {
+                // https://lexical.dev/docs/faq#how-do-i-clear-the-contents-of-the-editor
+                editor.update(() => {
+                  $getRoot().clear();
+                });
+                onSubmit(value);
+              })
+            );
+            return true;
+          })
+        ),
+        COMMAND_PRIORITY_LOW
       ),
-      COMMAND_PRIORITY_LOW
+      editor.registerCommand(
+        KEY_ARROW_UP_COMMAND,
+        () =>
+          pipe(
+            $getSelection(),
+            option.fromNullable,
+            option.filter($isRangeSelection),
+            option.filter((s) => s.isCollapsed()),
+            option.filter((s) => s.anchor.offset === 0),
+            option.match(constFalse, () => {
+              focusElementWithId(uniqueId.lastNodeLink);
+              return true;
+            })
+          ),
+        COMMAND_PRIORITY_LOW
+      )
     );
   }, [editor, editorTextRef, onSubmit]);
 
@@ -109,7 +133,7 @@ export const NodeEditor = memo<{
         }}
       >
         <PlainTextPlugin
-          contentEditable={<ContentEditable />}
+          contentEditable={<ContentEditable id={uniqueId.createNodeInput} />}
           placeholder={<></>}
           ErrorBoundary={LexicalErrorBoundary}
         />

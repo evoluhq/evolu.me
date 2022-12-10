@@ -28,7 +28,7 @@ const EvoluFilterLinkOrButton: FC<{
   const keyNavigation = useKeyNavigation({
     x,
     keys: {
-      ArrowRight: !isLast ? "nextX" : { id: uniqueId.mainNavButton },
+      ArrowRight: !isLast ? "nextX" : { id: uniqueId.createNodeInput },
       ArrowLeft: "previousX",
       ArrowUp: { id: uniqueId.createNodeInput },
     },

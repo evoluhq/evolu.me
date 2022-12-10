@@ -7,7 +7,6 @@ import {
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/hooks/useKeyNavigation";
-import { uniqueId } from "../lib/uniqueId";
 import { Button } from "./Button";
 import { Link } from "./Link";
 import { Popover } from "./Popover";
@@ -83,7 +82,6 @@ export const MainNav = () => {
         onPress={() => setPopoverIsVisible(true)}
         {...buttonKeyNavigation}
         ref={handleRef}
-        nativeID={uniqueId.mainNavButton}
       >
         <Text as="button">
           {intl.formatMessage({ defaultMessage: "⋮", id: "Z/OE6b" })}
