@@ -11,7 +11,8 @@ import {
   RefCallback,
   useCallback,
   useContext,
-  useEffect,
+  useLayoutEffect,
+  useMemo,
   useReducer,
   useRef,
 } from "react";
@@ -62,18 +63,16 @@ export const KeyboardNavigationContext = createContext<ContextType>({
 });
 
 /** Limit `x` and `y` to ensure focus is not lost. */
-interface PositionBounds {
+interface Bounds {
   maxX: number;
   maxY: number;
 }
 
 // // https://dev.to/gcanti/functional-design-smart-constructors-14nb
-const createSafePosition = ({
-  x,
-  y,
-  maxX,
-  maxY,
-}: Position & PositionBounds): BoundedPosition =>
+const createBoundedPosition = (
+  { x, y }: Position,
+  { maxX, maxY }: Bounds
+): BoundedPosition =>
   ({
     x: bounded.clamp({ ...number.Ord, bottom: 0, top: maxX })(x),
     y: bounded.clamp({ ...number.Ord, bottom: 0, top: maxY })(y),
@@ -90,36 +89,35 @@ export interface KeyboardNavigationProviderProps {
 }
 
 interface State {
-  position: BoundedPosition;
+  position: Position;
   hasFocus: boolean;
 }
 
 type Action = { type: "onFocus"; position: Position } | { type: "onBlur" };
+
+const reducer: Reducer<State, Action> = (state, action) => {
+  switch (action.type) {
+    case "onFocus":
+      return { ...state, position: action.position, hasFocus: true };
+    case "onBlur":
+      return { ...state, hasFocus: false };
+  }
+};
 
 type SparseArray<T> = (T | undefined)[];
 
 export const KeyboardNavigationProvider: FC<
   KeyboardNavigationProviderProps
 > = ({ maxX, maxY = 0, initialX = 0, initialY = 0, children }) => {
-  // https://twitter.com/dan_abramov/status/1102010979611746304
-  const reducer: Reducer<State, Action> = (state, action) => {
-    switch (action.type) {
-      case "onFocus":
-        return {
-          ...state,
-          position: createSafePosition({ ...action.position, maxX, maxY }),
-          hasFocus: true,
-        };
-      case "onBlur":
-        return { ...state, hasFocus: false };
-        break;
-    }
-  };
-
-  const [{ position, hasFocus }, dispatch] = useReducer(reducer, null, () => ({
-    position: createSafePosition({ x: initialX, y: initialY, maxX, maxY }),
+  const [state, dispatch] = useReducer(reducer, null, () => ({
+    position: { x: initialX, y: initialY },
     hasFocus: false,
   }));
+
+  const position = useMemo(
+    () => createBoundedPosition(state.position, { maxX, maxY }),
+    [maxX, maxY, state.position]
+  );
 
   const focusablesRef = useRef<SparseArray<SparseArray<Focusable>>>();
   const getFocusables = () => {
@@ -182,7 +180,7 @@ export const KeyboardNavigationProvider: FC<
   return (
     <KeyboardNavigationContext.Provider value={contextValueRef.current}>
       {typeof children === "function"
-        ? children({ ...position, hasFocus })
+        ? children({ ...position, hasFocus: state.hasFocus })
         : children}
     </KeyboardNavigationContext.Provider>
   );
@@ -240,8 +238,7 @@ export const useKeyNavigation = <E extends HTMLElement>({
     focusableRef.current = focusable;
   }, []);
 
-  // I don't think we need useLayoutEffect.
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!focusableRef.current) return;
     return register({ x, y }, focusableRef.current);
   }, [register, x, y]);
