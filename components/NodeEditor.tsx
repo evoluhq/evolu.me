@@ -29,9 +29,8 @@ import {
   useEffect,
   useRef,
 } from "react";
-import { focusElementWithId } from "../lib/hooks/useKeyNavigation";
+import { focusClassNames, focusClassName } from "../lib/focusClassNames";
 import { safeParseToEither } from "../lib/safeParseToEither";
-import { uniqueId } from "../lib/uniqueId";
 import { Text } from "./Text";
 
 const initialConfig: InitialConfigType = {
@@ -89,7 +88,7 @@ const SubmitOnEnterPlugin: FC<{
       ),
       editor.registerCommand(
         KEY_ARROW_UP_COMMAND,
-        () =>
+        (e) =>
           pipe(
             $getSelection(),
             option.fromNullable,
@@ -97,7 +96,8 @@ const SubmitOnEnterPlugin: FC<{
             option.filter((s) => s.isCollapsed()),
             option.filter((s) => s.anchor.offset === 0),
             option.match(constFalse, () => {
-              focusElementWithId(uniqueId.lastNodeLink);
+              e.preventDefault();
+              focusClassName("lastNodeLink")();
               return true;
             })
           ),
@@ -133,7 +133,9 @@ export const NodeEditor = memo<{
         }}
       >
         <PlainTextPlugin
-          contentEditable={<ContentEditable id={uniqueId.createNodeInput} />}
+          contentEditable={
+            <ContentEditable className={focusClassNames.createNodeInput} />
+          }
           placeholder={<></>}
           ErrorBoundary={LexicalErrorBoundary}
         />

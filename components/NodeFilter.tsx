@@ -4,13 +4,13 @@ import { option, readonlyArray } from "fp-ts";
 import { pipe } from "fp-ts/function";
 import { FC, memo } from "react";
 import { NodeId, useQuery } from "../lib/db";
+import { focusClassName, focusClassNames } from "../lib/focusClassNames";
 import {
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/hooks/useKeyNavigation";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { truncate } from "../lib/truncate";
-import { uniqueId } from "../lib/uniqueId";
 import { Link } from "./Link";
 import { PageTitle } from "./PageTitle";
 import { ScrollView } from "./styled";
@@ -28,7 +28,7 @@ const NodeFilterLink: FC<{
     keys: {
       ArrowLeft: "previousX",
       ArrowRight: "nextX",
-      ArrowDown: { id: uniqueId.createNodeInput },
+      ArrowDown: focusClassName("createNodeInput"),
     },
   });
 
@@ -37,11 +37,12 @@ const NodeFilterLink: FC<{
       <Text
         as="link"
         p
-        className={clsx(isFirst && "pl-0")}
+        className={clsx(
+          isFirst && ["pl-0", focusClassNames.firstNodeFilterLink]
+        )}
         {...keyNavigation}
         // @ts-expect-error RNfW
         focusable={focusable}
-        nativeID={isFirst ? uniqueId.firstNodeFilterLink : undefined}
       >
         {title}
       </Text>

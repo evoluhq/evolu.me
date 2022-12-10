@@ -1,8 +1,9 @@
+import clsx from "clsx";
 import { NonEmptyString1000 } from "evolu";
 import { memo } from "react";
 import { NodeId } from "../lib/db";
+import { focusClassName, focusClassNames } from "../lib/focusClassNames";
 import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
-import { uniqueId } from "../lib/uniqueId";
 import { Link } from "./Link";
 import { NodeItemButton } from "./NodeItemButton";
 import { View } from "./styled";
@@ -29,7 +30,7 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
     y: 1,
     keys: {
       ArrowUp: "previousX",
-      ArrowDown: !isLast ? "nextX" : { id: uniqueId.createNodeInput },
+      ArrowDown: !isLast ? "nextX" : focusClassName("createNodeInput"),
       ArrowLeft: "previousY",
     },
   });
@@ -47,10 +48,9 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
           {...linkKeyNavigation}
           as="link"
           p
-          className="pl-0"
+          className={clsx("pl-0", isLast && focusClassNames.lastNodeLink)}
           // @ts-expect-error RNfW
           focusable={focusable === "input"}
-          nativeID={isLast ? uniqueId.lastNodeLink : undefined}
         >
           {title}
         </Text>

@@ -64,7 +64,7 @@ export const NodeList = () => {
   return (
     <View
       accessibilityRole="list"
-      className="py-[88px]" // A space for scrolling, 2x44
+      // className="py-[88px]" // A space for scrolling, 2x44
     >
       <KeyboardNavigationProvider
         maxX={loadedRows.length - 1}

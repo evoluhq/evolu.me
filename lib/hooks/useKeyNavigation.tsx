@@ -1,5 +1,5 @@
 import { bounded, number, option, record } from "fp-ts";
-import { constVoid, pipe } from "fp-ts/function";
+import { absurd, constVoid, pipe } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
 import { Predicate } from "fp-ts/Predicate";
 import {
@@ -209,7 +209,6 @@ type Key =
 
 type KeyAction<E extends HTMLElement> =
   | Direction
-  | { id: string }
   | ((e: KeyboardEvent<E>) => void);
 
 type Keys<E extends HTMLElement> = Partial<
@@ -217,10 +216,6 @@ type Keys<E extends HTMLElement> = Partial<
 >;
 
 type KeyDownHandler<E extends HTMLElement> = (e: KeyboardEvent<E>) => void;
-
-export const focusElementWithId = (id: string) => {
-  document.getElementById(id)?.focus();
-};
 
 interface KeyNavigation<E extends HTMLElement> {
   ref: RefCallback<Focusable>;
@@ -275,7 +270,7 @@ export const useKeyNavigation = <E extends HTMLElement>({
             action(e);
             break;
           default: {
-            focusElementWithId(action.id);
+            absurd(action);
           }
         }
       })

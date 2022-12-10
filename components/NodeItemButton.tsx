@@ -26,7 +26,7 @@ import { View } from "./styled";
 import { Text } from "./Text";
 import { useLocationHash } from "../lib/hooks/useLocationHash";
 import { useRouter } from "next/router";
-import { uniqueId } from "../lib/uniqueId";
+import { focusClassName } from "../lib/focusClassNames";
 
 const NodeItemButtonPopoverButton: FC<{
   title: string;
@@ -156,7 +156,7 @@ export const NodeItemButton: FC<NodeItemButton> = ({
     x,
     keys: {
       ArrowUp: "previousX",
-      ArrowDown: !isLast ? "nextX" : { id: uniqueId.createNodeInput },
+      ArrowDown: !isLast ? "nextX" : focusClassName("createNodeInput"),
       ArrowRight: "nextY",
     },
   });
