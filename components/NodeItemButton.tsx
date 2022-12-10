@@ -97,8 +97,7 @@ const NodeItemButtonPopover: FC<{
   return (
     <Popover
       ownerRef={ownerRef}
-      position="bottom left to bottom right"
-      // yOffset={-4}
+      position="top left to top right"
       onRequestClose={onRequestClose}
     >
       <View className="flex-row">

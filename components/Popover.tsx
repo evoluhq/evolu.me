@@ -11,12 +11,16 @@ import { Dimensions, Modal, View } from "react-native";
 import { CloseButtonLayer } from "./CloseButtonLayer";
 import { Ring } from "./Ring";
 
+type PopoverPosition =
+  // what where
+  | "bottom right to bottom right"
+  | "bottom left to bottom right"
+  | "top right to top right"
+  | "top left to top right";
+
 export type PopoverProps = {
   ownerRef: MutableRefObject<View | null>;
-  position:
-    | "bottom right to bottom right"
-    | "bottom left to bottom right"
-    | "top right to top right";
+  position: PopoverPosition;
   yOffset?: number;
   onRequestClose: IO<void>;
   children: ReactNode;
@@ -64,6 +68,11 @@ export const Popover: FC<PopoverProps> = ({
           case "top right to top right":
             return {
               x: ownerRect.left - viewEl.offsetWidth + ownerRect.width,
+              y: ownerRect.top - ownerRect.height + ownerRect.height,
+            };
+          case "top left to top right":
+            return {
+              x: ownerRect.left + ownerRect.width,
               y: ownerRect.top - ownerRect.height + ownerRect.height,
             };
         }
