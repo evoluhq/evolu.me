@@ -26,7 +26,7 @@ export const Layout: FC<{
       {titleIsString && <PageTitle title={title} />}
       <View className={clsx("flex-1 justify-center", isHidden && "hidden")}>
         <View className="max-h-[700px] flex-1">
-          <Container className="absolute inset-x-0 z-10" backdrop>
+          <Container>
             <View className="flex-row">
               {titleIsString ? (
                 <Text p className="flex-1 pl-0" {...accessibility.heading(1)}>
@@ -44,9 +44,7 @@ export const Layout: FC<{
             onScroll={layoutScroll.onScroll}
             ref={layoutScroll.onRef}
           >
-            <Container className={clsx(!centerContent && "pt-24")}>
-              {children}
-            </Container>
+            <Container>{children}</Container>
           </ScrollView>
           {footer}
         </View>

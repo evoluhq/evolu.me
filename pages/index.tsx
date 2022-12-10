@@ -21,7 +21,7 @@ const Footer: FC = () => {
   const addNodeMutation = useAddNodeMutation();
 
   return (
-    <Container className="absolute inset-x-0 bottom-0 pb-0" backdrop>
+    <Container className="pb-0">
       <NodeEditor onSubmit={addNodeMutation} />
       <View className="flex-row justify-evenly">
         <Link href="/">
