@@ -9,15 +9,15 @@
     "analyze": "cross-env ANALYZE=true pnpm build"
   },
   "dependencies": {
-    "@lexical/html": "^0.6.5",
-    "@lexical/react": "^0.6.5",
+    "@lexical/html": "^0.7.0",
+    "@lexical/react": "^0.7.0",
     "@next/bundle-analyzer": "^13.0.6",
     "clsx": "^1.2.1",
     "cross-env": "^7.0.3",
     "evolu": "^0.5.1",
     "fp-ts": "^2.13.1",
     "jotai": "^1.11.1",
-    "lexical": "^0.6.5",
+    "lexical": "^0.7.0",
     "nativewind": "3.0.0-next.34",
     "next": "^13.0.6",
     "openpgp": "^5.5.0",
