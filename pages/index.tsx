@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useIntl } from "react-intl";
-import { AdjacentNodes } from "../components/AdjacentNodes";
+import { NodeFilter } from "../components/NodeFilter";
 import { Button } from "../components/Button";
 import { ClientOnly } from "../components/ClientOnly";
 import { Container } from "../components/Container";
@@ -51,7 +51,7 @@ const Index = () => {
       waitForData
       title={
         <ClientOnly>
-          <AdjacentNodes />
+          <NodeFilter />
         </ClientOnly>
       }
       centerContent

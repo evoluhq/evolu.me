@@ -90,6 +90,10 @@ const NodeItemButtonPopover: FC<{
     });
   };
 
+  const handleEditPress = () => {
+    alert("todo");
+  };
+
   return (
     <Popover
       ownerRef={ownerRef}
@@ -101,29 +105,29 @@ const NodeItemButtonPopover: FC<{
         <KeyboardNavigationProvider maxX={2}>
           <NodeItemButtonPopoverButton
             title={intl.formatMessage({
-              defaultMessage: "Add",
-              id: "2/2yg+",
-            })}
-            x={0}
-            onPress={handleAddPress}
-            className="rounded-none rounded-l"
-          />
-          <NodeItemButtonPopoverButton
-            title={intl.formatMessage({
               defaultMessage: "Delete",
               id: "K3r6DQ",
             })}
-            x={1}
+            x={0}
             onPress={handleDeletePress}
-            className="rounded-none"
+            className="rounded-none rounded-l"
           />
           <NodeItemButtonPopoverButton
             title={intl.formatMessage({
               defaultMessage: "Edit",
               id: "wEQDC6",
             })}
+            x={1}
+            onPress={handleEditPress}
+            className="rounded-none"
+          />
+          <NodeItemButtonPopoverButton
+            title={intl.formatMessage({
+              defaultMessage: "Filter",
+              id: "9Obw6C",
+            })}
             x={2}
-            onPress={handleDeletePress}
+            onPress={handleAddPress}
             className="rounded-none rounded-r"
           />
         </KeyboardNavigationProvider>

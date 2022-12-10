@@ -15,7 +15,7 @@ import { PageTitle } from "./PageTitle";
 import { ScrollView } from "./styled";
 import { Text } from "./Text";
 
-const AdjacentNodesLink: FC<{
+const NodeFilterLink: FC<{
   focusable: boolean;
   x: number;
   title: string;
@@ -47,8 +47,8 @@ const AdjacentNodesLink: FC<{
   );
 };
 
-const AdjacentNodesWithIds = memo<{ ids: readonly NodeId[] }>(
-  function AdjacentNodesLinks({ ids }) {
+const NodeFilterWithIds = memo<{ ids: readonly NodeId[] }>(
+  function NodeFilterLinks({ ids }) {
     const { rows } = useQuery((db) =>
       db
         .selectFrom("node")
@@ -83,13 +83,13 @@ const AdjacentNodesWithIds = memo<{ ids: readonly NodeId[] }>(
           >
             {({ x }) =>
               sortedRowsWithTruncatedTitle.map((row, i) => (
-                <AdjacentNodesLink
+                <NodeFilterLink
                   key={row.id}
                   focusable={x === i}
                   x={i}
                   isFirst={i === 0}
                   //   isLast={false}
-                  //   nativeID={uniqueId.firstAdjacentNodesItem}
+                  //   nativeID={uniqueId.firstNodeFilterItem}
                   title={row.title}
                   id={row.id}
                   //   hrefOrOnPress={`/#${pipe(
@@ -108,10 +108,10 @@ const AdjacentNodesWithIds = memo<{ ids: readonly NodeId[] }>(
   }
 );
 
-export const AdjacentNodes = () => {
+export const NodeFilter = () => {
   // useLocationHash uses useSyncExternalStore which can dispatch
   // the same value twice. That's why we isolate it from useQuery.
   // https://github.com/facebook/react/issues/25191#issuecomment-1244805920
   const ids = useLocationHashNodeIds();
-  return <AdjacentNodesWithIds ids={ids} />;
+  return <NodeFilterWithIds ids={ids} />;
 };

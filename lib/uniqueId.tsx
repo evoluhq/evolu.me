@@ -4,6 +4,6 @@ export const uniqueId = createKeyNavigationUniqueId([
   "createNodeInput",
   "lastNodeLink",
 
-  "firstAdjacentNodesItem",
-  "lastAdjacentNodesItem",
+  "firstNodeFilterItem",
+  "lastNodeFilterItem",
 ]);

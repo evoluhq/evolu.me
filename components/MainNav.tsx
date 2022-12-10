@@ -65,7 +65,7 @@ export const MainNav = () => {
 
   const buttonKeyNavigation = useKeyNavigation({
     keys: {
-      // ArrowLeft: { id: uniqueId.lastAdjacentNodesItem },
+      // ArrowLeft: { id: uniqueId.lastNodeFilterItem },
       // ArrowUp: { id: uniqueId.createNodeInput },
     },
   });

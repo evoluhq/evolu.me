@@ -84,7 +84,7 @@ const EvoluFilterWorkaround = memo<{ ids: readonly NodeId[] }>(
                 focusable={x === 0}
                 x={0}
                 isLast={false}
-                nativeID={uniqueId.firstAdjacentNodesItem}
+                nativeID={uniqueId.firstNodeFilterItem}
                 title={intl.formatMessage({
                   defaultMessage: "All",
                   id: "zQvVDJ",
@@ -97,7 +97,7 @@ const EvoluFilterWorkaround = memo<{ ids: readonly NodeId[] }>(
                   focusable={x === i + 1}
                   x={i + 1}
                   isLast={false}
-                  nativeID={uniqueId.firstAdjacentNodesItem}
+                  nativeID={uniqueId.firstNodeFilterItem}
                   title={row.title}
                   hrefOrOnPress={`/#${pipe(
                     sortedRows,
@@ -111,7 +111,7 @@ const EvoluFilterWorkaround = memo<{ ids: readonly NodeId[] }>(
                 focusable={x === sortedRows.length + 1}
                 x={sortedRows.length + 1}
                 isLast={true}
-                nativeID={uniqueId.lastAdjacentNodesItem}
+                nativeID={uniqueId.lastNodeFilterItem}
                 title="…"
                 hrefOrOnPress={() => {
                   alert("todo");

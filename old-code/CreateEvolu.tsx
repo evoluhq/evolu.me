@@ -26,7 +26,7 @@ export const CreateEvolu = memo(function CreateEvolu() {
   const inputKeyNavigation = useKeyNavigation({
     keys: {
       ArrowUp: { id: uniqueId.lastNodeLink },
-      ArrowDown: { id: uniqueId.firstAdjacentNodesItem },
+      ArrowDown: { id: uniqueId.firstNodeFilterItem },
       // Backspace: [
       //   { id: uniqueId.lastNodeLink },
       //   ({ currentTarget: { selectionStart, selectionEnd } }) =>
