@@ -2,7 +2,14 @@ import clsx from "clsx";
 import { readonlyArray } from "fp-ts";
 import { pipe } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
-import { FC, MutableRefObject, useRef, useState } from "react";
+import {
+  FC,
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
 import { Button } from "./Button";
@@ -17,6 +24,7 @@ import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
 import { requestNodeListFocus } from "./NodeListFocus";
 import { View } from "./styled";
 import { Text } from "./Text";
+import { useLocationHash } from "../lib/hooks/useLocationHash";
 
 const NodeItemButtonPopoverButton: FC<{
   title: string;
@@ -49,6 +57,15 @@ const NodeItemButtonPopover: FC<{
 }> = ({ id, onRequestClose, ownerRef }) => {
   const intl = useIntl();
   const { mutate } = useMutation();
+
+  const hash = useLocationHash();
+  const prefRef = useRef(hash);
+  useEffect(() => {
+    if (hash !== prefRef.current) {
+      prefRef.current = hash;
+      onRequestClose();
+    }
+  }, [hash, onRequestClose]);
 
   const handleDeletePress = () => {
     mutate("node", { id, isDeleted: true }, () => {
@@ -131,6 +148,10 @@ export const NodeItemButton: FC<NodeItemButton> = ({ focusable, id, x }) => {
     buttonRef.current = view;
   });
 
+  const handleRequestClose = useCallback(() => {
+    setPopoverIsVisible(false);
+  }, []);
+
   return (
     <>
       <Button
@@ -156,7 +177,7 @@ export const NodeItemButton: FC<NodeItemButton> = ({ focusable, id, x }) => {
       {popoverIsVisible && (
         <NodeItemButtonPopover
           id={id}
-          onRequestClose={() => setPopoverIsVisible(false)}
+          onRequestClose={handleRequestClose}
           ownerRef={buttonRef}
         />
       )}

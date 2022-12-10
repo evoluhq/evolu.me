@@ -7,11 +7,11 @@ export type LocationHash = string & BRAND<"LocationHash">;
 const currentLocationHash = (): LocationHash =>
   window.location.hash.replace(/^#/, "") as LocationHash;
 
-const subscribe = (onChange: IO<void>) => {
+const subscribeHashChange = (onChange: IO<void>) => {
   window.addEventListener("hashchange", onChange);
   return () => window.removeEventListener("hashchange", onChange);
 };
 
 export const useLocationHash = (): LocationHash => {
-  return useSyncExternalStore(subscribe, currentLocationHash);
+  return useSyncExternalStore(subscribeHashChange, currentLocationHash);
 };
