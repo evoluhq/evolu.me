@@ -27,17 +27,15 @@ const NodeListItemButtonPopoverButton: FC<{
 }> = ({ title, x, onPress, className /*onRequestClose*/ }) => {
   const keyNavigation = useKeyNavigation({
     x,
-    keys: { ArrowLeft: "previousX", ArrowRight: "nextX" },
+    keys: {
+      ArrowLeft: "previousX",
+      ArrowRight: "nextX",
+    },
   });
 
   return (
     <Button {...keyNavigation} onPress={onPress}>
-      <Text
-        as="button"
-        // py-1 my-1
-        className={clsx("my-0 py-2", className)}
-        //  customClassName={customClassName}
-      >
+      <Text as="button" className={clsx("my-0 py-[8px]", className)}>
         {title}
       </Text>
     </Button>
@@ -70,27 +68,11 @@ const NodeListItemButtonPopover: FC<{
     <Popover
       ownerRef={ownerRef}
       position="bottom left to bottom right"
-      yOffset={-4}
+      // yOffset={-4}
       onRequestClose={onRequestClose}
     >
       <View className="flex-row">
         <KeyboardNavigationProvider maxX={2}>
-          {/* <NodeListItemButtonPopoverButton
-            title={intl.formatMessage({
-              defaultMessage: "Focus",
-              id: "hsJlm7",
-            })}
-            x={0}
-            onPress={focusHref}
-            customClassName="rounded-none rounded-l"
-            onRequestClose={onRequestClose}
-          /> */}
-          {/* <NodeListItemButtonPopoverButton
-            title="Move"
-            x={1}
-            onPress={constVoid}
-            customClassName="rounded-none"
-          /> */}
           <NodeListItemButtonPopoverButton
             title={intl.formatMessage({
               defaultMessage: "Delete",
@@ -102,10 +84,19 @@ const NodeListItemButtonPopover: FC<{
           />
           <NodeListItemButtonPopoverButton
             title={intl.formatMessage({
+              defaultMessage: "Add",
+              id: "2/2yg+",
+            })}
+            x={1}
+            onPress={handleDeletePress}
+            className="rounded-none"
+          />
+          <NodeListItemButtonPopoverButton
+            title={intl.formatMessage({
               defaultMessage: "Edit",
               id: "wEQDC6",
             })}
-            x={1}
+            x={2}
             onPress={handleDeletePress}
             className="rounded-none rounded-r"
           />
