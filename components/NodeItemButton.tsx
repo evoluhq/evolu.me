@@ -35,7 +35,7 @@ const NodeItemButtonPopoverButton: FC<{
 
   return (
     <Button {...keyNavigation} onPress={onPress}>
-      <Text as="button" className={clsx("my-0 py-[8px]", className)}>
+      <Text as="button" className={clsx("!my-0 !py-2", className)}>
         {title}
       </Text>
     </Button>
