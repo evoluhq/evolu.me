@@ -25,6 +25,8 @@ import { requestNodeListFocus } from "./NodeListFocus";
 import { View } from "./styled";
 import { Text } from "./Text";
 import { useLocationHash } from "../lib/hooks/useLocationHash";
+import { useRouter } from "next/router";
+import { uniqueId } from "../lib/uniqueId";
 
 const NodeItemButtonPopoverButton: FC<{
   title: string;
@@ -67,19 +69,26 @@ const NodeItemButtonPopover: FC<{
     }
   }, [hash, onRequestClose]);
 
+  const nodeIds = useLocationHashNodeIds();
+  const router = useRouter();
+
+  const handleAddPress = () => {
+    pipe(
+      nodeIds,
+      readonlyArray.append(id),
+      nodeIdsToLocationHash,
+      (s) => `/#${s}`,
+      (url) => {
+        router.push(url);
+      }
+    );
+  };
+
   const handleDeletePress = () => {
     mutate("node", { id, isDeleted: true }, () => {
       requestNodeListFocus("current");
     });
   };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const focusHref = pipe(
-    useLocationHashNodeIds(),
-    readonlyArray.append(id),
-    nodeIdsToLocationHash,
-    (s) => `/#${s}`
-  );
 
   return (
     <Popover
@@ -92,17 +101,17 @@ const NodeItemButtonPopover: FC<{
         <KeyboardNavigationProvider maxX={2}>
           <NodeItemButtonPopoverButton
             title={intl.formatMessage({
-              defaultMessage: "Delete",
-              id: "K3r6DQ",
+              defaultMessage: "Add",
+              id: "2/2yg+",
             })}
             x={0}
-            onPress={handleDeletePress}
+            onPress={handleAddPress}
             className="rounded-none rounded-l"
           />
           <NodeItemButtonPopoverButton
             title={intl.formatMessage({
-              defaultMessage: "Add",
-              id: "2/2yg+",
+              defaultMessage: "Delete",
+              id: "K3r6DQ",
             })}
             x={1}
             onPress={handleDeletePress}
@@ -127,9 +136,15 @@ export interface NodeItemButton {
   focusable: boolean;
   id: NodeId;
   x: number;
+  isLast: boolean;
 }
 
-export const NodeItemButton: FC<NodeItemButton> = ({ focusable, id, x }) => {
+export const NodeItemButton: FC<NodeItemButton> = ({
+  focusable,
+  id,
+  x,
+  isLast,
+}) => {
   const intl = useIntl();
   const [popoverIsVisible, setPopoverIsVisible] = useState(false);
 
@@ -137,7 +152,7 @@ export const NodeItemButton: FC<NodeItemButton> = ({ focusable, id, x }) => {
     x,
     keys: {
       ArrowUp: "previousX",
-      ArrowDown: "nextX",
+      ArrowDown: !isLast ? "nextX" : { id: uniqueId.createNodeInput },
       ArrowRight: "nextY",
     },
   });

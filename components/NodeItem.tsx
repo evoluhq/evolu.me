@@ -36,7 +36,12 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
 
   return (
     <View className="flex-row" accessibilityRole={"listitem" as "list"}>
-      <NodeItemButton focusable={focusable === "button"} id={id} x={x} />
+      <NodeItemButton
+        focusable={focusable === "button"}
+        id={id}
+        x={x}
+        isLast={isLast}
+      />
       <Link href={`/#${id}`}>
         <Text
           {...linkKeyNavigation}
