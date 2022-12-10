@@ -10,6 +10,7 @@ import {
 } from "../lib/hooks/useKeyNavigation";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { truncate } from "../lib/truncate";
+import { uniqueId } from "../lib/uniqueId";
 import { Link } from "./Link";
 import { PageTitle } from "./PageTitle";
 import { ScrollView } from "./styled";
@@ -17,17 +18,17 @@ import { Text } from "./Text";
 
 const NodeFilterLink: FC<{
   focusable: boolean;
-  x: number;
-  title: string;
   id: NodeId;
   isFirst: boolean;
-}> = ({ x, title, id, isFirst }) => {
+  title: string;
+  x: number;
+}> = ({ focusable, id, isFirst, title, x }) => {
   const keyNavigation = useKeyNavigation({
     x,
     keys: {
-      //   ArrowRight: !isLast ? "nextX" : { id: uniqueId.mainNavButton },
-      //   ArrowLeft: "previousX",
-      //   ArrowUp: { id: uniqueId.createNodeInput },
+      ArrowLeft: "previousX",
+      ArrowRight: "nextX",
+      ArrowDown: { id: uniqueId.createNodeInput },
     },
   });
 
@@ -38,8 +39,9 @@ const NodeFilterLink: FC<{
         p
         className={clsx(isFirst && "pl-0")}
         {...keyNavigation}
-        // focusable={focusable}
-        // nativeID={nativeID}
+        // @ts-expect-error RNfW
+        focusable={focusable}
+        nativeID={isFirst ? uniqueId.firstNodeFilterLink : undefined}
       >
         {title}
       </Text>
@@ -86,18 +88,10 @@ const NodeFilterWithIds = memo<{ ids: readonly NodeId[] }>(
                 <NodeFilterLink
                   key={row.id}
                   focusable={x === i}
-                  x={i}
-                  isFirst={i === 0}
-                  //   isLast={false}
-                  //   nativeID={uniqueId.firstNodeFilterItem}
-                  title={row.title}
                   id={row.id}
-                  //   hrefOrOnPress={`/#${pipe(
-                  //     sortedRows,
-                  //     readonlyArray.map((i) => i.id),
-                  //     readonlyArray.dropRight(sortedRows.length - 1 - i),
-                  //     nodeIdsToLocationHash
-                  //   )}`}
+                  isFirst={i === 0}
+                  title={row.title}
+                  x={i}
                 />
               ))
             }
