@@ -7,7 +7,7 @@ import { KeyboardNavigationProvider } from "../lib/hooks/useKeyNavigation";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { layoutScroll } from "../lib/layoutScroll";
 import { NodeListFocus } from "./NodeListFocus";
-import { NodeListItem } from "./NodeListItem";
+import { NodeItem } from "./NodeItem";
 import { View } from "./styled";
 import { Text } from "./Text";
 
@@ -75,7 +75,7 @@ export const NodeList = () => {
           <>
             <NodeListFocus />
             {loadedRows.map((row, i) => (
-              <NodeListItem
+              <NodeItem
                 key={row.id}
                 row={row}
                 x={i}

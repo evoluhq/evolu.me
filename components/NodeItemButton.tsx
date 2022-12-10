@@ -5,8 +5,8 @@ import { IO } from "fp-ts/IO";
 import { FC, MutableRefObject, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
-import { Button } from "../components/Button";
-import { Popover } from "../components/Popover";
+import { Button } from "./Button";
+import { Popover } from "./Popover";
 import { NodeId, useMutation } from "../lib/db";
 import {
   KeyboardNavigationProvider,
@@ -18,7 +18,7 @@ import { requestNodeListFocus } from "./NodeListFocus";
 import { View } from "./styled";
 import { Text } from "./Text";
 
-const NodeListItemButtonPopoverButton: FC<{
+const NodeItemButtonPopoverButton: FC<{
   title: string;
   x: number;
   onPress: IO<void>;
@@ -42,7 +42,7 @@ const NodeListItemButtonPopoverButton: FC<{
   );
 };
 
-const NodeListItemButtonPopover: FC<{
+const NodeItemButtonPopover: FC<{
   id: NodeId;
   onRequestClose: IO<void>;
   ownerRef: MutableRefObject<View | null>;
@@ -73,7 +73,7 @@ const NodeListItemButtonPopover: FC<{
     >
       <View className="flex-row">
         <KeyboardNavigationProvider maxX={2}>
-          <NodeListItemButtonPopoverButton
+          <NodeItemButtonPopoverButton
             title={intl.formatMessage({
               defaultMessage: "Delete",
               id: "K3r6DQ",
@@ -82,7 +82,7 @@ const NodeListItemButtonPopover: FC<{
             onPress={handleDeletePress}
             className="rounded-none rounded-l"
           />
-          <NodeListItemButtonPopoverButton
+          <NodeItemButtonPopoverButton
             title={intl.formatMessage({
               defaultMessage: "Add",
               id: "2/2yg+",
@@ -91,7 +91,7 @@ const NodeListItemButtonPopover: FC<{
             onPress={handleDeletePress}
             className="rounded-none"
           />
-          <NodeListItemButtonPopoverButton
+          <NodeItemButtonPopoverButton
             title={intl.formatMessage({
               defaultMessage: "Edit",
               id: "wEQDC6",
@@ -106,17 +106,13 @@ const NodeListItemButtonPopover: FC<{
   );
 };
 
-export interface NodeListItemButton {
+export interface NodeItemButton {
   focusable: boolean;
   id: NodeId;
   x: number;
 }
 
-export const NodeListItemButton: FC<NodeListItemButton> = ({
-  focusable,
-  id,
-  x,
-}) => {
+export const NodeItemButton: FC<NodeItemButton> = ({ focusable, id, x }) => {
   const intl = useIntl();
   const [popoverIsVisible, setPopoverIsVisible] = useState(false);
 
@@ -158,7 +154,7 @@ export const NodeListItemButton: FC<NodeListItemButton> = ({
         />
       </Button>
       {popoverIsVisible && (
-        <NodeListItemButtonPopover
+        <NodeItemButtonPopover
           id={id}
           onRequestClose={() => setPopoverIsVisible(false)}
           ownerRef={buttonRef}

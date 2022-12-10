@@ -4,11 +4,11 @@ import { NodeId } from "../lib/db";
 import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
 import { uniqueId } from "../lib/uniqueId";
 import { Link } from "./Link";
-import { NodeListItemButton } from "./NodeListItemButton";
+import { NodeItemButton } from "./NodeItemButton";
 import { View } from "./styled";
 import { Text } from "./Text";
 
-interface NodeListItemProps {
+interface NodeItemProps {
   row: {
     id: NodeId;
     title: NonEmptyString1000;
@@ -18,7 +18,7 @@ interface NodeListItemProps {
   isLast: boolean;
 }
 
-export const NodeListItem = memo<NodeListItemProps>(function NodeListItem({
+export const NodeItem = memo<NodeItemProps>(function NodeItem({
   row: { id, title },
   focusable,
   x,
@@ -36,7 +36,7 @@ export const NodeListItem = memo<NodeListItemProps>(function NodeListItem({
 
   return (
     <View className="flex-row" accessibilityRole={"listitem" as "list"}>
-      <NodeListItemButton focusable={focusable === "button"} id={id} x={x} />
+      <NodeItemButton focusable={focusable === "button"} id={id} x={x} />
       <Link href={`/#${id}`}>
         <Text
           {...linkKeyNavigation}
