@@ -14,6 +14,7 @@ import {
 } from "../lib/hooks/useKeyNavigation";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
+import { requestNodeListFocus } from "./NodeListFocus";
 import { View } from "./styled";
 import { Text } from "./Text";
 
@@ -50,12 +51,10 @@ const NodeListItemButtonPopover: FC<{
 }> = ({ id, onRequestClose, ownerRef }) => {
   const intl = useIntl();
   const { mutate } = useMutation();
-  //   const { move } = useContext(KeyboardNavigationContext);
 
   const handleDeletePress = () => {
-    // TODO: Tohle musi fungovat i bez callbacku. OK.
     mutate("node", { id, isDeleted: true }, () => {
-      //   setSafeTimeout(() => move("current"));
+      requestNodeListFocus("current");
     });
   };
 

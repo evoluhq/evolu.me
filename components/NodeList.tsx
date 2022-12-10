@@ -6,6 +6,7 @@ import { useQuery } from "../lib/db";
 import { KeyboardNavigationProvider } from "../lib/hooks/useKeyNavigation";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { layoutScroll } from "../lib/layoutScroll";
+import { NodeListFocus } from "./NodeListFocus";
 import { NodeListItem } from "./NodeListItem";
 import { View } from "./styled";
 import { Text } from "./Text";
@@ -70,17 +71,20 @@ export const NodeList = () => {
         maxY={1}
         initialY={1}
       >
-        {({ x, y }) =>
-          loadedRows.map((row, i) => (
-            <NodeListItem
-              key={row.id}
-              row={row}
-              x={i}
-              focusable={i === x && (y === 0 ? "button" : "input")}
-              // isLast={i === loadedRows.length - 1}
-            />
-          ))
-        }
+        {({ x, y }) => (
+          <>
+            <NodeListFocus />
+            {loadedRows.map((row, i) => (
+              <NodeListItem
+                key={row.id}
+                row={row}
+                x={i}
+                focusable={i === x && (y === 0 ? "button" : "input")}
+                // isLast={i === loadedRows.length - 1}
+              />
+            ))}
+          </>
+        )}
       </KeyboardNavigationProvider>
     </View>
   );
