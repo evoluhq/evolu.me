@@ -28,7 +28,7 @@ const NodeFilterLink: FC<{
     keys: {
       ArrowLeft: "previousX",
       ArrowRight: "nextX",
-      ArrowDown: focusClassName("createNodeInput"),
+      ArrowDown: focusClassName("firstNodeItemLink"),
     },
   });
 

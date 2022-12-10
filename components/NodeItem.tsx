@@ -16,6 +16,7 @@ interface NodeItemProps {
   };
   focusable: false | "button" | "input";
   x: number;
+  isFirst: boolean;
   isLast: boolean;
 }
 
@@ -23,13 +24,14 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
   row: { id, title },
   focusable,
   x,
+  isFirst,
   isLast,
 }) {
   const linkKeyNavigation = useKeyNavigation({
     x,
     y: 1,
     keys: {
-      ArrowUp: "previousX",
+      ArrowUp: !isFirst ? "previousX" : focusClassName("firstNodeFilterLink"),
       ArrowDown: !isLast ? "nextX" : focusClassName("createNodeInput"),
       ArrowLeft: "previousY",
     },
@@ -48,7 +50,11 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
           {...linkKeyNavigation}
           as="link"
           p
-          className={clsx("pl-0", isLast && focusClassNames.lastNodeLink)}
+          className={clsx(
+            "pl-0",
+            isLast && focusClassNames.lastNodeItemLink,
+            isFirst && focusClassNames.firstNodeItemLink
+          )}
           // @ts-expect-error RNfW
           focusable={focusable === "input"}
         >

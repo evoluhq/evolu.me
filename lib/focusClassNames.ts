@@ -14,8 +14,8 @@ const createFocusClassNames = <T extends string>(
 
 export const focusClassNames = createFocusClassNames([
   "createNodeInput",
-  "firstNodeLink",
-  "lastNodeLink",
+  "firstNodeItemLink",
+  "lastNodeItemLink",
   "firstNodeFilterLink",
 ]);
 
