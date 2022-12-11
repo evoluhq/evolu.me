@@ -43,6 +43,7 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
         focusable={focusable === "button"}
         id={id}
         x={x}
+        isFirst={isFirst}
         isLast={isLast}
       />
       <Link href={`/#${id}`}>

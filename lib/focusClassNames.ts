@@ -17,10 +17,13 @@ export const focusClassNames = createFocusClassNames([
   "firstNodeItemLink",
   "lastNodeItemLink",
   "firstNodeFilterLink",
+  "allLink",
 ]);
 
+export type FocusClassName = keyof typeof focusClassNames;
+
 export const focusClassName =
-  (className: keyof typeof focusClassNames): IO<void> =>
+  (className: FocusClassName): IO<void> =>
   () => {
     const el = document.querySelector(`.${focusClassNames[className]}`);
     if (el && "focus" in el && typeof el.focus === "function") el.focus();

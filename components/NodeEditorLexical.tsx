@@ -18,6 +18,7 @@ import {
   $isRangeSelection,
   COMMAND_PRIORITY_LOW,
   EditorState,
+  KEY_ARROW_DOWN_COMMAND,
   KEY_ARROW_UP_COMMAND,
   KEY_ENTER_COMMAND,
 } from "lexical";
@@ -29,7 +30,11 @@ import {
   useEffect,
   useRef,
 } from "react";
-import { focusClassNames, focusClassName } from "../lib/focusClassNames";
+import {
+  focusClassNames,
+  focusClassName,
+  FocusClassName,
+} from "../lib/focusClassNames";
 import { safeParseToEither } from "../lib/safeParseToEither";
 import { Text } from "./Text";
 
@@ -55,6 +60,22 @@ const SubmitOnEnterPlugin: FC<{
   editorTextRef: MutableRefObject<string | undefined>;
 }> = ({ onSubmit, editorTextRef }) => {
   const [editor] = useLexicalComposerContext();
+
+  const onCollapsedRangeSelection =
+    (className: FocusClassName) =>
+    (e: KeyboardEvent): boolean =>
+      pipe(
+        $getSelection(),
+        option.fromNullable,
+        option.filter($isRangeSelection),
+        option.filter((s) => s.isCollapsed()),
+        option.filter((s) => s.anchor.offset === 0),
+        option.match(constFalse, () => {
+          e.preventDefault();
+          focusClassName(className)();
+          return true;
+        })
+      );
 
   useEffect(() => {
     return mergeRegister(
@@ -88,19 +109,12 @@ const SubmitOnEnterPlugin: FC<{
       ),
       editor.registerCommand(
         KEY_ARROW_UP_COMMAND,
-        (e) =>
-          pipe(
-            $getSelection(),
-            option.fromNullable,
-            option.filter($isRangeSelection),
-            option.filter((s) => s.isCollapsed()),
-            option.filter((s) => s.anchor.offset === 0),
-            option.match(constFalse, () => {
-              e.preventDefault();
-              focusClassName("lastNodeItemLink")();
-              return true;
-            })
-          ),
+        onCollapsedRangeSelection("lastNodeItemLink"),
+        COMMAND_PRIORITY_LOW
+      ),
+      editor.registerCommand(
+        KEY_ARROW_DOWN_COMMAND,
+        onCollapsedRangeSelection("allLink"),
         COMMAND_PRIORITY_LOW
       )
     );
