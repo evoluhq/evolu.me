@@ -1,14 +1,11 @@
-const nativewind = require("nativewind/tailwind");
-const hocusPlugin = require("tailwindcss-hocus");
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
-  presets: [nativewind],
-  plugins: [hocusPlugin],
+  presets: [require("nativewind/tailwind")],
+  plugins: [require("tailwindcss-hocus")],
   important: "html",
   theme: {},
   future: {
