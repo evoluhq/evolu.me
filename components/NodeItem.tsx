@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { NonEmptyString1000 } from "evolu";
+import { useRouter } from "next/router";
 import { memo } from "react";
 import { NodeId } from "../lib/db";
 import { focusClassName, focusClassNames } from "../lib/focusClassNames";
@@ -27,6 +28,7 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
   isFirst,
   isLast,
 }) {
+  const router = useRouter();
   const linkKeyNavigation = useKeyNavigation({
     x,
     y: 1,
@@ -34,6 +36,9 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
       ArrowUp: !isFirst ? "previousX" : focusClassName("firstNodeFilterLink"),
       ArrowDown: !isLast ? "nextX" : focusClassName("createNodeInput"),
       ArrowLeft: "previousY",
+      ArrowRight: () => {
+        router.push(`/#${id}`);
+      },
     },
   });
 
