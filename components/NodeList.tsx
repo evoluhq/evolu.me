@@ -47,7 +47,7 @@ Of course, you can connect "tomorrow" with "to buy" and anything else.`,
   };
 
   return (
-    <Button onPress={focusClassName("createNodeInput")}>
+    <Button focusable={false} onPress={focusClassName("createNodeInput")}>
       <Text className="text-center">{getMessage()}</Text>
     </Button>
   );
