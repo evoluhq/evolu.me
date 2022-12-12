@@ -1,18 +1,52 @@
 /* eslint-disable formatjs/no-literal-string-in-jsx */
-import { has, model } from "evolu";
-import { useLayoutEffect, useMemo } from "react";
+import { has, model, NodeId } from "evolu";
+import { FC, useLayoutEffect, useMemo } from "react";
 import { useIntl } from "react-intl";
 import { useQuery } from "../lib/db";
 import { KeyboardNavigationProvider } from "../lib/hooks/useKeyNavigation";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { layoutScroll } from "../lib/layoutScroll";
-import { NodeListFocus } from "./NodeListFocus";
 import { NodeItem } from "./NodeItem";
+import { NodeListFocus } from "./NodeListFocus";
 import { View } from "./styled";
 import { Text } from "./Text";
 
-export const NodeList = () => {
+const PlaceholderHelp: FC<{ ids: readonly NodeId[] }> = ({ ids }) => {
   const intl = useIntl();
+
+  const getMessage = (): string => {
+    switch (ids.length) {
+      case 0:
+        return intl.formatMessage({
+          defaultMessage: `Here will be your thoughts, organized.
+You can connect anything with anything.
+For example: to see - Arrival movie
+
+Write a thought, press enter, and click on the link.
+`,
+          id: "ACHype",
+        });
+      case 1:
+        return intl.formatMessage({
+          defaultMessage: "No connection yet.",
+          id: "VJOcWh",
+        });
+      default:
+        return intl.formatMessage({
+          defaultMessage: `You added something else to the filter, and that's how we can filter and connect more thoughts altogether.
+
+For example: to see - Arrival - tomorrow
+
+Of course, you can connect "tomorrow" with "to buy" and anything else.`,
+          id: "+vUqCW",
+        });
+    }
+  };
+
+  return <Text className="text-center">{getMessage()}</Text>;
+};
+
+export const NodeList = () => {
   const ids = useLocationHashNodeIds();
 
   const { rows, isLoaded } = useQuery((db) => {
@@ -51,15 +85,8 @@ export const NodeList = () => {
     };
   }, [idsString, isLoaded]);
 
-  if (loadedRows.length === 0)
-    return ids.length === 0 ? (
-      <Text className="text-center">
-        {intl.formatMessage({
-          defaultMessage: "Here will be your thoughts, organized.",
-          id: "9Udtvr",
-        })}
-      </Text>
-    ) : null;
+  if (!isLoaded) return null;
+  if (loadedRows.length === 0) return <PlaceholderHelp ids={ids} />;
 
   return (
     <View

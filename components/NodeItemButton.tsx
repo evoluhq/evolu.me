@@ -45,7 +45,7 @@ const NodeItemButtonPopoverButton: FC<{
 
   return (
     <Button {...keyNavigation} onPress={onPress}>
-      <Text as="button" className={clsx("!my-0 !py-2", className)}>
+      <Text as="button" className={clsx("my-0 py-2", className)}>
         {title}
       </Text>
     </Button>
@@ -70,9 +70,11 @@ const NodeItemButtonPopover: FC<{
   }, [hash, onRequestClose]);
 
   const nodeIds = useLocationHashNodeIds();
+  const showAppend = nodeIds.length > 0;
+
   const router = useRouter();
 
-  const handleAddPress = () => {
+  const handleAppendPress = () => {
     pipe(
       nodeIds,
       readonlyArray.append(id),
@@ -118,17 +120,19 @@ const NodeItemButtonPopover: FC<{
             })}
             x={1}
             onPress={handleEditPress}
-            className="rounded-none"
+            className={!showAppend ? "rounded-none rounded-r" : "rounded-none"}
           />
-          <NodeItemButtonPopoverButton
-            title={intl.formatMessage({
-              defaultMessage: "Filter",
-              id: "9Obw6C",
-            })}
-            x={2}
-            onPress={handleAddPress}
-            className="rounded-none rounded-r"
-          />
+          {showAppend && (
+            <NodeItemButtonPopoverButton
+              title={intl.formatMessage({
+                defaultMessage: "Add to Filter",
+                id: "IRwSGb",
+              })}
+              x={2}
+              onPress={handleAppendPress}
+              className="rounded-none rounded-r"
+            />
+          )}
         </KeyboardNavigationProvider>
       </View>
     </Popover>
