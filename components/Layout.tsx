@@ -24,30 +24,28 @@ export const Layout: FC<{
   return (
     <>
       {titleIsString && <PageTitle title={title} />}
-      <View className={clsx("flex-1 justify-center", isHidden && "hidden")}>
-        <View className="max-h-[700px] flex-1">
-          <Container>
-            <View className="flex-row">
-              {titleIsString ? (
-                <Text p className="flex-1 pl-0" {...accessibility.heading(1)}>
-                  {title}
-                </Text>
-              ) : (
-                title
-              )}
-              <MainNav />
-            </View>
-          </Container>
-          <ScrollView
-            centerContent={centerContent}
-            scrollEventThrottle={0}
-            onScroll={layoutScroll.onScroll}
-            ref={layoutScroll.onRef}
-          >
-            <Container>{children}</Container>
-          </ScrollView>
-          {footer}
-        </View>
+      <View className={clsx("flex-1", isHidden && "hidden")}>
+        <Container>
+          <View className="flex-row">
+            {titleIsString ? (
+              <Text p className="flex-1 pl-0" {...accessibility.heading(1)}>
+                {title}
+              </Text>
+            ) : (
+              title
+            )}
+            <MainNav />
+          </View>
+        </Container>
+        <ScrollView
+          centerContent={centerContent}
+          scrollEventThrottle={0}
+          onScroll={layoutScroll.onScroll}
+          ref={layoutScroll.onRef}
+        >
+          <Container>{children}</Container>
+        </ScrollView>
+        {footer}
       </View>
     </>
   );
