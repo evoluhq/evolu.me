@@ -3,9 +3,11 @@ import { has, model, NodeId } from "evolu";
 import { FC, useLayoutEffect, useMemo } from "react";
 import { useIntl } from "react-intl";
 import { useQuery } from "../lib/db";
+import { focusClassName } from "../lib/focusClassNames";
 import { KeyboardNavigationProvider } from "../lib/hooks/useKeyNavigation";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { layoutScroll } from "../lib/layoutScroll";
+import { Button } from "./Button";
 import { NodeItem } from "./NodeItem";
 import { NodeListFocus } from "./NodeListFocus";
 import { View } from "./styled";
@@ -19,17 +21,18 @@ const PlaceholderHelp: FC<{ ids: readonly NodeId[] }> = ({ ids }) => {
       case 0:
         return intl.formatMessage({
           defaultMessage: `Here will be your thoughts, organized.
+
 You can connect anything with anything.
 For example: to see - Arrival movie
 
 Write a thought, press enter, and click on the link.
 `,
-          id: "ACHype",
+          id: "pZB8g5",
         });
       case 1:
         return intl.formatMessage({
-          defaultMessage: "No connection yet.",
-          id: "VJOcWh",
+          defaultMessage: "Add something related.",
+          id: "LaSyKs",
         });
       default:
         return intl.formatMessage({
@@ -43,7 +46,11 @@ Of course, you can connect "tomorrow" with "to buy" and anything else.`,
     }
   };
 
-  return <Text className="text-center">{getMessage()}</Text>;
+  return (
+    <Button onPress={focusClassName("createNodeInput")}>
+      <Text className="text-center">{getMessage()}</Text>
+    </Button>
+  );
 };
 
 export const NodeList = () => {
