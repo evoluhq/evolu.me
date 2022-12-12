@@ -156,6 +156,7 @@ export const NodeItemButton: FC<NodeItemButton> = ({
 }) => {
   const intl = useIntl();
   const [popoverIsVisible, setPopoverIsVisible] = useState(false);
+  const router = useRouter();
 
   const buttonKeyNavigation = useKeyNavigation({
     x,
@@ -163,6 +164,9 @@ export const NodeItemButton: FC<NodeItemButton> = ({
       ArrowUp: !isFirst ? "previousX" : focusClassName("firstNodeFilterLink"),
       ArrowDown: !isLast ? "nextX" : focusClassName("createNodeInput"),
       ArrowRight: "nextY",
+      ArrowLeft: () => {
+        router.back();
+      },
     },
   });
 
