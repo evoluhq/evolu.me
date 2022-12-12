@@ -1,10 +1,14 @@
 import { Provider as JotaiProvider } from "jotai";
+import { NativeWindStyleSheet } from "nativewind";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { FC, ReactNode } from "react";
 import { IntlProvider } from "react-intl";
 import { useAppDescription } from "../lib/hooks/useAppDescription";
 import "../styles/globals.css";
+import { twMerge } from "tailwind-merge";
+
+NativeWindStyleSheet.setWebClassNameMergeStrategy(twMerge);
 
 // Because IntlProvider must be the parent.
 const MetaDescription: FC<{ children: ReactNode }> = ({ children }) => {

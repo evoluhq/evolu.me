@@ -36,6 +36,7 @@ specifiers:
   react-intl: ^6.2.5
   react-native-web: ^0.18.10
   react-use-event-hook: ^0.9.3
+  tailwind-merge: ^1.8.0
   tailwindcss: ^3.2.4
   tailwindcss-hocus: ^0.0.7
   typescript: ^4.9.4
@@ -60,6 +61,7 @@ dependencies:
   react-intl: 6.2.5_o77wnou4wwnegu5woljtklrzru
   react-native-web: 0.18.10_biqbaboplfbrettd7655fr4n2y
   react-use-event-hook: 0.9.3_react@18.2.0
+  tailwind-merge: 1.8.0
   zod: 3.19.1
 
 devDependencies:
@@ -3724,6 +3726,10 @@ packages:
       '@pkgr/utils': 2.3.1
       tslib: 2.4.1
     dev: true
+
+  /tailwind-merge/1.8.0:
+    resolution: {integrity: sha512-tER/2SbYRdfPYg6m4pDWZSlbymLTmDi+dx4iCsJmgmz4UDGzgnVelOvBe3GNtGCw9Bmc4MiObfJJbKeVL+KnMQ==}
+    dev: false
 
   /tailwindcss-hocus/0.0.7_tailwindcss@3.2.4:
     resolution: {integrity: sha512-KY3jLlppAoPkCLRhDqbe503c1Ryq//G1bLQqFCZz1pnB0JFzHa3VK0bXvjTa8n/dwCxgkhi5uJm1d6gp8OzPhw==}
