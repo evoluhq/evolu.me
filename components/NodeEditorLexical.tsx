@@ -161,11 +161,7 @@ export const NodeEditorLexical = memo<{
       >
         <PlainTextPlugin
           contentEditable={
-            <ContentEditable
-              autoCapitalize={false}
-              autoComplete={false}
-              className={focusClassNames.createNodeInput}
-            />
+            <ContentEditable className={focusClassNames.createNodeInput} />
           }
           placeholder={<></>}
           ErrorBoundary={LexicalErrorBoundary}
