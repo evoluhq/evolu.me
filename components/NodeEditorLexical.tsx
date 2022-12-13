@@ -20,7 +20,6 @@ import {
   COMMAND_PRIORITY_LOW,
   EditorState,
   KEY_ARROW_DOWN_COMMAND,
-  KEY_ARROW_LEFT_COMMAND,
   KEY_ARROW_UP_COMMAND,
   KEY_ENTER_COMMAND,
 } from "lexical";
@@ -34,9 +33,9 @@ import {
   useRef,
 } from "react";
 import {
-  focusClassNames,
   focusClassName,
   FocusClassName,
+  focusClassNames,
 } from "../lib/focusClassNames";
 import { safeParseToEither } from "../lib/safeParseToEither";
 import { Text } from "./Text";
@@ -121,13 +120,6 @@ const KeyHandlerPlugin: FC<{
       editor.registerCommand(
         KEY_ARROW_DOWN_COMMAND,
         onCollapsedRangeSelection("allLink"),
-        COMMAND_PRIORITY_LOW
-      ),
-      editor.registerCommand(
-        KEY_ARROW_LEFT_COMMAND,
-        onCollapsedRangeSelection(() => {
-          router.back();
-        }),
         COMMAND_PRIORITY_LOW
       )
     );
