@@ -12,6 +12,7 @@ import { mergeRegister } from "@lexical/utils";
 import { NonEmptyString1000 } from "evolu";
 import { either, option } from "fp-ts";
 import { constFalse, constVoid, flow, pipe } from "fp-ts/function";
+import { IO } from "fp-ts/IO";
 import {
   $getRoot,
   $getSelection,
@@ -19,9 +20,11 @@ import {
   COMMAND_PRIORITY_LOW,
   EditorState,
   KEY_ARROW_DOWN_COMMAND,
+  KEY_ARROW_LEFT_COMMAND,
   KEY_ARROW_UP_COMMAND,
   KEY_ENTER_COMMAND,
 } from "lexical";
+import { useRouter } from "next/router";
 import {
   FC,
   memo,
@@ -55,14 +58,15 @@ const createInitialEditorState = (text: string): string => {
   return `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"${text}","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`;
 };
 
-const SubmitOnEnterPlugin: FC<{
+const KeyHandlerPlugin: FC<{
   onSubmit: (value: NonEmptyString1000) => void;
   editorTextRef: MutableRefObject<string | undefined>;
 }> = ({ onSubmit, editorTextRef }) => {
   const [editor] = useLexicalComposerContext();
+  const router = useRouter();
 
   const onCollapsedRangeSelection =
-    (className: FocusClassName) =>
+    (classNameOrCallback: FocusClassName | IO<void>) =>
     (e: KeyboardEvent): boolean =>
       pipe(
         $getSelection(),
@@ -72,7 +76,9 @@ const SubmitOnEnterPlugin: FC<{
         option.filter((s) => s.anchor.offset === 0),
         option.match(constFalse, () => {
           e.preventDefault();
-          focusClassName(className)();
+          if (typeof classNameOrCallback === "string")
+            focusClassName(classNameOrCallback)();
+          else classNameOrCallback();
           return true;
         })
       );
@@ -116,9 +122,16 @@ const SubmitOnEnterPlugin: FC<{
         KEY_ARROW_DOWN_COMMAND,
         onCollapsedRangeSelection("allLink"),
         COMMAND_PRIORITY_LOW
+      ),
+      editor.registerCommand(
+        KEY_ARROW_LEFT_COMMAND,
+        onCollapsedRangeSelection(() => {
+          router.back();
+        }),
+        COMMAND_PRIORITY_LOW
       )
     );
-  }, [editor, editorTextRef, onSubmit]);
+  }, [editor, editorTextRef, onSubmit, router]);
 
   return null;
 };
@@ -155,10 +168,7 @@ export const NodeEditorLexical = memo<{
         />
         <OnChangePlugin onChange={handleChange} />
         <HistoryPlugin />
-        <SubmitOnEnterPlugin
-          onSubmit={onSubmit}
-          editorTextRef={editorTextRef}
-        />
+        <KeyHandlerPlugin onSubmit={onSubmit} editorTextRef={editorTextRef} />
       </LexicalComposer>
     </Text>
   );
