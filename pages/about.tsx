@@ -1,4 +1,3 @@
-/* eslint-disable formatjs/no-literal-string-in-jsx */
 import { useIntl } from "react-intl";
 import { Layout } from "../components/Layout";
 import { View } from "../components/styled";
@@ -8,6 +7,8 @@ import { useAppDescription } from "../lib/hooks/useAppDescription";
 const About = () => {
   const intl = useIntl();
   const appDescription = useAppDescription();
+
+  const github = "GitHub";
 
   return (
     <Layout
@@ -24,7 +25,7 @@ const About = () => {
           href="https://github.com/evoluhq/evolu.me"
           hrefAttrs={{ target: "blank" }}
         >
-          GitHub
+          {github}
         </Text>
       </View>
     </Layout>
