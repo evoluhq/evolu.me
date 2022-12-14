@@ -2,31 +2,32 @@ import clsx from "clsx";
 import { readonlyArray } from "fp-ts";
 import { pipe } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
+import { useRouter } from "next/router";
 import {
   FC,
   MutableRefObject,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
 } from "react";
 import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
-import { Button } from "./Button";
-import { Popover } from "./Popover";
 import { NodeId, useMutation } from "../lib/db";
+import { focusClassName } from "../lib/focusClassNames";
 import {
+  KeyboardNavigationContext,
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/hooks/useKeyNavigation";
+import { useLocationHash } from "../lib/hooks/useLocationHash";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
-import { requestNodeListFocus } from "./NodeListFocus";
+import { Button } from "./Button";
+import { Popover } from "./Popover";
 import { View } from "./styled";
 import { Text } from "./Text";
-import { useLocationHash } from "../lib/hooks/useLocationHash";
-import { useRouter } from "next/router";
-import { focusClassName } from "../lib/focusClassNames";
 
 const NodeItemButtonPopoverButton: FC<{
   title: string;
@@ -86,9 +87,11 @@ const NodeItemButtonPopover: FC<{
     );
   };
 
+  const { move } = useContext(KeyboardNavigationContext);
+
   const handleDeletePress = () => {
     mutate("node", { id, isDeleted: true }, () => {
-      requestNodeListFocus("current");
+      move("current", true);
     });
   };
 

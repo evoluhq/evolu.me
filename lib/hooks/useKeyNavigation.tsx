@@ -12,6 +12,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useId,
   useLayoutEffect,
   useMemo,
   useReducer,
@@ -20,10 +21,8 @@ import {
 import useEvent from "react-use-event-hook";
 import { BRAND } from "zod";
 
-export const IS_SERVER = typeof window === "undefined" || "Deno" in window;
-export const useIsomorphicLayoutEffect = IS_SERVER
-  ? useEffect
-  : useLayoutEffect;
+const IS_SERVER = typeof window === "undefined" || "Deno" in window;
+const useIsomorphicLayoutEffect = IS_SERVER ? useEffect : useLayoutEffect;
 
 // React Hook for keyboard navigation via Roving tabindex
 //  - fast, flexible, minimal
@@ -58,7 +57,9 @@ export type Direction =
   | "previousY"
   | "current";
 
-type Move = (direction: Direction) => void;
+const moveAfterRender = new Map<string, Direction>();
+
+type Move = (direction: Direction, afterRender?: boolean) => void;
 
 interface ContextType {
   register: Register;
@@ -153,7 +154,22 @@ export const KeyboardNavigationProvider: FC<
 
   const onBlur = useCallback<OnBlur>(() => dispatch({ type: "onBlur" }), []);
 
-  const move = useEvent<Move>((direction) => {
+  const id = useId();
+
+  useEffect(() => {
+    const direction = moveAfterRender.get(id);
+    if (direction) {
+      moveAfterRender.delete(id);
+      move(direction);
+    }
+  });
+
+  const move = useEvent<Move>((direction, afterRender) => {
+    if (afterRender) {
+      moveAfterRender.set(id, direction);
+      return;
+    }
+
     const focusables = getFocusables();
 
     if (direction === "current") {
