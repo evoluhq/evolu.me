@@ -9,7 +9,7 @@ export const Text = styled(
     variants: {
       as: {
         text: "",
-        link: "rounded focus:outline-none hocus-visible:underline",
+        link: "rounded decoration-1 underline-offset-2 focus:outline-none hocus-visible:underline",
         button: clsx(
           "select-none rounded px-2 py-1 my-1",
           "ring-current group-focus-visible:ring-1",
