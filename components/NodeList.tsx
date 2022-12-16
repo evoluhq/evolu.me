@@ -1,9 +1,13 @@
 import { has, model } from "evolu";
-import { useLayoutEffect, useMemo } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import { useQuery } from "../lib/db";
-import { KeyboardNavigationProvider } from "../lib/hooks/useKeyNavigation";
+import {
+  KeyboardNavigationProvider,
+  KeyboardNavigationProviderRef,
+  Position,
+} from "../lib/hooks/useKeyNavigation";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
-import { layoutScroll } from "../lib/layoutScroll";
+import { useScrollRestoration } from "../lib/hooks/useScrollRestoration";
 import { NodeItem } from "./NodeItem";
 import { NodeListPlaceholder } from "./NodeListPlaceholder";
 import { View } from "./styled";
@@ -36,21 +40,46 @@ export const NodeList = () => {
 
   const loadedRows = useMemo(() => rows.filter(has(["title"])), [rows]);
 
-  useLayoutEffect(() => layoutScroll.scrollToEndAnimatedIfRequested());
+  const { scrollToEndAnimatedIfRequested } = useScrollRestoration();
+  useLayoutEffect(() => scrollToEndAnimatedIfRequested());
 
   const idsString = ids.join();
+
+  const focusPositionRef = useRef<Position>();
+
+  const handleKeyboardNavigationProviderFocus = useCallback(
+    (position: Position) => {
+      focusPositionRef.current = position;
+    },
+    []
+  );
+
+  const keyboardNavigationProviderRef =
+    useRef<KeyboardNavigationProviderRef>(null);
+
+  const { restoreScroll, storeScroll } = useScrollRestoration();
+
   useLayoutEffect(() => {
     if (!isLoaded) return;
-    layoutScroll.restoreScroll(idsString);
+    const position = restoreScroll(idsString);
+    // console.log("restore", idsString, position);
+
+    if (position) keyboardNavigationProviderRef.current?.move(position);
+    else {
+      if (focusPositionRef.current != null)
+        keyboardNavigationProviderRef.current?.move({ x: 0, y: 1 });
+      // TODO: Focus NodeListPlaceholder.
+    }
+
     return () => {
-      layoutScroll.storeScroll(idsString);
+      // console.log("store", idsString, focusPositionRef.current);
+      storeScroll(idsString, focusPositionRef.current);
     };
-  }, [idsString, isLoaded]);
+  }, [idsString, isLoaded, restoreScroll, storeScroll]);
 
   if (!isLoaded) return null;
-  if (loadedRows.length === 0) return <NodeListPlaceholder ids={ids} />;
 
-  // console.log("x");
+  if (loadedRows.length === 0) return <NodeListPlaceholder ids={ids} />;
 
   return (
     <View
@@ -61,6 +90,8 @@ export const NodeList = () => {
         maxX={loadedRows.length - 1}
         maxY={1}
         initialY={1}
+        onFocus={handleKeyboardNavigationProviderFocus}
+        ref={keyboardNavigationProviderRef}
       >
         {({ x, y }) =>
           loadedRows.map((row, i) => (

@@ -29,6 +29,7 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
   isLast,
 }) {
   const router = useRouter();
+
   const linkKeyNavigation = useKeyNavigation({
     x,
     y: 1,
@@ -36,9 +37,7 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
       ArrowUp: !isFirst ? "previousX" : focusClassName("firstNodeFilterLink"),
       ArrowDown: !isLast ? "nextX" : focusClassName("createNodeInput"),
       ArrowLeft: "previousY",
-      ArrowRight: () => {
-        router.push(`/#${id}`);
-      },
+      Escape: () => router.back(),
     },
   });
 

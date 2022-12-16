@@ -4,7 +4,7 @@ import { IO } from "fp-ts/IO";
 import { Predicate } from "fp-ts/Predicate";
 import {
   createContext,
-  FC,
+  forwardRef,
   KeyboardEvent,
   ReactNode,
   Reducer,
@@ -13,16 +13,17 @@ import {
   useContext,
   useEffect,
   useId,
+  useImperativeHandle,
   useLayoutEffect,
   useMemo,
   useReducer,
   useRef,
 } from "react";
 import useEvent from "react-use-event-hook";
-import { BRAND } from "zod";
 
 const IS_SERVER = typeof window === "undefined" || "Deno" in window;
-const useIsomorphicLayoutEffect = IS_SERVER ? useEffect : useLayoutEffect;
+// https://github.com/facebook/react/issues/14927#issuecomment-572720368
+const useLayoutEffect_SAFE_FOR_SSR = IS_SERVER ? useEffect : useLayoutEffect;
 
 // React Hook for keyboard navigation via Roving tabindex
 //  - fast, flexible, minimal
@@ -32,12 +33,10 @@ const useIsomorphicLayoutEffect = IS_SERVER ? useEffect : useLayoutEffect;
 // TODO: Add an option for rotation, aka jump from start to end.
 // TODO: Release as use-key-navigation
 
-interface Position {
+export interface Position {
   x: number;
   y: number;
 }
-
-type BoundedPosition = Position & BRAND<"bounded">;
 
 interface Focusable {
   focus: IO<void>;
@@ -49,7 +48,6 @@ type OnFocus = (position: Position) => void;
 
 type OnBlur = () => void;
 
-// TODO: Add Position.
 export type Direction =
   | "nextX"
   | "previousX"
@@ -57,9 +55,12 @@ export type Direction =
   | "previousY"
   | "current";
 
-const moveAfterRender = new Map<string, Direction>();
+const moveAfterRender = new Map<string, Direction | Position>();
 
-type Move = (direction: Direction, afterRender?: boolean) => void;
+type Move = (
+  directionOrPosition: Direction | Position,
+  afterRender?: boolean
+) => void;
 
 interface ContextType {
   register: Register;
@@ -81,17 +82,15 @@ interface Bounds {
   maxY: number;
 }
 
-// // https://dev.to/gcanti/functional-design-smart-constructors-14nb
 const createBoundedPosition = (
   { x, y }: Position,
   { maxX, maxY }: Bounds
-): BoundedPosition =>
-  ({
-    x: bounded.clamp({ ...number.Ord, bottom: 0, top: maxX })(x),
-    y: bounded.clamp({ ...number.Ord, bottom: 0, top: maxY })(y),
-  } as BoundedPosition);
+): Position => ({
+  x: bounded.clamp({ ...number.Ord, bottom: 0, top: maxX })(x),
+  y: bounded.clamp({ ...number.Ord, bottom: 0, top: maxY })(y),
+});
 
-export interface KeyboardNavigationProviderProps {
+interface KeyboardNavigationProviderProps {
   maxX: number;
   maxY?: number;
   initialX?: number;
@@ -99,6 +98,7 @@ export interface KeyboardNavigationProviderProps {
   children:
     | ReactNode
     | ((state: { x: number; y: number; hasFocus: boolean }) => ReactNode);
+  onFocus?: (position: Position) => void;
 }
 
 interface State {
@@ -119,9 +119,19 @@ const reducer: Reducer<State, Action> = (state, action) => {
 
 type SparseArray<T> = (T | undefined)[];
 
-export const KeyboardNavigationProvider: FC<
+export interface KeyboardNavigationProviderRef {
+  move: Move;
+}
+
+export const KeyboardNavigationProvider = forwardRef<
+  KeyboardNavigationProviderRef,
   KeyboardNavigationProviderProps
-> = ({ maxX, maxY = 0, initialX = 0, initialY = 0, children }) => {
+>(function KeyboardNavigationProvider(
+  { maxX, maxY = 0, initialX = 0, initialY = 0, children, onFocus },
+  ref
+) {
+  useImperativeHandle(ref, () => ({ move }));
+
   const [state, dispatch] = useReducer(reducer, null, () => ({
     position: { x: initialX, y: initialY },
     hasFocus: false,
@@ -147,12 +157,14 @@ export const KeyboardNavigationProvider: FC<
     };
   }, []);
 
-  const onFocus = useCallback<OnFocus>(
-    (position) => dispatch({ type: "onFocus", position }),
-    []
-  );
+  const handleFocus = useEvent<OnFocus>((position) => {
+    dispatch({ type: "onFocus", position });
+    if (onFocus) onFocus(position);
+  });
 
-  const onBlur = useCallback<OnBlur>(() => dispatch({ type: "onBlur" }), []);
+  const handleBlur = useEvent<OnBlur>(() => {
+    dispatch({ type: "onBlur" });
+  });
 
   const id = useId();
 
@@ -164,20 +176,24 @@ export const KeyboardNavigationProvider: FC<
     }
   });
 
-  const move = useEvent<Move>((direction, afterRender) => {
+  const move = useEvent<Move>((directionOrPosition, afterRender) => {
     if (afterRender) {
-      moveAfterRender.set(id, direction);
+      moveAfterRender.set(id, directionOrPosition);
       return;
     }
 
     const focusables = getFocusables();
 
+    if (typeof directionOrPosition === "object") {
+      focusables[directionOrPosition.x]?.[directionOrPosition.y]?.focus();
+      return;
+    }
+
+    const direction = directionOrPosition;
+
     if (direction === "current") {
-      const focusable = focusables[position.x]?.[position.y];
-      if (focusable) {
-        focusable.focus();
-        return;
-      }
+      focusables[position.x]?.[position.y]?.focus();
+      return;
     }
 
     const isX = direction === "nextX" || direction === "previousX";
@@ -198,21 +214,26 @@ export const KeyboardNavigationProvider: FC<
     }
   });
 
-  const contextValueRef = useRef<ContextType>({
-    register,
-    onFocus,
-    onBlur,
-    move,
-  });
+  const contextValueRef = useRef<ContextType>();
+  const getContextValue = () => {
+    if (!contextValueRef.current)
+      contextValueRef.current = {
+        register,
+        onFocus: handleFocus,
+        onBlur: handleBlur,
+        move,
+      };
+    return contextValueRef.current;
+  };
 
   return (
-    <KeyboardNavigationContext.Provider value={contextValueRef.current}>
+    <KeyboardNavigationContext.Provider value={getContextValue()}>
       {typeof children === "function"
         ? children({ ...position, hasFocus: state.hasFocus })
         : children}
     </KeyboardNavigationContext.Provider>
   );
-};
+});
 
 type Key =
   | "ArrowUp"
@@ -261,7 +282,8 @@ export const useKeyNavigation = <E extends HTMLElement>({
     focusableRef.current = focusable;
   }, []);
 
-  useIsomorphicLayoutEffect(() => {
+  // Must register ASAP.
+  useLayoutEffect_SAFE_FOR_SSR(() => {
     if (!focusableRef.current) return;
     return register({ x, y }, focusableRef.current);
   }, [register, x, y]);
@@ -280,6 +302,7 @@ export const useKeyNavigation = <E extends HTMLElement>({
         e.preventDefault();
         switch (typeof action) {
           case "string":
+          case "object":
             move(action);
             break;
           case "function":

@@ -62,13 +62,12 @@ const NodeItemButtonPopover: FC<{
   const { mutate } = useMutation();
 
   const hash = useLocationHash();
-  const prefRef = useRef(hash);
+  const prevHashRef = useRef(hash);
   useEffect(() => {
-    if (hash !== prefRef.current) {
-      prefRef.current = hash;
-      onRequestClose();
-    }
-  }, [hash, onRequestClose]);
+    if (hash === prevHashRef.current) return;
+    prevHashRef.current = hash;
+    onRequestClose();
+  });
 
   const nodeIds = useLocationHashNodeIds();
   const showAppend = nodeIds.length > 0;
@@ -167,9 +166,7 @@ export const NodeItemButton: FC<NodeItemButton> = ({
       ArrowUp: !isFirst ? "previousX" : focusClassName("firstNodeFilterLink"),
       ArrowDown: !isLast ? "nextX" : focusClassName("createNodeInput"),
       ArrowRight: "nextY",
-      ArrowLeft: () => {
-        router.back();
-      },
+      Escape: () => router.back(),
     },
   });
 
