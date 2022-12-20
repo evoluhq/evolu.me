@@ -1,16 +1,64 @@
-import { has, model } from "evolu";
-import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
+import { has, model, NodeId } from "evolu";
+import { FC, useLayoutEffect, useMemo, useRef } from "react";
+import { useIntl } from "react-intl";
+import useEvent from "react-use-event-hook";
 import { useQuery } from "../lib/db";
+import { focusClassName } from "../lib/focusClassNames";
 import {
+  FocusPosition,
   KeyboardNavigationProvider,
   KeyboardNavigationProviderRef,
-  Position,
 } from "../lib/hooks/useKeyNavigation";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { useScrollRestoration } from "../lib/hooks/useScrollRestoration";
 import { NodeItem } from "./NodeItem";
-import { NodeListPlaceholder } from "./NodeListPlaceholder";
 import { View } from "./styled";
+import { Text } from "./Text";
+
+let canDoAutoFocusOnInput = false;
+
+// It's impossible to detect a virtual keyboard, so we can't autoFocus input
+// naively. No touch detection is possible, and we can autoFocus only when
+// we are 100% sure a user used key navigation.
+const handleNodeItemKeyEnter = () => {
+  canDoAutoFocusOnInput = true;
+};
+
+const NodeListPlaceholder: FC<{ ids: readonly NodeId[] }> = ({ ids }) => {
+  const intl = useIntl();
+
+  const getMessage = (): string => {
+    switch (ids.length) {
+      case 0:
+        return intl.formatMessage({
+          defaultMessage: `Here will be your thoughts, organized.
+
+You can connect anything with anything.
+For example: to see - Arrival movie
+
+Write a thought, press enter, and click on the link.
+`,
+          id: "pZB8g5",
+        });
+      case 1:
+        return intl.formatMessage({
+          defaultMessage: "Add something related.",
+          id: "LaSyKs",
+        });
+      default:
+        return intl.formatMessage({
+          defaultMessage: `You added something else to the filter, and that's how we can filter and connect even more thoughts.
+
+For example: to see - Arrival - tomorrow
+
+Of course, you can connect "tomorrow" with "to buy" and anything else.`,
+          id: "NVEciF",
+        });
+    }
+  };
+
+  return <Text className="text-center">{getMessage()}</Text>;
+};
 
 export const NodeList = () => {
   const ids = useLocationHashNodeIds();
@@ -45,13 +93,16 @@ export const NodeList = () => {
 
   const idsString = ids.join();
 
-  const focusPositionRef = useRef<Position>();
+  const focusPositionRef = useRef<Map<string, FocusPosition>>();
+  const getFocusPosition = () => {
+    if (!focusPositionRef.current) focusPositionRef.current = new Map();
+    return focusPositionRef.current;
+  };
 
-  const handleKeyboardNavigationProviderFocus = useCallback(
-    (position: Position) => {
-      focusPositionRef.current = position;
-    },
-    []
+  const handleKeyboardNavigationProviderFocus = useEvent(
+    (position: FocusPosition) => {
+      getFocusPosition().set(idsString, position);
+    }
   );
 
   const keyboardNavigationProviderRef =
@@ -59,23 +110,31 @@ export const NodeList = () => {
 
   const { restoreScroll, storeScroll } = useScrollRestoration();
 
+  // We use useEvent to not rerun useLayoutEffect on loadedRows.length change.
+  const isEmpty = useEvent(() => loadedRows.length === 0);
   useLayoutEffect(() => {
     if (!isLoaded) return;
-    const position = restoreScroll(idsString);
-    // console.log("restore", idsString, position);
-
-    if (position) keyboardNavigationProviderRef.current?.move(position);
-    else {
-      if (focusPositionRef.current != null)
+    if (isEmpty()) {
+      if (canDoAutoFocusOnInput) {
+        focusClassName("createNodeInput")();
+      }
+    } else {
+      // AutoFocus on links is OK.
+      const position = restoreScroll(idsString);
+      // We have a position, we know it's not the initial render.
+      if (position) keyboardNavigationProviderRef.current?.move(position);
+      // We check it's not the initial render because something was focused.
+      else if (getFocusPosition().size > 0) {
         keyboardNavigationProviderRef.current?.move({ x: 0, y: 1 });
-      // TODO: Focus NodeListPlaceholder.
+      }
     }
 
     return () => {
-      // console.log("store", idsString, focusPositionRef.current);
-      storeScroll(idsString, focusPositionRef.current);
+      const position = getFocusPosition().get(idsString);
+      // Ensure "Add To Filter" will save focus to the link, not the button.
+      storeScroll(idsString, position ? { x: position.x, y: 1 } : undefined);
     };
-  }, [idsString, isLoaded, restoreScroll, storeScroll]);
+  }, [idsString, isEmpty, isLoaded, restoreScroll, storeScroll]);
 
   if (!isLoaded) return null;
 
@@ -102,6 +161,7 @@ export const NodeList = () => {
               focusable={i === x && (y === 0 ? "button" : "input")}
               isFirst={i === 0}
               isLast={i === rows.length - 1}
+              onKeyEnter={handleNodeItemKeyEnter}
             />
           ))
         }

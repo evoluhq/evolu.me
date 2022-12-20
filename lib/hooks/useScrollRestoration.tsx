@@ -13,11 +13,11 @@ import {
   NativeSyntheticEvent,
 } from "react-native";
 import { ScrollView } from "../../components/styled";
-import { Position } from "./useKeyNavigation";
+import { FocusPosition } from "./useKeyNavigation";
 
 interface ContextType {
-  storeScroll: (id: string, position?: Position) => void;
-  restoreScroll: (id: string) => Position | undefined;
+  storeScroll: (id: string, position?: FocusPosition) => void;
+  restoreScroll: (id: string) => FocusPosition | undefined;
   requestScrollToEndAnimated: () => void;
   scrollToEndAnimatedIfRequested: () => void;
 }
@@ -44,7 +44,7 @@ export const ScrollRestoration: FC<{
       string,
       {
         point?: NativeScrollPoint;
-        position?: Position;
+        position?: FocusPosition;
       }
     >
   >();
@@ -63,7 +63,7 @@ export const ScrollRestoration: FC<{
     []
   );
 
-  const storeScroll = useCallback((id: string, position?: Position) => {
+  const storeScroll = useCallback((id: string, position?: FocusPosition) => {
     getScrollPoints().set(id, { point: scrollPointRef.current, position });
   }, []);
 

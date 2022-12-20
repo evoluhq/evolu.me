@@ -33,7 +33,7 @@ const useLayoutEffect_SAFE_FOR_SSR = IS_SERVER ? useEffect : useLayoutEffect;
 // TODO: Add an option for rotation, aka jump from start to end.
 // TODO: Release as use-key-navigation
 
-export interface Position {
+export interface FocusPosition {
   x: number;
   y: number;
 }
@@ -42,9 +42,9 @@ interface Focusable {
   focus: IO<void>;
 }
 
-type Register = (position: Position, focusable: Focusable) => IO<void>;
+type Register = (position: FocusPosition, focusable: Focusable) => IO<void>;
 
-type OnFocus = (position: Position) => void;
+type OnFocus = (position: FocusPosition) => void;
 
 type OnBlur = () => void;
 
@@ -55,10 +55,10 @@ export type Direction =
   | "previousY"
   | "current";
 
-const moveAfterRender = new Map<string, Direction | Position>();
+const moveAfterRender = new Map<string, Direction | FocusPosition>();
 
 type Move = (
-  directionOrPosition: Direction | Position,
+  directionOrPosition: Direction | FocusPosition,
   afterRender?: boolean
 ) => void;
 
@@ -83,9 +83,9 @@ interface Bounds {
 }
 
 const createBoundedPosition = (
-  { x, y }: Position,
+  { x, y }: FocusPosition,
   { maxX, maxY }: Bounds
-): Position => ({
+): FocusPosition => ({
   x: bounded.clamp({ ...number.Ord, bottom: 0, top: maxX })(x),
   y: bounded.clamp({ ...number.Ord, bottom: 0, top: maxY })(y),
 });
@@ -98,15 +98,15 @@ interface KeyboardNavigationProviderProps {
   children:
     | ReactNode
     | ((state: { x: number; y: number; hasFocus: boolean }) => ReactNode);
-  onFocus?: (position: Position) => void;
+  onFocus?: (position: FocusPosition) => void;
 }
 
 interface State {
-  position: Position;
+  position: FocusPosition;
   hasFocus: boolean;
 }
 
-type Action = { type: "onFocus"; position: Position } | { type: "onBlur" };
+type Action = { type: "onFocus"; position: FocusPosition } | { type: "onBlur" };
 
 const reducer: Reducer<State, Action> = (state, action) => {
   switch (action.type) {

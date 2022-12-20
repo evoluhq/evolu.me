@@ -13,6 +13,8 @@ import { Text } from "../components/Text";
 // Evolu Me is a tool for organizing thoughts.
 // Write thoughts your don't want to remember but also you don't want
 // to forget. Connect anything with anything. Here are some examples:
+// TODO: Keyboard.
+// Remember, it's not trees, it's undirected graph... The difference is...
 
 const Help = () => {
   const intl = useIntl();

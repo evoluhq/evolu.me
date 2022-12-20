@@ -22,6 +22,7 @@ import {
   KEY_ARROW_DOWN_COMMAND,
   KEY_ARROW_UP_COMMAND,
   KEY_ENTER_COMMAND,
+  KEY_ESCAPE_COMMAND,
 } from "lexical";
 import { useRouter } from "next/router";
 import {
@@ -110,6 +111,14 @@ const KeyHandlerPlugin: FC<{
             return true;
           })
         ),
+        COMMAND_PRIORITY_LOW
+      ),
+      editor.registerCommand(
+        KEY_ESCAPE_COMMAND,
+        () => {
+          router.back();
+          return true;
+        },
         COMMAND_PRIORITY_LOW
       ),
       editor.registerCommand(

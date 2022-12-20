@@ -1,5 +1,7 @@
 import clsx from "clsx";
 import { NonEmptyString1000 } from "evolu";
+import { constVoid } from "fp-ts/function";
+import { IO } from "fp-ts/IO";
 import { useRouter } from "next/router";
 import { memo } from "react";
 import { NodeId } from "../lib/db";
@@ -19,6 +21,7 @@ interface NodeItemProps {
   x: number;
   isFirst: boolean;
   isLast: boolean;
+  onKeyEnter: IO<void>;
 }
 
 export const NodeItem = memo<NodeItemProps>(function NodeItem({
@@ -27,6 +30,7 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
   x,
   isFirst,
   isLast,
+  onKeyEnter,
 }) {
   const router = useRouter();
 
@@ -38,6 +42,13 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
       ArrowDown: !isLast ? "nextX" : focusClassName("createNodeInput"),
       ArrowLeft: "previousY",
       Escape: () => router.back(),
+      Enter: [
+        constVoid,
+        () => {
+          onKeyEnter();
+          return false;
+        },
+      ],
     },
   });
 
@@ -56,7 +67,7 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
           as="link"
           p
           className={clsx(
-            "pl-0",
+            "flex-1 pl-0",
             isLast && focusClassNames.lastNodeItemLink,
             isFirst && focusClassNames.firstNodeItemLink
           )}

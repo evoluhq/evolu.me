@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { has, model } from "evolu";
 import { option, readonlyArray } from "fp-ts";
 import { pipe } from "fp-ts/function";
+import { useRouter } from "next/router";
 import { FC, memo } from "react";
 import { NodeId, useQuery } from "../lib/db";
 import { focusClassName, focusClassNames } from "../lib/focusClassNames";
@@ -23,12 +24,14 @@ const NodeFilterLink: FC<{
   title: string;
   x: number;
 }> = ({ focusable, id, isFirst, title, x }) => {
+  const router = useRouter();
   const keyNavigation = useKeyNavigation({
     x,
     keys: {
       ArrowLeft: "previousX",
       ArrowRight: "nextX",
       ArrowDown: focusClassName("firstNodeItemLink"),
+      Escape: () => router.back(),
     },
   });
 
