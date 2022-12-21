@@ -14,6 +14,13 @@ const About = () => {
       centerContent
     >
       <Text mb>{appDescription}</Text>
+      <Text mb>
+        {intl.formatMessage({
+          defaultMessage:
+            "Focused on privacy means all data are end-to-end encrypted. You don't even have to create an account to use this app.",
+          id: "QhJpjX",
+        })}
+      </Text>
       <View className="flex-row">
         <Text
           as="link"
