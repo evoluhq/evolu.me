@@ -46,8 +46,12 @@ Write a thought and press enter.`,
         );
       case 1:
         return intl.formatMessage({
-          defaultMessage: "Add something related.",
-          id: "LaSyKs",
+          defaultMessage: `No connection yet.
+          
+With Evolu Me, you can connect anything with anything.
+
+That's how the human brain works.`,
+          id: "rLtM8k",
         });
       default:
         return intl.formatMessage({
