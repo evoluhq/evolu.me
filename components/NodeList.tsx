@@ -4,6 +4,7 @@ import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
 import { useQuery } from "../lib/db";
 import { focusClassName } from "../lib/focusClassNames";
+import { useAppDescription } from "../lib/hooks/useAppDescription";
 import {
   FocusPosition,
   KeyboardNavigationProvider,
@@ -26,20 +27,23 @@ const handleNodeItemKeyEnter = () => {
 
 const NodeListPlaceholder: FC<{ ids: readonly NodeId[] }> = ({ ids }) => {
   const intl = useIntl();
+  const description = useAppDescription();
 
   const getMessage = (): string => {
     switch (ids.length) {
       case 0:
-        return intl.formatMessage({
-          defaultMessage: `Here will be your thoughts, organized.
+        return (
+          description +
+          intl.formatMessage({
+            defaultMessage: `
 
 You can connect anything with anything.
 For example: to see - Arrival movie
 
-Write a thought, press enter, and click on the link.
-`,
-          id: "pZB8g5",
-        });
+Write a thought and press enter.`,
+            id: "mgAjw1",
+          })
+        );
       case 1:
         return intl.formatMessage({
           defaultMessage: "Add something related.",
@@ -51,8 +55,8 @@ Write a thought, press enter, and click on the link.
 
 For example: to see - Arrival - tomorrow
 
-Of course, you can connect "tomorrow" with "to buy" and anything else.`,
-          id: "NVEciF",
+Of course, you can connect "tomorrow" with "to buy" and anything else. The possibilities are endless.`,
+          id: "QbK9iv",
         });
     }
   };
