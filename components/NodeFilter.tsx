@@ -82,7 +82,7 @@ const NodeFilterWithIds = memo<{ ids: readonly NodeId[] }>(
 
     return (
       <>
-        <PageTitle title={title} />
+        {title.length > 0 && <PageTitle title={title} />}
         <ScrollView horizontal>
           <KeyboardNavigationProvider
             maxX={sortedRowsWithTruncatedTitle.length}

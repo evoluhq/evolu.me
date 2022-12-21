@@ -11,28 +11,26 @@ import { Text } from "./Text";
 
 export const Layout: FC<{
   children: ReactNode;
-  title: string | JSX.Element;
+  title: string;
   waitForData?: boolean;
+  header?: ReactNode;
   footer?: ReactNode;
   centerContent?: boolean;
-}> = ({ children, title, waitForData, footer, centerContent }) => {
+}> = ({ children, title, waitForData, header, footer, centerContent }) => {
   // React Suspense would be better, but we are not there yet.
   const dataAreLoaded = useEvoluFirstDataAreLoaded();
   const isHidden = waitForData ? !dataAreLoaded : false;
-  const titleIsString = typeof title === "string";
 
   return (
     <>
-      {titleIsString && <PageTitle title={title} />}
+      <PageTitle title={title} />
       <View className={clsx("flex-1", isHidden && "hidden")}>
         <Container>
           <View className="flex-row">
-            {titleIsString ? (
+            {header || (
               <Text p className="flex-1 pl-0" {...accessibility.heading(1)}>
                 {title}
               </Text>
-            ) : (
-              title
             )}
             <MainNav />
           </View>

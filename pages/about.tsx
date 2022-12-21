@@ -8,8 +8,6 @@ const About = () => {
   const intl = useIntl();
   const appDescription = useAppDescription();
 
-  const github = "GitHub";
-
   return (
     <Layout
       title={intl.formatMessage({ defaultMessage: "About", id: "g5pX+a" })}
@@ -24,8 +22,9 @@ const About = () => {
           // @ts-expect-errors RNfW
           href="https://github.com/evoluhq/evolu.me"
           hrefAttrs={{ target: "blank" }}
+          // eslint-disable-next-line formatjs/no-literal-string-in-jsx
         >
-          {github}
+          GitHub
         </Text>
       </View>
     </Layout>
