@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { useRouter } from "next/router";
 import { FC, ReactNode, useRef, useState } from "react";
 import { useIntl } from "react-intl";
@@ -16,7 +17,8 @@ const MainNavLink: FC<{
   children: ReactNode;
   href: string;
   x: number;
-}> = ({ children, href, x }) => {
+  className: string;
+}> = ({ children, href, x, className }) => {
   const keyNavigation = useKeyNavigation({
     x,
     keys: { ArrowUp: "previousX", ArrowDown: "nextX" },
@@ -29,7 +31,7 @@ const MainNavLink: FC<{
         as="link"
         p
         transparent={!isCurrent}
-        className="px-3"
+        className={clsx("px-3", className)}
         {...keyNavigation}
       >
         {children}
@@ -43,16 +45,16 @@ const MainNavLinks = () => {
 
   return (
     <>
-      <MainNavLink href="/" x={0}>
+      <MainNavLink href="/" x={0} className="rounded-b-none">
         {intl.formatMessage({ defaultMessage: "Home", id: "ejEGdx" })}
       </MainNavLink>
-      <MainNavLink href="/settings" x={1}>
+      <MainNavLink href="/settings" x={1} className="rounded-none">
         {intl.formatMessage({ defaultMessage: "Settings", id: "D3idYv" })}
       </MainNavLink>
-      <MainNavLink href="/help" x={2}>
+      <MainNavLink href="/help" x={2} className="rounded-none">
         {intl.formatMessage({ defaultMessage: "Help", id: "SENRqu" })}
       </MainNavLink>
-      <MainNavLink href="/about" x={3}>
+      <MainNavLink href="/about" x={3} className="rounded-t-none">
         {intl.formatMessage({ defaultMessage: "About", id: "g5pX+a" })}
       </MainNavLink>
     </>

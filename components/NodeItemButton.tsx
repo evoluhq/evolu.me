@@ -113,7 +113,7 @@ const NodeItemButtonPopover: FC<{
             })}
             x={0}
             onPress={handleDeletePress}
-            className="rounded-none rounded-l"
+            className="rounded-r-none"
           />
           <NodeItemButtonPopoverButton
             title={intl.formatMessage({
@@ -122,7 +122,7 @@ const NodeItemButtonPopover: FC<{
             })}
             x={1}
             onPress={handleEditPress}
-            className={!showAppend ? "rounded-none rounded-r" : "rounded-none"}
+            className={!showAppend ? "rounded-l-none" : "rounded-none"}
           />
           {showAppend && (
             <NodeItemButtonPopoverButton
@@ -132,7 +132,7 @@ const NodeItemButtonPopover: FC<{
               })}
               x={2}
               onPress={handleAppendPress}
-              className="rounded-none rounded-r"
+              className="rounded-l-none"
             />
           )}
         </KeyboardNavigationProvider>

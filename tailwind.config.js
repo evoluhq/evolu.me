@@ -5,7 +5,6 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   presets: [require("nativewind/tailwind")],
-  plugins: [require("tailwindcss-hocus")],
   important: "html",
   theme: {},
   future: {

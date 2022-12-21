@@ -38,7 +38,6 @@ specifiers:
   react-use-event-hook: ^0.9.3
   tailwind-merge: ^1.8.0
   tailwindcss: ^3.2.4
-  tailwindcss-hocus: ^0.0.7
   typescript: ^4.9.4
   zod: ^3.20.2
 
@@ -83,7 +82,6 @@ devDependencies:
   prettier: 2.8.1
   prettier-plugin-tailwindcss: 0.2.1_prettier@2.8.1
   tailwindcss: 3.2.4_postcss@8.4.20
-  tailwindcss-hocus: 0.0.7_tailwindcss@3.2.4
   typescript: 4.9.4
 
 packages:
@@ -3730,14 +3728,6 @@ packages:
   /tailwind-merge/1.8.0:
     resolution: {integrity: sha512-tER/2SbYRdfPYg6m4pDWZSlbymLTmDi+dx4iCsJmgmz4UDGzgnVelOvBe3GNtGCw9Bmc4MiObfJJbKeVL+KnMQ==}
     dev: false
-
-  /tailwindcss-hocus/0.0.7_tailwindcss@3.2.4:
-    resolution: {integrity: sha512-KY3jLlppAoPkCLRhDqbe503c1Ryq//G1bLQqFCZz1pnB0JFzHa3VK0bXvjTa8n/dwCxgkhi5uJm1d6gp8OzPhw==}
-    peerDependencies:
-      tailwindcss: ^3.0.0
-    dependencies:
-      tailwindcss: 3.2.4_postcss@8.4.20
-    dev: true
 
   /tailwindcss/3.2.4_postcss@8.4.20:
     resolution: {integrity: sha512-AhwtHCKMtR71JgeYDaswmZXhPcW9iuI9Sp2LvZPo9upDZ7231ZJ7eA9RaURbhpXGVlrjX4cFNlB4ieTetEb7hQ==}

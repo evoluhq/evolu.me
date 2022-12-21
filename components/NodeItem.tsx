@@ -67,7 +67,7 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
           as="link"
           p
           className={clsx(
-            "flex-1 pl-0",
+            "-ml-1 px-1",
             isLast && focusClassNames.lastNodeItemLink,
             isFirst && focusClassNames.firstNodeItemLink
           )}

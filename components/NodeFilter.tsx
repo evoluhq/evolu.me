@@ -14,7 +14,7 @@ import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { truncate } from "../lib/truncate";
 import { Link } from "./Link";
 import { PageTitle } from "./PageTitle";
-import { ScrollView } from "./styled";
+import { ScrollView, View } from "./styled";
 import { Text } from "./Text";
 
 const NodeFilterLink: FC<{
@@ -41,7 +41,8 @@ const NodeFilterLink: FC<{
         as="link"
         p
         className={clsx(
-          isFirst && ["pl-0", focusClassNames.firstNodeFilterLink]
+          "my-1 py-1",
+          isFirst && focusClassNames.firstNodeFilterLink
         )}
         {...keyNavigation}
         // @ts-expect-error RNfW
@@ -83,23 +84,26 @@ const NodeFilterWithIds = memo<{ ids: readonly NodeId[] }>(
     return (
       <>
         {title.length > 0 && <PageTitle title={title} />}
-        <ScrollView horizontal>
-          <KeyboardNavigationProvider
-            maxX={sortedRowsWithTruncatedTitle.length}
-          >
-            {({ x }) =>
-              sortedRowsWithTruncatedTitle.map((row, i) => (
-                <NodeFilterLink
-                  key={row.id}
-                  focusable={x === i}
-                  id={row.id}
-                  isFirst={i === 0}
-                  title={row.title}
-                  x={i}
-                />
-              ))
-            }
-          </KeyboardNavigationProvider>
+        {/* ml to ensure focus ring is visible */}
+        <ScrollView horizontal className="-ml-[1px]">
+          <View className="ml-[1px] flex-row">
+            <KeyboardNavigationProvider
+              maxX={sortedRowsWithTruncatedTitle.length}
+            >
+              {({ x }) =>
+                sortedRowsWithTruncatedTitle.map((row, i) => (
+                  <NodeFilterLink
+                    key={row.id}
+                    focusable={x === i}
+                    id={row.id}
+                    isFirst={i === 0}
+                    title={row.title}
+                    x={i}
+                  />
+                ))
+              }
+            </KeyboardNavigationProvider>
+          </View>
         </ScrollView>
       </>
     );

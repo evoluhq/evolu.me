@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { FC } from "react";
 import { useIntl } from "react-intl";
 import { Button } from "../components/Button";
@@ -35,7 +36,7 @@ const Toolbar: FC<{ x: number }> = ({ x }) => {
         <Text
           as="link"
           p
-          className={focusClassNames.allLink}
+          className={clsx(focusClassNames.allLink, "my-1 py-1")}
           {...allKeyNav}
           // @ts-expect-error RNfW
           focusable={x === 0}
