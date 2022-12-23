@@ -1,5 +1,13 @@
 import clsx from "clsx";
-import { FC } from "react";
+import {
+  FC,
+  forwardRef,
+  memo,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from "react";
 import { useIntl } from "react-intl";
 import { Button } from "../components/Button";
 import { Container } from "../components/Container";
@@ -24,6 +32,7 @@ import { NonEmptyString1000 } from "evolu";
 import { either, option } from "fp-ts";
 import { constFalse, constVoid, flow, pipe } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
   $createParagraphNode,
   $createTextNode,
@@ -38,23 +47,28 @@ import {
   KEY_ESCAPE_COMMAND,
 } from "lexical";
 import { useRouter } from "next/router";
-import { MutableRefObject, useCallback, useEffect, useRef } from "react";
+import { useEffect } from "react";
+import { flushSync } from "react-dom";
+import useEvent from "react-use-event-hook";
+import {
+  editNodeIdAtom,
+  editNodeTitleAtom,
+  newNodeTitleAtom,
+} from "../lib/atoms";
 import { useMutation } from "../lib/db";
 import { FocusClassName } from "../lib/focusClassNames";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { useScrollRestoration } from "../lib/hooks/useScrollRestoration";
-import { localStorageKeys } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
 
-const KeyHandlerPlugin: FC<{
-  onSubmit: (value: NonEmptyString1000) => void;
-  editorTextRef: MutableRefObject<string | undefined>;
-}> = ({ onSubmit, editorTextRef }) => {
+const KeyHandlerPlugin = memo<{
+  onKeyEnter: IO<void>;
+}>(function KeyHandlerPlugin({ onKeyEnter }) {
   const [editor] = useLexicalComposerContext();
   const router = useRouter();
 
-  const onCollapsedRangeSelection =
-    (classNameOrCallback: FocusClassName | IO<void>) =>
+  const onCollapsedRangeSelectionAndTextStart =
+    (...className: FocusClassName[]) =>
     (e: KeyboardEvent): boolean =>
       pipe(
         $getSelection(),
@@ -64,9 +78,7 @@ const KeyHandlerPlugin: FC<{
         option.filter((s) => s.anchor.offset === 0),
         option.match(constFalse, () => {
           e.preventDefault();
-          if (typeof classNameOrCallback === "string")
-            focusClassName(classNameOrCallback)();
-          else classNameOrCallback();
+          focusClassName(...className)();
           return true;
         })
       );
@@ -79,23 +91,8 @@ const KeyHandlerPlugin: FC<{
           option.fromNullable,
           option.filter((e) => !e.shiftKey),
           option.match(constFalse, (e) => {
-            // Lexical rich text plugin uses only preventDefault 🤷‍♂️
-            // event.stopPropagation();
-            // event.stopImmediatePropagation()
             e.preventDefault();
-
-            pipe(
-              NonEmptyString1000.safeParse(editorTextRef.current),
-              safeParseToEither,
-              // TODO: Alert "too long text, it's x length, max is y"
-              either.match(constVoid, (value) => {
-                // https://lexical.dev/docs/faq#how-do-i-clear-the-contents-of-the-editor
-                editor.update(() => {
-                  $getRoot().clear();
-                });
-                onSubmit(value);
-              })
-            );
+            onKeyEnter();
             return true;
           })
         ),
@@ -111,31 +108,35 @@ const KeyHandlerPlugin: FC<{
       ),
       editor.registerCommand(
         KEY_ARROW_UP_COMMAND,
-        onCollapsedRangeSelection("lastNodeItemLink"),
+        onCollapsedRangeSelectionAndTextStart("lastNodeItemLink"),
         COMMAND_PRIORITY_LOW
       ),
       editor.registerCommand(
         KEY_ARROW_DOWN_COMMAND,
-        onCollapsedRangeSelection("allLink"),
+        onCollapsedRangeSelectionAndTextStart("allLink", "saveNodeButton"),
         COMMAND_PRIORITY_LOW
       )
     );
-  }, [editor, editorTextRef, onSubmit, router]);
+  }, [editor, onKeyEnter, router]);
 
   return null;
-};
+});
 
-const Toolbar: FC<{ x: number }> = ({ x }) => {
+const useButtonKeyNavigation = (x: number) =>
+  useKeyNavigation({
+    x,
+    keys: {
+      ArrowLeft: "previousX",
+      ArrowRight: "nextX",
+      ArrowUp: focusClassName("createNodeInput"),
+    },
+  });
+
+const NewNodeMenuButtons: FC<{ x: number }> = ({ x }) => {
   const intl = useIntl();
 
-  const keys = {
-    ArrowLeft: "previousX",
-    ArrowRight: "nextX",
-    ArrowUp: focusClassName("createNodeInput"),
-  } as const;
-
-  const allKeyNav = useKeyNavigation({ x: 0, keys });
-  const searchKeyNav = useKeyNavigation({ x: 1, keys });
+  const allKeyNav = useButtonKeyNavigation(0);
+  const searchKeyNav = useButtonKeyNavigation(1);
 
   return (
     <View className="flex-row justify-evenly">
@@ -148,105 +149,205 @@ const Toolbar: FC<{ x: number }> = ({ x }) => {
           // @ts-expect-error RNfW
           focusable={x === 0}
         >
-          {intl.formatMessage({
-            defaultMessage: "All",
-            id: "zQvVDJ",
-          })}
+          {intl.formatMessage({ defaultMessage: "All", id: "zQvVDJ" })}
         </Text>
       </Link>
       <Button {...searchKeyNav} focusable={x === 1}>
         <Text as="button">
-          {intl.formatMessage({
-            defaultMessage: "Search",
-            id: "xmcVZ0",
-          })}
+          {intl.formatMessage({ defaultMessage: "Search", id: "xmcVZ0" })}
         </Text>
       </Button>
     </View>
   );
 };
 
-const useAddNodeMutation = (): ((value: NonEmptyString1000) => void) => {
-  const { mutate } = useMutation();
-  const ids = useLocationHashNodeIds();
-  const { requestScrollToEndAnimated } = useScrollRestoration();
-
-  return useCallback(
-    (value) => {
-      const { id } = mutate("node", { title: value }, () => {
-        requestScrollToEndAnimated();
-      });
-      ids.forEach((relatedId) => {
-        // The edge direction doesn't matter.
-        // We sort IDs to have always the same edge.
-        const sortedTuple = [id, relatedId].sort();
-        mutate("edge", { a: sortedTuple[0], b: sortedTuple[1] });
-      });
-    },
-    [ids, mutate, requestScrollToEndAnimated]
+const NewNodeMenu: FC = () => {
+  return (
+    <KeyboardNavigationProvider maxX={1}>
+      {({ x }) => <NewNodeMenuButtons x={x} />}
+    </KeyboardNavigationProvider>
   );
 };
 
-export const NodeEditor: FC = () => {
-  const editorTextRef = useRef<string>();
+const useCancelEditModeAndFocusAllLink = () => {
+  const setEditNodeTitle = useSetAtom(editNodeTitleAtom);
+  const setEditNodeId = useSetAtom(editNodeIdAtom);
 
-  const handleChange = useCallback((state: EditorState) => {
-    state.read(() => {
-      const value = $getRoot().getTextContent().trim();
-      editorTextRef.current = value;
-      localStorage.setItem(localStorageKeys.newNodeTitle, value);
+  return () => {
+    // So we can focus immediately after.
+    flushSync(() => {
+      setEditNodeTitle("");
+      setEditNodeId(null);
     });
+    focusClassName("allLink")();
+  };
+};
+
+const EditNodeMenuButtons: FC<{ x: number; onSavePress: IO<void> }> = ({
+  x,
+  onSavePress,
+}) => {
+  const intl = useIntl();
+
+  const saveKeyNav = useButtonKeyNavigation(0);
+  const cancelKeyNav = useButtonKeyNavigation(1);
+
+  return (
+    <View className="flex-row justify-evenly">
+      <Button
+        {...saveKeyNav}
+        focusable={x === 0}
+        className={focusClassNames.saveNodeButton}
+        onPress={onSavePress}
+      >
+        <Text as="button">
+          {intl.formatMessage({ defaultMessage: "Save", id: "jvo0vs" })}
+        </Text>
+      </Button>
+      <Button
+        {...cancelKeyNav}
+        focusable={x === 1}
+        onPress={useCancelEditModeAndFocusAllLink()}
+      >
+        <Text as="button">
+          {intl.formatMessage({ defaultMessage: "Cancel", id: "47FYwb" })}
+        </Text>
+      </Button>
+    </View>
+  );
+};
+
+const EditNodeMenu: FC<{ onSavePress: IO<void> }> = ({ onSavePress }) => {
+  return (
+    <KeyboardNavigationProvider maxX={1}>
+      {({ x }) => <EditNodeMenuButtons x={x} onSavePress={onSavePress} />}
+    </KeyboardNavigationProvider>
+  );
+};
+
+interface NodeEditorPluginsRef {
+  save: IO<void>;
+}
+
+const NodeEditorPlugins = forwardRef<NodeEditorPluginsRef>(
+  function NodeEditorPlugins(props, ref) {
+    useImperativeHandle(ref, () => ({ save }));
+
+    const [editor] = useLexicalComposerContext();
+
+    const { mutate } = useMutation();
+    const ids = useLocationHashNodeIds();
+    const { requestScrollToEndAnimated } = useScrollRestoration();
+
+    const editNodeId = useAtomValue(editNodeIdAtom);
+    const [editNodeTitle, setEditNodeTitle] = useAtom(editNodeTitleAtom);
+    const [newNodeTitle, setNewNodeTitle] = useAtom(newNodeTitleAtom);
+
+    const handleChange = useEvent((state: EditorState) => {
+      state.read(() => {
+        const value = $getRoot().getTextContent().trim();
+        (editNodeId ? setEditNodeTitle : setNewNodeTitle)(value);
+      });
+    });
+
+    const cancelEditModeAndFocusAllLink = useCancelEditModeAndFocusAllLink();
+
+    const save = useEvent(() =>
+      pipe(
+        // TODO: Alert "too long text, it's x length, max is..."
+        NonEmptyString1000.safeParse(editNodeId ? editNodeTitle : newNodeTitle),
+        safeParseToEither,
+        either.match(constVoid, (title) => {
+          editor.update(() => {
+            $getRoot().clear();
+          });
+
+          const { id } = mutate(
+            "node",
+            { title, id: editNodeId || undefined },
+            () => {
+              requestScrollToEndAnimated();
+            }
+          );
+          if (editNodeId == null)
+            ids.forEach((adjacentId) => {
+              // The edge direction doesn't matter.
+              // We sort IDs to have always the same edge.
+              const sortedTuple = [id, adjacentId].sort();
+              mutate("edge", { a: sortedTuple[0], b: sortedTuple[1] });
+            });
+
+          if (editNodeId) cancelEditModeAndFocusAllLink();
+        })
+      )
+    );
+
+    return (
+      <>
+        <OnChangePlugin onChange={handleChange} />
+        <KeyHandlerPlugin onKeyEnter={save} />
+      </>
+    );
+  }
+);
+
+export const NodeEditor: FC = () => {
+  const nodeEditorPluginsRef = useRef<NodeEditorPluginsRef>(null);
+
+  const lexicalComposerChildren = useMemo(
+    () => (
+      <>
+        <PlainTextPlugin
+          contentEditable={
+            <ContentEditable className={focusClassNames.createNodeInput} />
+          }
+          placeholder={null}
+          ErrorBoundary={LexicalErrorBoundary}
+        />
+        <HistoryPlugin />
+        <NodeEditorPlugins ref={nodeEditorPluginsRef} />
+      </>
+    ),
+    []
+  );
+
+  const handleSavePress = useCallback(() => {
+    nodeEditorPluginsRef.current?.save();
   }, []);
 
-  const addNodeMutation = useAddNodeMutation();
-  const handleSubmit = (value: NonEmptyString1000) => {
-    addNodeMutation(value);
-  };
+  const editNodeId = useAtomValue(editNodeIdAtom);
+  const newNodeTitle = useAtomValue(newNodeTitleAtom);
+  const editNodeTitle = useAtomValue(editNodeTitleAtom);
 
   return (
     <Container className="pb-0">
       <Text className="rounded bg-gray-100 px-3 py-2 dark:bg-gray-900">
         <LexicalComposer
+          key={editNodeId}
           initialConfig={{
             namespace: "EvoluMe",
             onError(error) {
               // eslint-disable-next-line no-console
               console.log(error);
             },
-            theme: {
-              root: "outline-none",
-            },
+            theme: { root: "outline-none" },
             editorState: () => {
-              pipe(
-                localStorage.getItem(localStorageKeys.newNodeTitle),
-                option.fromNullable,
-                option.map($createTextNode),
-                option.map((text) => $createParagraphNode().append(text)),
-                option.match(constVoid, (p) => {
-                  $getRoot().append(p);
-                })
-              );
+              const value = editNodeId ? editNodeTitle : newNodeTitle;
+              if (value)
+                $getRoot().append(
+                  $createParagraphNode().append($createTextNode(value))
+                );
             },
           }}
         >
-          <PlainTextPlugin
-            contentEditable={
-              <ContentEditable className={focusClassNames.createNodeInput} />
-            }
-            placeholder={<></>}
-            ErrorBoundary={LexicalErrorBoundary}
-          />
-          <OnChangePlugin onChange={handleChange} />
-          <HistoryPlugin />
-          <KeyHandlerPlugin
-            onSubmit={handleSubmit}
-            editorTextRef={editorTextRef}
-          />
+          {lexicalComposerChildren}
         </LexicalComposer>
       </Text>
-      <KeyboardNavigationProvider maxX={1}>
-        {({ x }) => <Toolbar x={x} />}
-      </KeyboardNavigationProvider>
+      {editNodeId ? (
+        <EditNodeMenu onSavePress={handleSavePress} />
+      ) : (
+        <NewNodeMenu />
+      )}
     </Container>
   );
 };

@@ -1,4 +1,6 @@
 import { IO } from "fp-ts/IO";
+import { pipe } from "fp-ts/function";
+import { array } from "fp-ts";
 
 const createFocusClassNames = <T extends string>(
   names: T[]
@@ -13,18 +15,27 @@ const createFocusClassNames = <T extends string>(
 };
 
 export const focusClassNames = createFocusClassNames([
+  // TODO: Rename to nodeEditorInput
   "createNodeInput",
   "firstNodeItemLink",
   "lastNodeItemLink",
   "firstNodeFilterLink",
   "allLink",
+  "saveNodeButton",
 ]);
 
 export type FocusClassName = keyof typeof focusClassNames;
 
+//
 export const focusClassName =
-  (className: FocusClassName): IO<void> =>
-  () => {
-    const el = document.querySelector(`.${focusClassNames[className]}`);
-    if (el && "focus" in el && typeof el.focus === "function") el.focus();
-  };
+  (...className: FocusClassName[]): IO<void> =>
+  () =>
+    pipe(
+      className,
+      array.map((c) => `.${focusClassNames[c]}`),
+      (a) => a.join(", "),
+      (s) => document.querySelector(s),
+      (el) => {
+        if (el && "focus" in el && typeof el.focus === "function") el.focus();
+      }
+    );

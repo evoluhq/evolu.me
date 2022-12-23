@@ -79,14 +79,14 @@ export const NodeList = () => {
       .where("isDeleted", "is not", model.cast(true));
 
     // https://inviqa.com/blog/storing-graphs-database-sql-meets-social-network
-    ids.forEach((relatedId) => {
+    ids.forEach((adjacentId) => {
       q = q.where("id", "in", (qb) =>
         qb
           .selectFrom("edge")
-          .where("b", "=", relatedId)
+          .where("b", "=", adjacentId)
           .select("a as id")
           .union(
-            qb.selectFrom("edge").where("a", "=", relatedId).select("b as id")
+            qb.selectFrom("edge").where("a", "=", adjacentId).select("b as id")
           )
       );
     });

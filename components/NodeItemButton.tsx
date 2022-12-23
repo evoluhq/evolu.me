@@ -1,7 +1,9 @@
 import clsx from "clsx";
+import { NonEmptyString1000 } from "evolu";
 import { readonlyArray } from "fp-ts";
 import { pipe } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter } from "next/router";
 import {
   FC,
@@ -12,8 +14,10 @@ import {
   useRef,
   useState,
 } from "react";
+import { flushSync } from "react-dom";
 import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
+import { editNodeIdAtom, editNodeTitleAtom } from "../lib/atoms";
 import { NodeId, useMutation } from "../lib/db";
 import { focusClassName } from "../lib/focusClassNames";
 import {
@@ -57,7 +61,8 @@ const NodeItemButtonPopover: FC<{
   id: NodeId;
   onRequestClose: IO<void>;
   ownerRef: MutableRefObject<View | null>;
-}> = ({ id, onRequestClose, ownerRef }) => {
+  title: NonEmptyString1000;
+}> = ({ id, onRequestClose, ownerRef, title }) => {
   const intl = useIntl();
   const { mutate } = useMutation();
 
@@ -94,8 +99,21 @@ const NodeItemButtonPopover: FC<{
     });
   };
 
+  const editNodeId = useAtomValue(editNodeIdAtom);
+  const setEditNodeId = useSetAtom(editNodeIdAtom);
+  const setEditNodeTitle = useSetAtom(editNodeTitleAtom);
+
   const handleEditPress = () => {
-    alert("todo");
+    onRequestClose();
+    if (editNodeId == null) {
+      flushSync(() => {
+        setEditNodeId(id);
+        setEditNodeTitle(title);
+      });
+    }
+    // setTimeout, because onRequestClose Modal moves the focus back.
+    focusClassName("createNodeInput")(); // prevents NodeItemButton focus flash
+    setTimeout(focusClassName("createNodeInput"));
   };
 
   return (
@@ -147,6 +165,7 @@ export interface NodeItemButton {
   x: number;
   isFirst: boolean;
   isLast: boolean;
+  title: NonEmptyString1000;
 }
 
 export const NodeItemButton: FC<NodeItemButton> = ({
@@ -155,6 +174,7 @@ export const NodeItemButton: FC<NodeItemButton> = ({
   x,
   isFirst,
   isLast,
+  title,
 }) => {
   const intl = useIntl();
   const [popoverIsVisible, setPopoverIsVisible] = useState(false);
@@ -207,6 +227,7 @@ export const NodeItemButton: FC<NodeItemButton> = ({
           id={id}
           onRequestClose={handleRequestClose}
           ownerRef={buttonRef}
+          title={title}
         />
       )}
     </>

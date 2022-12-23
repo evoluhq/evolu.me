@@ -9,9 +9,7 @@ const nextConfig = {
   swcMinify: true,
   devIndicators: { buildActivity: false },
 
-  experimental: {
-    transpilePackages: ["nativewind"],
-  },
+  transpilePackages: ["nativewind"],
 
   webpack: (config, { dev }) => {
     config.resolve.alias = {
