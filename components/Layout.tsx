@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import { useEvoluFirstDataAreLoaded } from "evolu";
 import { FC, ReactNode } from "react";
-import { SafeAreaView } from "react-native";
 import { accessibility } from "../lib/accessibility";
 import { ScrollRestoration } from "../lib/hooks/useScrollRestoration";
 import { Container } from "./Container";
@@ -23,7 +22,7 @@ export const Layout: FC<{
   const isHidden = waitForData ? !dataAreLoaded : false;
 
   return (
-    <SafeAreaView>
+    <>
       <PageTitle title={title} />
       <View className={clsx("flex-1", isHidden && "hidden")}>
         <Container>
@@ -47,6 +46,6 @@ export const Layout: FC<{
           )}
         </ScrollRestoration>
       </View>
-    </SafeAreaView>
+    </>
   );
 };
