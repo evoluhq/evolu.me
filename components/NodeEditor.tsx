@@ -137,6 +137,7 @@ const NewNodeMenuButtons: FC<{ x: number }> = ({ x }) => {
 
   const allKeyNav = useButtonKeyNavigation(0);
   const searchKeyNav = useButtonKeyNavigation(1);
+  const ids = useLocationHashNodeIds();
 
   return (
     <View className="flex-row justify-evenly">
@@ -144,6 +145,7 @@ const NewNodeMenuButtons: FC<{ x: number }> = ({ x }) => {
         <Text
           as="link"
           p
+          transparent={ids.length > 0}
           className={clsx(focusClassNames.allLink, "my-1 py-1")}
           {...allKeyNav}
           // @ts-expect-error RNfW
