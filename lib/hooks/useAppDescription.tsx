@@ -4,7 +4,7 @@ export const useAppDescription = () => {
   const intl = useIntl();
   return intl.formatMessage({
     defaultMessage:
-      "Evolu Me is a mind-mapping app focused on privacy that works offline to keep your thoughts organized.",
-    id: "TRNu84",
+      "Evolu Me is a mind-mapping app focused on privacy to keep all your thoughts organized.",
+    id: "nFLb9g",
   });
 };
