@@ -6,7 +6,7 @@ import { ScrollRestoration } from "../lib/hooks/useScrollRestoration";
 import { Container } from "./Container";
 import { MainNav } from "./MainNav";
 import { PageTitle } from "./PageTitle";
-import { ScrollView, View } from "./styled";
+import { SafeAreaView, ScrollView, View } from "./styled";
 import { Text } from "./Text";
 
 export const Layout: FC<{
@@ -24,7 +24,7 @@ export const Layout: FC<{
   return (
     <>
       <PageTitle title={title} />
-      <View className={clsx("flex-1", isHidden && "hidden")}>
+      <SafeAreaView className={clsx("flex-1", isHidden && "hidden")}>
         <Container>
           <View className="flex-row">
             {header || (
@@ -45,7 +45,7 @@ export const Layout: FC<{
             </>
           )}
         </ScrollRestoration>
-      </View>
+      </SafeAreaView>
     </>
   );
 };

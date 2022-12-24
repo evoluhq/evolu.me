@@ -5,6 +5,7 @@ import {
   Text as RnText,
   TextInput as RnTextInput,
   View as RnView,
+  SafeAreaView as RnSafeAreaView,
 } from "react-native";
 
 export const Pressable = styled(RnPressable);
@@ -21,3 +22,6 @@ export type TextInput = RnTextInput;
 
 export const View = styled(RnView);
 export type View = RnView;
+
+export const SafeAreaView = styled(RnSafeAreaView);
+export type SafeAreaView = RnSafeAreaView;
