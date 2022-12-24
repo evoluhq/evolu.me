@@ -36,6 +36,7 @@ specifiers:
   react-intl: ^6.2.5
   react-native-web: ^0.18.10
   react-use-event-hook: ^0.9.3
+  react-wrap-balancer: ^0.2.3
   tailwind-merge: ^1.8.1
   tailwindcss: ^3.2.4
   typescript: ^4.9.4
@@ -60,6 +61,7 @@ dependencies:
   react-intl: 6.2.5_o77wnou4wwnegu5woljtklrzru
   react-native-web: 0.18.10_biqbaboplfbrettd7655fr4n2y
   react-use-event-hook: 0.9.3_react@18.2.0
+  react-wrap-balancer: 0.2.3_react@18.2.0
   tailwind-merge: 1.8.1
   zod: 3.20.2
 
@@ -3423,6 +3425,14 @@ packages:
     resolution: {integrity: sha512-8edWglTZ9Z5kfl31EuRjr4MDkTcEczHvrbo2EG1WVrX/a1B2sP3S9RCXjtSwrEnYRw29ldErlvDQNbTOxHNcmQ==}
     peerDependencies:
       react: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
+    dev: false
+
+  /react-wrap-balancer/0.2.3_react@18.2.0:
+    resolution: {integrity: sha512-PWwo0+bMtRSsK2sDUl1NAtufz+vuB91AekruNurHsgHhxJx38RK4+vgzPN5jzGH0nufvwMxhtZXBjYRe+hFYCw==}
+    peerDependencies:
+      react: ^18.0.0
     dependencies:
       react: 18.2.0
     dev: false

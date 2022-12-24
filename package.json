@@ -27,6 +27,7 @@
     "react-intl": "^6.2.5",
     "react-native-web": "^0.18.10",
     "react-use-event-hook": "^0.9.3",
+    "react-wrap-balancer": "^0.2.3",
     "tailwind-merge": "^1.8.1",
     "zod": "^3.20.2"
   },

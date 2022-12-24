@@ -15,6 +15,7 @@ import { useScrollRestoration } from "../lib/hooks/useScrollRestoration";
 import { NodeItem } from "./NodeItem";
 import { View } from "./styled";
 import { Text } from "./Text";
+import Balancer from "react-wrap-balancer";
 
 let canDoAutoFocusOnInput = false;
 
@@ -65,7 +66,12 @@ The possibilities are endless.`,
     }
   };
 
-  return <Text className="text-center">{getMessage()}</Text>;
+  return (
+    <Text className="text-center">
+      <Balancer>{getMessage()}</Balancer>
+      {/* {getMessage()} */}
+    </Text>
+  );
 };
 
 export const NodeList = () => {
