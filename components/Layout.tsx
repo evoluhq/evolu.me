@@ -1,12 +1,13 @@
 import clsx from "clsx";
 import { useEvoluFirstDataAreLoaded } from "evolu";
 import { FC, ReactNode } from "react";
+import { SafeAreaView } from "react-native";
 import { accessibility } from "../lib/accessibility";
 import { ScrollRestoration } from "../lib/hooks/useScrollRestoration";
 import { Container } from "./Container";
 import { MainNav } from "./MainNav";
 import { PageTitle } from "./PageTitle";
-import { SafeAreaView, ScrollView, View } from "./styled";
+import { ScrollView, View } from "./styled";
 import { Text } from "./Text";
 
 export const Layout: FC<{
@@ -22,9 +23,9 @@ export const Layout: FC<{
   const isHidden = waitForData ? !dataAreLoaded : false;
 
   return (
-    <>
+    <SafeAreaView>
       <PageTitle title={title} />
-      <SafeAreaView className={clsx("flex-1", isHidden && "hidden")}>
+      <View className={clsx("flex-1", isHidden && "hidden")}>
         <Container>
           <View className="flex-row">
             {header || (
@@ -45,7 +46,7 @@ export const Layout: FC<{
             </>
           )}
         </ScrollRestoration>
-      </SafeAreaView>
-    </>
+      </View>
+    </SafeAreaView>
   );
 };
