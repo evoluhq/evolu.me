@@ -22,3 +22,15 @@ export const { useQuery, useMutation } = createHooks({
     b: NodeId,
   },
 });
+
+export const createEdge = (
+  x: NodeId,
+  y: NodeId
+): {
+  a: NodeId;
+  b: NodeId;
+} => {
+  // Sort IDs to ensure edge direction doesn't matter.
+  const sorted = [x, y].sort();
+  return { a: sorted[0], b: sorted[1] };
+};

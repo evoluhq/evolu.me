@@ -88,10 +88,15 @@ export const NodeList = () => {
       q = q.where("id", "in", (qb) =>
         qb
           .selectFrom("edge")
+          .where("isDeleted", "is not", model.cast(true))
           .where("b", "=", adjacentId)
           .select("a as id")
           .union(
-            qb.selectFrom("edge").where("a", "=", adjacentId).select("b as id")
+            qb
+              .selectFrom("edge")
+              .where("isDeleted", "is not", model.cast(true))
+              .where("a", "=", adjacentId)
+              .select("b as id")
           )
       );
     });

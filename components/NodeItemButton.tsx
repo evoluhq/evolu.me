@@ -18,7 +18,7 @@ import { flushSync } from "react-dom";
 import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
 import { editNodeIdAtom, editNodeTitleAtom } from "../lib/atoms";
-import { NodeId, useMutation } from "../lib/db";
+import { createEdge, NodeId, useMutation, useQuery } from "../lib/db";
 import { focusClassName } from "../lib/focusClassNames";
 import {
   KeyboardNavigationContext,
@@ -74,14 +74,13 @@ const NodeItemButtonPopover: FC<{
     onRequestClose();
   });
 
-  const nodeIds = useLocationHashNodeIds();
-  const showAppend = nodeIds.length > 0;
+  const locationNodeIds = useLocationHashNodeIds();
 
   const router = useRouter();
 
-  const handleAppendPress = () => {
+  const handleFilterPress = () => {
     pipe(
-      nodeIds,
+      locationNodeIds,
       readonlyArray.append(id),
       nodeIdsToLocationHash,
       (s) => `/#${s}`,
@@ -116,6 +115,32 @@ const NodeItemButtonPopover: FC<{
     setTimeout(focusClassName("createNodeInput"));
   };
 
+  const { rows: edgeIdsRows, isLoaded } = useQuery((db) => {
+    const [a, b] = pipe(
+      locationNodeIds,
+      readonlyArray.map((locationNodeId) => createEdge(locationNodeId, id)),
+      readonlyArray.map(({ a, b }) => [a, b] as const),
+      readonlyArray.unzip
+    );
+
+    return db
+      .selectFrom("edge")
+      .select("id")
+      .where("a", "in", a)
+      .where("b", "in", b);
+  });
+
+  const handleRemovePress = () => {
+    if (!isLoaded) return;
+    edgeIdsRows.forEach(({ id }) => {
+      mutate("edge", { id, isDeleted: true }, () => {
+        move("current", true);
+      });
+    });
+  };
+
+  const hasAdjacentNodes = locationNodeIds.length > 0;
+
   return (
     <Popover
       ownerRef={ownerRef}
@@ -123,7 +148,7 @@ const NodeItemButtonPopover: FC<{
       onRequestClose={onRequestClose}
     >
       <View className="flex-row">
-        <KeyboardNavigationProvider maxX={2}>
+        <KeyboardNavigationProvider maxX={hasAdjacentNodes ? 3 : 1}>
           <NodeItemButtonPopoverButton
             title={intl.formatMessage({
               defaultMessage: "Delete",
@@ -140,18 +165,29 @@ const NodeItemButtonPopover: FC<{
             })}
             x={1}
             onPress={handleEditPress}
-            className={!showAppend ? "rounded-l-none" : "rounded-none"}
+            className="rounded-none"
           />
-          {showAppend && (
-            <NodeItemButtonPopoverButton
-              title={intl.formatMessage({
-                defaultMessage: "Add to Filter",
-                id: "IRwSGb",
-              })}
-              x={2}
-              onPress={handleAppendPress}
-              className="rounded-l-none"
-            />
+          {hasAdjacentNodes && (
+            <>
+              <NodeItemButtonPopoverButton
+                title={intl.formatMessage({
+                  defaultMessage: "Filter",
+                  id: "9Obw6C",
+                })}
+                x={2}
+                onPress={handleFilterPress}
+                className={hasAdjacentNodes ? "rounded-none" : "rounded-l-none"}
+              />
+              <NodeItemButtonPopoverButton
+                title={intl.formatMessage({
+                  defaultMessage: "Remove",
+                  id: "G/yZLu",
+                })}
+                x={3}
+                onPress={handleRemovePress}
+                className="rounded-l-none"
+              />
+            </>
           )}
         </KeyboardNavigationProvider>
       </View>

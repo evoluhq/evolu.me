@@ -55,7 +55,7 @@ import {
   editNodeTitleAtom,
   newNodeTitleAtom,
 } from "../lib/atoms";
-import { useMutation } from "../lib/db";
+import { createEdge, useMutation } from "../lib/db";
 import { FocusClassName } from "../lib/focusClassNames";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { useScrollRestoration } from "../lib/hooks/useScrollRestoration";
@@ -273,10 +273,7 @@ const NodeEditorPlugins = forwardRef<NodeEditorPluginsRef>(
           );
           if (editNodeId == null)
             ids.forEach((adjacentId) => {
-              // The edge direction doesn't matter.
-              // We sort IDs to have always the same edge.
-              const sortedTuple = [id, adjacentId].sort();
-              mutate("edge", { a: sortedTuple[0], b: sortedTuple[1] });
+              mutate("edge", createEdge(id, adjacentId));
             });
 
           if (editNodeId) cancelEditModeAndFocusAllLink();
