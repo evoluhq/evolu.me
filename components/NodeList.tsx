@@ -49,10 +49,10 @@ Write a thought and press enter.`,
         return intl.formatMessage({
           defaultMessage: `No connection yet.
           
-With Evolu Me, you can connect anything with anything.
+Remember, you can connect anything with anything. That's how the human brain works.
 
-That's how the human brain works.`,
-          id: "rLtM8k",
+For example: to see - Arrival movie`,
+          id: "vu/qrJ",
         });
       default:
         return intl.formatMessage({
@@ -69,7 +69,6 @@ The possibilities are endless.`,
   return (
     <Text className="text-center">
       <Balancer>{getMessage()}</Balancer>
-      {/* {getMessage()} */}
     </Text>
   );
 };
@@ -145,7 +144,7 @@ export const NodeList = () => {
 
     return () => {
       const position = getFocusPosition().get(idsString);
-      // Ensure "Add To Filter" will save focus to the link, not the button.
+      // y: 1 ensures "Add To Filter" will save focus to the link, not the button.
       storeScroll(idsString, position ? { x: position.x, y: 1 } : undefined);
     };
   }, [idsString, isEmpty, isLoaded, restoreScroll, storeScroll]);
