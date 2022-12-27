@@ -2,10 +2,8 @@ import clsx from "clsx";
 import { NonEmptyString1000 } from "evolu";
 import { constVoid } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
-import { useAtomValue } from "jotai";
 import { useRouter } from "next/router";
 import { memo } from "react";
-import { editNodeIdAtom } from "../lib/atoms";
 import { NodeId } from "../lib/db";
 import { focusClassName, focusClassNames } from "../lib/focusClassNames";
 import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
@@ -24,6 +22,7 @@ interface NodeItemProps {
   isFirst: boolean;
   isLast: boolean;
   onKeyEnter: IO<void>;
+  isEdit: boolean;
 }
 
 export const NodeItem = memo<NodeItemProps>(function NodeItem({
@@ -33,6 +32,7 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
   isFirst,
   isLast,
   onKeyEnter,
+  isEdit,
 }) {
   const router = useRouter();
 
@@ -54,8 +54,6 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
     },
   });
 
-  const editNodeId = useAtomValue(editNodeIdAtom);
-
   return (
     <View className="flex-row" accessibilityRole={"listitem" as "list"}>
       <NodeItemButton
@@ -71,7 +69,7 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
           {...linkKeyNavigation}
           as="link"
           p
-          transparent={id === editNodeId}
+          transparent={isEdit}
           className={clsx(
             "-ml-1 px-1",
             isLast && focusClassNames.lastNodeItemLink,

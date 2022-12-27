@@ -1,7 +1,10 @@
 import { has, model, NodeId } from "evolu";
+import { useAtomValue } from "jotai";
 import { FC, useLayoutEffect, useMemo, useRef } from "react";
 import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
+import Balancer from "react-wrap-balancer";
+import { editNodeIdAtom } from "../lib/atoms";
 import { useQuery } from "../lib/db";
 import { focusClassName } from "../lib/focusClassNames";
 import { useAppDescription } from "../lib/hooks/useAppDescription";
@@ -15,7 +18,6 @@ import { useScrollRestoration } from "../lib/hooks/useScrollRestoration";
 import { NodeItem } from "./NodeItem";
 import { View } from "./styled";
 import { Text } from "./Text";
-import Balancer from "react-wrap-balancer";
 
 let canDoAutoFocusOnInput = false;
 
@@ -154,6 +156,8 @@ export const NodeList = () => {
     };
   }, [idsString, isEmpty, isLoaded, restoreScroll, storeScroll]);
 
+  const editNodeId = useAtomValue(editNodeIdAtom);
+
   if (!isLoaded) return null;
 
   if (loadedRows.length === 0) return <NodeListPlaceholder ids={ids} />;
@@ -180,6 +184,7 @@ export const NodeList = () => {
               isFirst={i === 0}
               isLast={i === rows.length - 1}
               onKeyEnter={handleNodeItemKeyEnter}
+              isEdit={row.id === editNodeId}
             />
           ))
         }
