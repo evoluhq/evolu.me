@@ -58,12 +58,12 @@ For example: to see - Arrival movie`,
         });
       default:
         return intl.formatMessage({
-          defaultMessage: `You added something else to the filter, and that's how we can filter and connect as many thoughts as necessary.
+          defaultMessage: `You have more than one item in the filter, and that's how you can filter or connect as many thoughts as necessary.
 
 For example: to see - Arrival - tomorrow
 
 The possibilities are endless.`,
-          id: "TDReIn",
+          id: "yhztvg",
         });
     }
   };
