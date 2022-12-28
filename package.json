@@ -15,7 +15,7 @@
     "@next/bundle-analyzer": "^13.1.1",
     "clsx": "^1.2.1",
     "cross-env": "^7.0.3",
-    "evolu": "^0.6.0",
+    "evolu": "^0.7.0",
     "fp-ts": "^2.13.1",
     "jotai": "^1.12.0",
     "lexical": "^0.7.5",

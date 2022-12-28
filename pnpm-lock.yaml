@@ -21,7 +21,7 @@ specifiers:
   eslint: ^8.30.0
   eslint-config-next: ^13.1.1
   eslint-plugin-formatjs: ^4.3.9
-  evolu: ^0.6.0
+  evolu: ^0.7.0
   fp-ts: ^2.13.1
   jotai: ^1.12.0
   lexical: ^0.7.5
@@ -49,7 +49,7 @@ dependencies:
   '@next/bundle-analyzer': 13.1.1
   clsx: 1.2.1
   cross-env: 7.0.3
-  evolu: 0.6.0_4uk7ewgruz4hxwxrrsi6cthuti
+  evolu: 0.7.0_4uk7ewgruz4hxwxrrsi6cthuti
   fp-ts: 2.13.1
   jotai: 1.12.0_dojr2aquw55jwdpbannhlirjf4
   lexical: 0.7.5
@@ -2117,8 +2117,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /evolu/0.6.0_4uk7ewgruz4hxwxrrsi6cthuti:
-    resolution: {integrity: sha512-+kBkPtRNwhp1rK98Qm/VBvI+HbJs4PYMhVfiTPQogQ8/HsfK+0TLKo3WVejyA71iTgOVFy029KrVE6RQ8nENLg==}
+  /evolu/0.7.0_4uk7ewgruz4hxwxrrsi6cthuti:
+    resolution: {integrity: sha512-mWxmkt5TMRDjb+7HWRr3guJqBiO7WjzgjFclGuDSKYP3uzBcy2bGIAtYG7avZQ5hsqp7zKAjBM4RzCrvb6QP+Q==}
     engines: {node: '>=16.15'}
     peerDependencies:
       fp-ts: ^2.12.3
