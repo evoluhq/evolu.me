@@ -51,10 +51,10 @@ dependencies:
   cross-env: 7.0.3
   evolu: 0.7.0_4uk7ewgruz4hxwxrrsi6cthuti
   fp-ts: 2.13.1
-  jotai: 1.12.0_dojr2aquw55jwdpbannhlirjf4
+  jotai: 1.12.0_otspjrsspon4ofp37rshhlhp2y
   lexical: 0.7.5
   nativewind: 3.0.0-next.34_dpx3ezyh7vrtb4aufvxbx6obrq
-  next: 13.1.1_7xlrwlvvs7cv2obrs6a5y6oxxq
+  next: 13.1.1_qtpcxnaaarbm4ws7ughq6oxfve
   openpgp: 5.5.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
@@ -155,6 +155,7 @@ packages:
       semver: 6.3.0
     transitivePeerDependencies:
       - supports-color
+    dev: true
 
   /@babel/generator/7.20.7:
     resolution: {integrity: sha512-7wqMOJq8doJMZmP4ApXTzLxSr7+oO2jroJURrVEp6XShrQUObV8Tq/D0NCcoYg2uHqUrjzO0zwBjoYzelxK+sw==}
@@ -190,6 +191,7 @@ packages:
       browserslist: 4.21.4
       lru-cache: 5.1.1
       semver: 6.3.0
+    dev: true
 
   /@babel/helper-environment-visitor/7.18.9:
     resolution: {integrity: sha512-3r/aACDJ3fhQ/EVgFy0hpj8oHyHpQc+LPtJoY9SzTThAsStm4Ptegq92vqKoE3vD706ZVFWITnMnxucw+S9Ipg==}
@@ -2641,7 +2643,7 @@ packages:
     resolution: {integrity: sha512-PIeMbHqMt4DnUP3MA/Flc0HElYjMXArsw1qwJZcm9sqR8mq3l8NYizFMty0pWwE/tzIGH3EKK5+jes5mAr85yw==}
     dev: false
 
-  /jotai/1.12.0_dojr2aquw55jwdpbannhlirjf4:
+  /jotai/1.12.0_otspjrsspon4ofp37rshhlhp2y:
     resolution: {integrity: sha512-IhyBmjxU1sE2Ni/MUK7gQAb8QvCM6yd1/K5jtQzgQBmmjCjgfXZkkk1rYlQAIRp2KoQk0Y+yzhm1f5cZ7kegnw==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
@@ -2678,7 +2680,7 @@ packages:
       jotai-zustand:
         optional: true
     dependencies:
-      '@babel/core': 7.20.7
+      '@babel/core': 7.19.6
       react: 18.2.0
     dev: false
 
@@ -2934,7 +2936,7 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
 
-  /next/13.1.1_7xlrwlvvs7cv2obrs6a5y6oxxq:
+  /next/13.1.1_qtpcxnaaarbm4ws7ughq6oxfve:
     resolution: {integrity: sha512-R5eBAaIa3X7LJeYvv1bMdGnAVF4fVToEjim7MkflceFPuANY3YyvFxXee/A+acrSYwYPvOvf7f6v/BM/48ea5w==}
     engines: {node: '>=14.6.0'}
     hasBin: true
@@ -2958,7 +2960,7 @@ packages:
       postcss: 8.4.14
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      styled-jsx: 5.1.1_dojr2aquw55jwdpbannhlirjf4
+      styled-jsx: 5.1.1_otspjrsspon4ofp37rshhlhp2y
     optionalDependencies:
       '@next/swc-android-arm-eabi': 13.1.1
       '@next/swc-android-arm64': 13.1.1
@@ -3671,7 +3673,7 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /styled-jsx/5.1.1_dojr2aquw55jwdpbannhlirjf4:
+  /styled-jsx/5.1.1_otspjrsspon4ofp37rshhlhp2y:
     resolution: {integrity: sha512-pW7uC1l4mBZ8ugbiZrcIsiIvVx1UmTfw7UkC3Um2tmfUq9Bhk8IiyEIPl6F8agHgjzku6j0xQEZbfA5uSgSaCw==}
     engines: {node: '>= 12.0.0'}
     peerDependencies:
@@ -3684,7 +3686,7 @@ packages:
       babel-plugin-macros:
         optional: true
     dependencies:
-      '@babel/core': 7.20.7
+      '@babel/core': 7.19.6
       client-only: 0.0.1
       react: 18.2.0
     dev: false
