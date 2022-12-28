@@ -79,14 +79,15 @@ export const NodeList = () => {
   const ids = useLocationHashNodeIds();
 
   const { rows, isLoaded } = useQuery((db) => {
+    // https://inviqa.com/blog/storing-graphs-database-sql-meets-social-network
     let q = db
       .selectFrom("node")
       .select(["id", "title"])
       .orderBy("createdAt")
       .where("isDeleted", "is not", model.cast(true));
 
-    // https://inviqa.com/blog/storing-graphs-database-sql-meets-social-network
     ids.forEach((adjacentId) => {
+      // @ts-expect-error https://github.com/koskimas/kysely/issues/261
       q = q.where("id", "in", (qb) =>
         qb
           .selectFrom("edge")
