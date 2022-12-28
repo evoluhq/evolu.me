@@ -21,6 +21,13 @@ const About = () => {
           id: "QhJpjX",
         })}
       </Text>
+      <Text mb>
+        {intl.formatMessage({
+          defaultMessage:
+            "The master plan is to build a foundation for the Semantic Desktop - one unified UI for all your local-first data.",
+          id: "lrqCiB",
+        })}
+      </Text>
       <View className="flex-row">
         <Text
           as="link"
