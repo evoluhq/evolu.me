@@ -2130,7 +2130,7 @@ packages:
     dependencies:
       '@protobuf-ts/runtime': 2.8.2
       fp-ts: 2.13.1
-      kysely: 0.23.1
+      kysely: 0.23.3
       murmurhash: 2.0.1
       nanoid: 4.0.0
       openpgp: 5.5.0
@@ -2745,8 +2745,8 @@ packages:
       object.assign: 4.1.4
     dev: true
 
-  /kysely/0.23.1:
-    resolution: {integrity: sha512-ZuBZuDJggGPcr8Th1zU9+d2f4EJHhY60URnRWBpi3OBdeOTAGzOooL+SPcD1A2Yu8z2hhJLzEQvpuUcz8x1lUA==}
+  /kysely/0.23.3:
+    resolution: {integrity: sha512-spRhosWRLkI0Ox8PRBdstskdRfvoLPsJ5GEpDA/PPrX6NwuiygdsFxHBrMkdU3CX+VxLhj4Wn5P7rFAwaf7JuA==}
     engines: {node: '>=14.0.0'}
     dev: false
 

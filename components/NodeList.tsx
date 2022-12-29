@@ -87,7 +87,6 @@ export const NodeList = () => {
       .where("isDeleted", "is not", model.cast(true));
 
     ids.forEach((adjacentId) => {
-      // @ts-expect-error https://github.com/koskimas/kysely/issues/261
       q = q.where("id", "in", (qb) =>
         qb
           .selectFrom("edge")
