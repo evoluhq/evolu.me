@@ -1,25 +1,3 @@
-import clsx from "clsx";
-import {
-  FC,
-  forwardRef,
-  memo,
-  useCallback,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-} from "react";
-import { useIntl } from "react-intl";
-import { Button } from "../components/Button";
-import { Container } from "../components/Container";
-import { Link } from "../components/Link";
-import { View } from "../components/styled";
-import { Text } from "../components/Text";
-import { focusClassName, focusClassNames } from "../lib/focusClassNames";
-import {
-  KeyboardNavigationProvider,
-  useKeyNavigation,
-} from "../lib/hooks/useKeyNavigation";
-
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
@@ -32,7 +10,7 @@ import { NonEmptyString1000 } from "evolu";
 import { either, option } from "fp-ts";
 import { constFalse, constVoid, flow, pipe } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import {
   $createParagraphNode,
   $createTextNode,
@@ -47,15 +25,31 @@ import {
   KEY_ESCAPE_COMMAND,
 } from "lexical";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { flushSync } from "react-dom";
+import {
+  FC,
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from "react";
 import useEvent from "react-use-event-hook";
-import { editNodeAtom, editNodeHasChangeAtom, newNodeAtom } from "../lib/atoms";
+import { Container } from "../components/Container";
+import { Text } from "../components/Text";
+import { editNodeAtom, newNodeAtom } from "../lib/atoms";
 import { createEdge, useMutation } from "../lib/db";
-import { FocusClassName } from "../lib/focusClassNames";
+import {
+  focusClassName,
+  FocusClassName,
+  focusClassNames,
+} from "../lib/focusClassNames";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { useScrollRestoration } from "../lib/hooks/useScrollRestoration";
 import { safeParseToEither } from "../lib/safeParseToEither";
+import { EditNodeMenu, useCancelEditModeAndFocusAllLink } from "./EditNodeMenu";
+import { NewNodeMenu } from "./NewNodeMenu";
 
 const KeyHandlerPlugin = memo<{
   onKeyEnter: IO<void>;
@@ -116,114 +110,6 @@ const KeyHandlerPlugin = memo<{
   }, [editor, onKeyEnter, router]);
 
   return null;
-});
-
-const useButtonKeyNavigation = (x: number) =>
-  useKeyNavigation({
-    x,
-    keys: {
-      ArrowLeft: "previousX",
-      ArrowRight: "nextX",
-      ArrowUp: focusClassName("createNodeInput"),
-    },
-  });
-
-const NewNodeMenuButtons: FC<{ x: number }> = ({ x }) => {
-  const intl = useIntl();
-
-  const allKeyNav = useButtonKeyNavigation(0);
-  const searchKeyNav = useButtonKeyNavigation(1);
-  const ids = useLocationHashNodeIds();
-
-  return (
-    <View className="flex-row justify-evenly">
-      <Link href="/">
-        <Text
-          as="link"
-          p
-          transparent={ids.length > 0}
-          className={clsx(focusClassNames.allLink, "my-1 py-1")}
-          {...allKeyNav}
-          // @ts-expect-error RNfW
-          focusable={x === 0}
-        >
-          {intl.formatMessage({ defaultMessage: "All", id: "zQvVDJ" })}
-        </Text>
-      </Link>
-      <Button {...searchKeyNav} focusable={x === 1}>
-        <Text as="button">
-          {intl.formatMessage({ defaultMessage: "Search", id: "xmcVZ0" })}
-        </Text>
-      </Button>
-    </View>
-  );
-};
-
-const NewNodeMenu: FC = () => {
-  return (
-    <KeyboardNavigationProvider maxX={1}>
-      {({ x }) => <NewNodeMenuButtons x={x} />}
-    </KeyboardNavigationProvider>
-  );
-};
-
-const useCancelEditModeAndFocusAllLink = () => {
-  const setEditNode = useSetAtom(editNodeAtom);
-
-  return () => {
-    // So we can focus immediately after.
-    flushSync(() => {
-      setEditNode(null);
-    });
-    focusClassName("allLink")();
-  };
-};
-
-const EditNodeMenuButtons: FC<{ x: number; onSavePress: IO<void> }> = ({
-  x,
-  onSavePress,
-}) => {
-  const intl = useIntl();
-
-  const saveKeyNav = useButtonKeyNavigation(0);
-  const cancelKeyNav = useButtonKeyNavigation(1);
-
-  const hasChange = useAtomValue(editNodeHasChangeAtom);
-
-  return (
-    <View className="flex-row justify-evenly">
-      <Button
-        {...saveKeyNav}
-        focusable={x === 0}
-        className={focusClassNames.saveNodeButton}
-        disabled={!hasChange}
-        onPress={onSavePress}
-      >
-        <Text as="button" transparent={!hasChange}>
-          {intl.formatMessage({ defaultMessage: "Save", id: "jvo0vs" })}
-        </Text>
-      </Button>
-      <Button
-        {...cancelKeyNav}
-        focusable={x === 1}
-        onPress={useCancelEditModeAndFocusAllLink()}
-      >
-        <Text as="button">
-          {intl.formatMessage({ defaultMessage: "Cancel", id: "47FYwb" })}
-        </Text>
-      </Button>
-    </View>
-  );
-};
-
-const EditNodeMenu = memo<{ onSavePress: IO<void> }>(function EditNodeMenu({
-  onSavePress,
-}) {
-  return (
-    <KeyboardNavigationProvider maxX={1}>
-      {({ x }) => <EditNodeMenuButtons x={x} onSavePress={onSavePress} />}
-    </KeyboardNavigationProvider>
-  );
 });
 
 interface NodeEditorPluginsRef {
@@ -300,7 +186,11 @@ export const NodeEditor: FC = () => {
       <>
         <PlainTextPlugin
           contentEditable={
-            <ContentEditable className={focusClassNames.createNodeInput} />
+            <ContentEditable
+              // @ts-expect-error Wrong types.
+              autoCapitalize="none"
+              className={focusClassNames.createNodeInput}
+            />
           }
           placeholder={null}
           ErrorBoundary={LexicalErrorBoundary}
