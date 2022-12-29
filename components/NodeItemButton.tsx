@@ -3,7 +3,7 @@ import { NonEmptyString1000 } from "evolu";
 import { readonlyArray } from "fp-ts";
 import { pipe } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import {
   FC,
@@ -17,7 +17,7 @@ import {
 import { flushSync } from "react-dom";
 import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
-import { editNodeIdAtom, editNodeTitleAtom } from "../lib/atoms";
+import { editNodeAtom } from "../lib/atoms";
 import { createEdge, NodeId, useMutation, useQuery } from "../lib/db";
 import { focusClassName } from "../lib/focusClassNames";
 import {
@@ -98,16 +98,13 @@ const NodeItemButtonPopover: FC<{
     });
   };
 
-  const editNodeId = useAtomValue(editNodeIdAtom);
-  const setEditNodeId = useSetAtom(editNodeIdAtom);
-  const setEditNodeTitle = useSetAtom(editNodeTitleAtom);
+  const [editNode, setEditNode] = useAtom(editNodeAtom);
 
   const handleEditPress = () => {
     onRequestClose();
-    if (editNodeId == null) {
+    if (!editNode) {
       flushSync(() => {
-        setEditNodeId(id);
-        setEditNodeTitle(title);
+        setEditNode({ id, title, originalTitle: title });
       });
     }
     // setTimeout, because onRequestClose Modal moves the focus back.

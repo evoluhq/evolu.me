@@ -1,7 +1,6 @@
 export const localStorageKeys = {
-  newNodeTitle: "evolume:newNodeTitle",
-  editNodeTitle: "evolume:editNodeTitle",
-  editNodeId: "evolume:editNodeId",
+  newNodeAtom: "evolume:newNodeAtom",
+  editNodeAtom: "evolume:editNodeAtom",
 };
 
 // Must be called before Evolu restoreOwner and resetOwner.

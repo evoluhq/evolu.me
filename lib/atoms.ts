@@ -1,18 +1,20 @@
-import { atomWithStorage } from "jotai/utils";
+import { atomWithStorage, selectAtom } from "jotai/utils";
 import { NodeId } from "./db";
 import { localStorageKeys } from "./localStorage";
 
-export const newNodeTitleAtom = atomWithStorage(
-  localStorageKeys.newNodeTitle,
-  ""
-);
+export const newNodeAtom = atomWithStorage(localStorageKeys.newNodeAtom, {
+  title: "",
+});
 
-export const editNodeTitleAtom = atomWithStorage(
-  localStorageKeys.editNodeTitle,
-  ""
-);
+export const editNodeAtom = atomWithStorage<null | {
+  id: NodeId;
+  title: string;
+  originalTitle: string;
+}>(localStorageKeys.editNodeAtom, null);
 
-export const editNodeIdAtom = atomWithStorage<NodeId | null>(
-  localStorageKeys.editNodeId,
-  null
+export const editNodeIdAtom = selectAtom(editNodeAtom, (v) => v?.id);
+
+export const editNodeHasChangeAtom = selectAtom(
+  editNodeAtom,
+  (v) => v?.title !== v?.originalTitle
 );

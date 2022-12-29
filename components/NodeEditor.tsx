@@ -50,11 +50,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { flushSync } from "react-dom";
 import useEvent from "react-use-event-hook";
-import {
-  editNodeIdAtom,
-  editNodeTitleAtom,
-  newNodeTitleAtom,
-} from "../lib/atoms";
+import { editNodeAtom, editNodeHasChangeAtom, newNodeAtom } from "../lib/atoms";
 import { createEdge, useMutation } from "../lib/db";
 import { FocusClassName } from "../lib/focusClassNames";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
@@ -172,14 +168,12 @@ const NewNodeMenu: FC = () => {
 };
 
 const useCancelEditModeAndFocusAllLink = () => {
-  const setEditNodeTitle = useSetAtom(editNodeTitleAtom);
-  const setEditNodeId = useSetAtom(editNodeIdAtom);
+  const setEditNode = useSetAtom(editNodeAtom);
 
   return () => {
     // So we can focus immediately after.
     flushSync(() => {
-      setEditNodeTitle("");
-      setEditNodeId(null);
+      setEditNode(null);
     });
     focusClassName("allLink")();
   };
@@ -194,15 +188,18 @@ const EditNodeMenuButtons: FC<{ x: number; onSavePress: IO<void> }> = ({
   const saveKeyNav = useButtonKeyNavigation(0);
   const cancelKeyNav = useButtonKeyNavigation(1);
 
+  const hasChange = useAtomValue(editNodeHasChangeAtom);
+
   return (
     <View className="flex-row justify-evenly">
       <Button
         {...saveKeyNav}
         focusable={x === 0}
         className={focusClassNames.saveNodeButton}
+        disabled={!hasChange}
         onPress={onSavePress}
       >
-        <Text as="button">
+        <Text as="button" transparent={!hasChange}>
           {intl.formatMessage({ defaultMessage: "Save", id: "jvo0vs" })}
         </Text>
       </Button>
@@ -219,13 +216,15 @@ const EditNodeMenuButtons: FC<{ x: number; onSavePress: IO<void> }> = ({
   );
 };
 
-const EditNodeMenu: FC<{ onSavePress: IO<void> }> = ({ onSavePress }) => {
+const EditNodeMenu = memo<{ onSavePress: IO<void> }>(function EditNodeMenu({
+  onSavePress,
+}) {
   return (
     <KeyboardNavigationProvider maxX={1}>
       {({ x }) => <EditNodeMenuButtons x={x} onSavePress={onSavePress} />}
     </KeyboardNavigationProvider>
   );
-};
+});
 
 interface NodeEditorPluginsRef {
   save: IO<void>;
@@ -241,14 +240,14 @@ const NodeEditorPlugins = forwardRef<NodeEditorPluginsRef>(
     const ids = useLocationHashNodeIds();
     const { requestScrollToEndAnimated } = useScrollRestoration();
 
-    const editNodeId = useAtomValue(editNodeIdAtom);
-    const [editNodeTitle, setEditNodeTitle] = useAtom(editNodeTitleAtom);
-    const [newNodeTitle, setNewNodeTitle] = useAtom(newNodeTitleAtom);
+    const [newNode, setNewNode] = useAtom(newNodeAtom);
+    const [editNode, setEditNode] = useAtom(editNodeAtom);
 
     const handleChange = useEvent((state: EditorState) => {
       state.read(() => {
-        const value = $getRoot().getTextContent().trim();
-        (editNodeId ? setEditNodeTitle : setNewNodeTitle)(value);
+        const title = $getRoot().getTextContent().trim();
+        if (editNode) setEditNode((v) => (v ? { ...v, title } : null));
+        else setNewNode((a) => ({ ...a, title }));
       });
     });
 
@@ -257,7 +256,7 @@ const NodeEditorPlugins = forwardRef<NodeEditorPluginsRef>(
     const save = useEvent(() =>
       pipe(
         // TODO: Alert "too long text, it's x length, max is..."
-        NonEmptyString1000.safeParse(editNodeId ? editNodeTitle : newNodeTitle),
+        NonEmptyString1000.safeParse(editNode ? editNode.title : newNode.title),
         safeParseToEither,
         either.match(constVoid, (title) => {
           editor.update(() => {
@@ -266,26 +265,29 @@ const NodeEditorPlugins = forwardRef<NodeEditorPluginsRef>(
 
           const { id } = mutate(
             "node",
-            { title, id: editNodeId || undefined },
+            { title, id: editNode ? editNode.id : undefined },
             () => {
               requestScrollToEndAnimated();
             }
           );
-          if (editNodeId == null)
+
+          if (editNode) cancelEditModeAndFocusAllLink();
+          else
             ids.forEach((adjacentId) => {
               mutate("edge", createEdge(id, adjacentId));
             });
-
-          if (editNodeId) cancelEditModeAndFocusAllLink();
         })
       )
     );
 
-    return (
-      <>
-        <OnChangePlugin onChange={handleChange} />
-        <KeyHandlerPlugin onKeyEnter={save} />
-      </>
+    return useMemo(
+      () => (
+        <>
+          <OnChangePlugin onChange={handleChange} />
+          <KeyHandlerPlugin onKeyEnter={save} />
+        </>
+      ),
+      [handleChange, save]
     );
   }
 );
@@ -314,15 +316,14 @@ export const NodeEditor: FC = () => {
     nodeEditorPluginsRef.current?.save();
   }, []);
 
-  const editNodeId = useAtomValue(editNodeIdAtom);
-  const newNodeTitle = useAtomValue(newNodeTitleAtom);
-  const editNodeTitle = useAtomValue(editNodeTitleAtom);
+  const newNode = useAtomValue(newNodeAtom);
+  const editNode = useAtomValue(editNodeAtom);
 
   return (
     <Container className="pb-0">
       <Text className="rounded bg-gray-100 px-3 py-2 dark:bg-gray-900">
         <LexicalComposer
-          key={editNodeId}
+          key={editNode?.id}
           initialConfig={{
             namespace: "EvoluMe",
             onError(error) {
@@ -331,7 +332,7 @@ export const NodeEditor: FC = () => {
             },
             theme: { root: "outline-none" },
             editorState: () => {
-              const value = editNodeId ? editNodeTitle : newNodeTitle;
+              const value = editNode ? editNode.title : newNode.title;
               if (value)
                 $getRoot().append(
                   $createParagraphNode().append($createTextNode(value))
@@ -342,7 +343,7 @@ export const NodeEditor: FC = () => {
           {lexicalComposerChildren}
         </LexicalComposer>
       </Text>
-      {editNodeId ? (
+      {editNode ? (
         <EditNodeMenu onSavePress={handleSavePress} />
       ) : (
         <NewNodeMenu />
