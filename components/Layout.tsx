@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useEvoluFirstDataAreLoaded } from "evolu";
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 import { accessibility } from "../lib/accessibility";
 import { ScrollRestoration } from "../lib/hooks/useScrollRestoration";
 import { Container } from "./Container";
@@ -21,6 +21,20 @@ export const Layout: FC<{
   const dataAreLoaded = useEvoluFirstDataAreLoaded();
   const isHidden = waitForData ? !dataAreLoaded : false;
 
+  const [heights, setHeights] = useState("");
+
+  useEffect(() => {
+    const handleResize = () => {
+      setHeights(`${window.innerHeight}, ${visualViewport?.height}`);
+    };
+    handleResize();
+
+    visualViewport?.addEventListener("resize", handleResize);
+    return () => {
+      visualViewport?.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <>
       <PageTitle title={title} />
@@ -39,7 +53,10 @@ export const Layout: FC<{
           {(props) => (
             <>
               <ScrollView centerContent={centerContent} {...props}>
-                <Container>{children}</Container>
+                <Container>
+                  {children}
+                  <Text>{heights}</Text>
+                </Container>
               </ScrollView>
               {footer}
             </>
