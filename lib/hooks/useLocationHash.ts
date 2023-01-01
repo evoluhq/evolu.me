@@ -13,5 +13,9 @@ const subscribeHashChange = (onChange: IO<void>) => {
 };
 
 export const useLocationHash = (): LocationHash => {
-  return useSyncExternalStore(subscribeHashChange, currentLocationHash);
+  return useSyncExternalStore(
+    subscribeHashChange,
+    currentLocationHash,
+    () => "" as LocationHash
+  );
 };

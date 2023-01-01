@@ -26,13 +26,15 @@ export const Layout: FC<{
       <PageTitle title={title} />
       <View className={clsx("flex-1", isHidden && "hidden")}>
         <Container>
-          <View className="flex-row">
-            {header || (
-              <Text p className="flex-1 pl-0" {...accessibility.heading(1)}>
-                {title}
-              </Text>
-            )}
+          <View className="flex-row-reverse">
             <MainNav />
+            <View className="flex-1">
+              {header || (
+                <Text p className="flex-1 pl-0" {...accessibility.heading(1)}>
+                  {title}
+                </Text>
+              )}
+            </View>
           </View>
         </Container>
         <ScrollRestoration>

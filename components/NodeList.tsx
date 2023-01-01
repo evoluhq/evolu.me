@@ -35,35 +35,18 @@ const NodeListPlaceholder: FC<{ ids: readonly NodeId[] }> = ({ ids }) => {
   const getMessage = (): string => {
     switch (ids.length) {
       case 0:
-        return (
-          description +
-          intl.formatMessage({
-            defaultMessage: `
-
-You can connect anything with anything.
-For example: to see - Arrival movie
-
-Write a thought and press enter.`,
-            id: "mgAjw1",
-          })
-        );
+        return description;
       case 1:
         return intl.formatMessage({
-          defaultMessage: `No connection yet.
-          
-Remember, you can connect anything with anything. That's how the human brain works.
-
-For example: to see - Arrival movie`,
-          id: "vu/qrJ",
+          defaultMessage: `No connections.`,
+          id: "o4TjqS",
         });
       default:
         return intl.formatMessage({
           defaultMessage: `You have more than one item in the filter, and that's how you can filter or connect as many thoughts as necessary.
 
-For example: to see - Arrival - tomorrow
-
 The possibilities are endless.`,
-          id: "yhztvg",
+          id: "Sbf3N/",
         });
     }
   };
@@ -83,7 +66,7 @@ export const NodeList = () => {
     let q = db
       .selectFrom("node")
       .select(["id", "title"])
-      .orderBy("createdAt")
+      .orderBy("createdAt", "desc")
       .where("isDeleted", "is not", model.cast(true));
 
     ids.forEach((adjacentId) => {

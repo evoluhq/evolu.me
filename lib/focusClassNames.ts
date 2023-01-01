@@ -15,7 +15,7 @@ const createFocusClassNames = <T extends string>(
 };
 
 export const focusClassNames = createFocusClassNames([
-  // TODO: Rename to nodeEditorInput
+  // TODO: Review and delete unused.
   "createNodeInput",
   "firstNodeItemLink",
   "lastNodeItemLink",

@@ -196,8 +196,6 @@ export interface NodeItemButton {
   focusable: boolean;
   id: NodeId;
   x: number;
-  isFirst: boolean;
-  isLast: boolean;
   title: NonEmptyString1000;
 }
 
@@ -205,8 +203,6 @@ export const NodeItemButton: FC<NodeItemButton> = ({
   focusable,
   id,
   x,
-  isFirst,
-  isLast,
   title,
 }) => {
   const intl = useIntl();
@@ -216,8 +212,8 @@ export const NodeItemButton: FC<NodeItemButton> = ({
   const buttonKeyNavigation = useKeyNavigation({
     x,
     keys: {
-      ArrowUp: !isFirst ? "previousX" : focusClassName("firstNodeFilterLink"),
-      ArrowDown: !isLast ? "nextX" : focusClassName("createNodeInput"),
+      ArrowUp: "previousX",
+      ArrowDown: "nextX",
       ArrowRight: "nextY",
       Escape: () => router.back(),
     },
