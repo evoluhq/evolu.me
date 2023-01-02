@@ -3,7 +3,7 @@ import { either } from "fp-ts";
 import { constVoid, pipe } from "fp-ts/function";
 import { useAtom } from "jotai";
 import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
 import { Button } from "../components/Button";
@@ -16,7 +16,6 @@ import { TabBar } from "../components/TabBar";
 import { Text } from "../components/Text";
 import { newNodeAtom } from "../lib/atoms";
 import { createEdge, useMutation } from "../lib/db";
-import { focusClassName } from "../lib/focusClassNames";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
 import { safeParseToEither } from "../lib/safeParseToEither";
@@ -32,15 +31,6 @@ const AddEditor = () => {
   const handleEditorChange = useEvent((value: string) => {
     setNewNode((a) => ({ ...a, title: value }));
   });
-
-  useEffect(() => {
-    // For some reason, AutoFocusPlugin does not work in iOS.
-    // setTimeout is required even in Chrome desktop.
-    // Lexical probably does some async init.
-    setTimeout(() => {
-      focusClassName("editorContentEditable")();
-    }, 100);
-  }, []);
 
   const handleAddPress = useEvent(() => {
     pipe(

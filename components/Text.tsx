@@ -14,7 +14,7 @@ export const Text = styled(
           "focus:outline-none focus-visible:ring-1"
         ),
         button: clsx(
-          "select-none rounded px-2 py-1 my-1",
+          "select-none rounded px-2 py-1 my-1 text-center",
           "ring-current group-focus-visible:ring-1",
           "group-hover:bg-gray-200 dark:group-hover:bg-gray-900"
         ),

@@ -24,10 +24,6 @@ export const Dialog: FC<DialogProps> = ({
   buttons,
 }) => {
   const intl = useIntl();
-  const closeMessage = intl.formatMessage({
-    defaultMessage: "Close dialog",
-    id: "UaOI5P",
-  });
 
   return (
     <Modal transparent onRequestClose={onRequestClose} visible>
@@ -41,7 +37,12 @@ export const Dialog: FC<DialogProps> = ({
               {children}
               <View className="flex-row gap-2">
                 <Button onPress={onRequestClose}>
-                  <Text as="roundedButton">{closeMessage}</Text>
+                  <Text as="roundedButton">
+                    {intl.formatMessage({
+                      defaultMessage: "Close",
+                      id: "rbrahO",
+                    })}
+                  </Text>
                 </Button>
                 {buttons}
               </View>
