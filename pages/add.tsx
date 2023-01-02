@@ -39,7 +39,7 @@ const AddEditor = () => {
     // Lexical probably does some async init.
     setTimeout(() => {
       focusClassName("editorContentEditable")();
-    });
+    }, 100);
   }, []);
 
   const handleAddPress = useEvent(() => {
