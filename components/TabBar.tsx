@@ -41,12 +41,12 @@ export const TabBar = () => {
     <>
       <View className="flex-row">
         <TabBarLink
-          href={addHref}
-          text={intl.formatMessage({ defaultMessage: "Add", id: "2/2yg+" })}
-        />
-        <TabBarLink
           href="/"
           text={intl.formatMessage({ defaultMessage: "All", id: "zQvVDJ" })}
+        />
+        <TabBarLink
+          href={addHref}
+          text={intl.formatMessage({ defaultMessage: "Add", id: "2/2yg+" })}
         />
         <TabBarLink
           href="/search"
