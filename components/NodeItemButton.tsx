@@ -108,8 +108,8 @@ const NodeItemButtonPopover: FC<{
       });
     }
     // setTimeout, because onRequestClose Modal moves the focus back.
-    focusClassName("createNodeInput")(); // prevents NodeItemButton focus flash
-    setTimeout(focusClassName("createNodeInput"));
+    focusClassName("editorContentEditable")(); // prevents NodeItemButton focus flash
+    setTimeout(focusClassName("editorContentEditable"));
   };
 
   const { rows: edgeIdsRows, isLoaded } = useQuery((db) => {

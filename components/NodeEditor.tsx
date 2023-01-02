@@ -189,7 +189,7 @@ export const NodeEditor: FC = () => {
             <ContentEditable
               // @ts-expect-error Wrong types.
               autoCapitalize="none"
-              className={focusClassNames.createNodeInput}
+              className={focusClassNames.editorContentEditable}
             />
           }
           placeholder={null}

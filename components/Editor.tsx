@@ -1,4 +1,3 @@
-import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
@@ -81,7 +80,7 @@ export const Editor = memo(
               <ContentEditable
                 // @ts-expect-error Wrong types.
                 autoCapitalize="none"
-                className={focusClassNames.createNodeInput}
+                className={focusClassNames.editorContentEditable}
               />
             }
             placeholder={null}
@@ -89,7 +88,7 @@ export const Editor = memo(
           />
           <HistoryPlugin />
           <OnChangePlugin onChange={handleChange} />
-          <AutoFocusPlugin defaultSelection="rootEnd" />
+          {/* <AutoFocusPlugin defaultSelection="rootEnd" /> */}
           <RefPlugin editorRef={ref} />
         </LexicalComposer>
       </Text>

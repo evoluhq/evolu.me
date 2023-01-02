@@ -7,6 +7,6 @@ export const useNodeEditorButtonKeyNavigation = (x: number) =>
     keys: {
       ArrowLeft: "previousX",
       ArrowRight: "nextX",
-      ArrowUp: focusClassName("createNodeInput"),
+      ArrowUp: focusClassName("editorContentEditable"),
     },
   });

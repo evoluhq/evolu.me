@@ -68,7 +68,7 @@ export const MainNav = () => {
   const buttonKeyNavigation = useKeyNavigation({
     keys: {
       // ArrowLeft: { id: uniqueId.lastNodeFilterItem },
-      // ArrowUp: { id: uniqueId.createNodeInput },
+      // ArrowUp: { id: uniqueId.editorContentEditable },
     },
   });
 

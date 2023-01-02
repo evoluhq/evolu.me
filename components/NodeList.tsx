@@ -119,7 +119,7 @@ export const NodeList = () => {
     if (!isLoaded) return;
     if (isEmpty()) {
       if (canDoAutoFocusOnInput) {
-        focusClassName("createNodeInput")();
+        focusClassName("editorContentEditable")();
       }
     } else {
       // AutoFocus on links is OK.

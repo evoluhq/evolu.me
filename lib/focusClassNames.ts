@@ -15,8 +15,9 @@ const createFocusClassNames = <T extends string>(
 };
 
 export const focusClassNames = createFocusClassNames([
+  "editorContentEditable",
+
   // TODO: Review and delete unused.
-  "createNodeInput",
   "firstNodeItemLink",
   "lastNodeItemLink",
   "firstNodeFilterLink",
