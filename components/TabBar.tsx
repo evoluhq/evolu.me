@@ -31,10 +31,8 @@ const TabBarLink: FC<{
 export const TabBar = () => {
   const intl = useIntl();
 
-  const addHref = pipe(
-    useLocationHashNodeIds(),
-    nodeIdsToLocationHash,
-    (s) => `/add#${s}`
+  const addHref = pipe(useLocationHashNodeIds(), nodeIdsToLocationHash, (s) =>
+    s.length ? `/add#${s}` : "/add"
   );
 
   return (
