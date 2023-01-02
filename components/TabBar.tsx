@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { flushSync } from "react-dom";
 import { useIntl } from "react-intl";
+import { focusClassName } from "../lib/focusClassNames";
 import { AddModal } from "./AddModal";
 import { Button } from "./Button";
 import { Link } from "./Link";
@@ -27,6 +29,13 @@ export const TabBar = () => {
     }
   };
 
+  const handleAddPress = () => {
+    flushSync(() => {
+      setModal("add");
+    });
+    focusClassName("editorContentEditable")();
+  };
+
   return (
     <View className="flex-row">
       {renderModal()}
@@ -40,7 +49,7 @@ export const TabBar = () => {
           {intl.formatMessage({ defaultMessage: "All", id: "zQvVDJ" })}
         </Text>
       </Link>
-      <Button className="flex-1" onPress={() => setModal("add")}>
+      <Button className="flex-1" onPress={handleAddPress}>
         <Text as="button" transparent>
           {intl.formatMessage({ defaultMessage: "Add", id: "2/2yg+" })}
         </Text>
