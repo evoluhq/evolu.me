@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { flushSync } from "react-dom";
 import { useIntl } from "react-intl";
 import { focusClassName } from "../lib/focusClassNames";
@@ -18,10 +18,14 @@ export const TabBar = () => {
 
   const [modal, setModal] = useState<"add" | "search" | null>(null);
 
+  const handleRequestClose = useCallback(() => {
+    setModal(null);
+  }, []);
+
   const renderModal = (): JSX.Element | null => {
     switch (modal) {
       case "add":
-        return <AddModal onRequestClose={() => setModal(null)} />;
+        return <AddModal onRequestClose={handleRequestClose} />;
       case "search":
         return null;
       case null:
@@ -30,6 +34,7 @@ export const TabBar = () => {
   };
 
   const handleAddPress = () => {
+    // In iOS Safari, a focus shows virtual keyboard only in a click handler.
     flushSync(() => {
       setModal("add");
     });
@@ -50,12 +55,12 @@ export const TabBar = () => {
         </Text>
       </Link>
       <Button className="flex-1" onPress={handleAddPress}>
-        <Text as="button" transparent>
+        <Text as="button">
           {intl.formatMessage({ defaultMessage: "Add", id: "2/2yg+" })}
         </Text>
       </Button>
       <Button className="flex-1">
-        <Text as="button" transparent>
+        <Text as="button">
           {intl.formatMessage({ defaultMessage: "Search", id: "xmcVZ0" })}
         </Text>
       </Button>
