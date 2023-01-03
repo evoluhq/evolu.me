@@ -1,9 +1,7 @@
 import clsx from "clsx";
-import { NonEmptyString1000 } from "evolu";
 import { readonlyArray } from "fp-ts";
 import { pipe } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
-import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import {
   FC,
@@ -14,12 +12,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { flushSync } from "react-dom";
 import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
-import { editNodeAtom } from "../lib/atoms";
 import { createEdge, NodeId, useMutation, useQuery } from "../lib/db";
-import { focusClassName } from "../lib/focusClassNames";
 import {
   KeyboardNavigationContext,
   KeyboardNavigationProvider,
@@ -61,8 +56,7 @@ const NodeItemButtonPopover: FC<{
   id: NodeId;
   onRequestClose: IO<void>;
   ownerRef: MutableRefObject<View | null>;
-  title: NonEmptyString1000;
-}> = ({ id, onRequestClose, ownerRef, title }) => {
+}> = ({ id, onRequestClose, ownerRef }) => {
   const intl = useIntl();
   const { mutate } = useMutation();
 
@@ -98,20 +92,6 @@ const NodeItemButtonPopover: FC<{
     });
   };
 
-  const [editNode, setEditNode] = useAtom(editNodeAtom);
-
-  const handleEditPress = () => {
-    onRequestClose();
-    if (!editNode) {
-      flushSync(() => {
-        setEditNode({ id, title, originalTitle: title });
-      });
-    }
-    // setTimeout, because onRequestClose Modal moves the focus back.
-    focusClassName("editorContentEditable")(); // prevents NodeItemButton focus flash
-    setTimeout(focusClassName("editorContentEditable"));
-  };
-
   const { rows: edgeIdsRows, isLoaded } = useQuery((db) => {
     const [a, b] = pipe(
       locationNodeIds,
@@ -145,7 +125,7 @@ const NodeItemButtonPopover: FC<{
       onRequestClose={onRequestClose}
     >
       <View className="flex-row">
-        <KeyboardNavigationProvider maxX={hasAdjacentNodes ? 3 : 1}>
+        <KeyboardNavigationProvider maxX={hasAdjacentNodes ? 2 : 0}>
           <NodeItemButtonPopoverButton
             title={intl.formatMessage({
               defaultMessage: "Delete",
@@ -153,16 +133,7 @@ const NodeItemButtonPopover: FC<{
             })}
             x={0}
             onPress={handleDeletePress}
-            className="rounded-r-none"
-          />
-          <NodeItemButtonPopoverButton
-            title={intl.formatMessage({
-              defaultMessage: "Edit",
-              id: "wEQDC6",
-            })}
-            x={1}
-            onPress={handleEditPress}
-            className="rounded-none"
+            className={clsx(hasAdjacentNodes && "rounded-r-none")}
           />
           {hasAdjacentNodes && (
             <>
@@ -196,15 +167,9 @@ export interface NodeItemButton {
   focusable: boolean;
   id: NodeId;
   x: number;
-  title: NonEmptyString1000;
 }
 
-export const NodeItemButton: FC<NodeItemButton> = ({
-  focusable,
-  id,
-  x,
-  title,
-}) => {
+export const NodeItemButton: FC<NodeItemButton> = ({ focusable, id, x }) => {
   const intl = useIntl();
   const [popoverIsVisible, setPopoverIsVisible] = useState(false);
   const router = useRouter();
@@ -256,7 +221,6 @@ export const NodeItemButton: FC<NodeItemButton> = ({
           id={id}
           onRequestClose={handleRequestClose}
           ownerRef={buttonRef}
-          title={title}
         />
       )}
     </>

@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { FC, memo } from "react";
 import { NodeId, useQuery } from "../lib/db";
 import { focusClassName, focusClassNames } from "../lib/focusClassNames";
+import { getFirstLine } from "../lib/getFirstLine";
 import {
   KeyboardNavigationProvider,
   useKeyNavigation,
@@ -72,7 +73,7 @@ const NodeFilterWithIds = memo<{ ids: readonly NodeId[] }>(
       readonlyArray.filter(has(["title"])),
       readonlyArray.map((a) => ({
         ...a,
-        title: truncate(a.title)({ maxLength: 21 }).text,
+        title: pipe(a.title, getFirstLine, truncate)({ maxLength: 21 }).text,
       }))
     );
 

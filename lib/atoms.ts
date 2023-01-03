@@ -8,6 +8,7 @@ export const newNodeAtom = atomWithStorage(localStorageKeys.newNodeAtom, {
 
 export const newNodeTitleAtom = selectAtom(newNodeAtom, (v) => v.title);
 
+// TODO: Replace it with list of edited nodes.
 export const editNodeAtom = atomWithStorage<null | {
   id: NodeId;
   title: string;

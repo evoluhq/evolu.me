@@ -4,6 +4,7 @@ import { IO } from "fp-ts/IO";
 import { useRouter } from "next/router";
 import { memo } from "react";
 import { NodeId } from "../lib/db";
+import { getFirstLine } from "../lib/getFirstLine";
 import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
 import { Link } from "./Link";
 import { NodeItemButton } from "./NodeItemButton";
@@ -20,7 +21,6 @@ interface NodeItemProps {
   isFirst: boolean;
   isLast: boolean;
   onKeyEnter: IO<void>;
-  isEdit: boolean;
 }
 
 export const NodeItem = memo<NodeItemProps>(function NodeItem({
@@ -28,7 +28,6 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
   focusable,
   x,
   onKeyEnter,
-  isEdit,
 }) {
   const router = useRouter();
 
@@ -52,23 +51,17 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
 
   return (
     <View className="flex-row" accessibilityRole={"listitem" as "list"}>
-      <NodeItemButton
-        focusable={focusable === "button"}
-        id={id}
-        x={x}
-        title={title}
-      />
+      <NodeItemButton focusable={focusable === "button"} id={id} x={x} />
       <Link href={`/#${id}`}>
         <Text
           {...linkKeyNavigation}
           as="link"
           p
-          transparent={isEdit}
           className="-ml-1 px-1"
           // @ts-expect-error RNfW
           focusable={focusable === "input"}
         >
-          {title}
+          {getFirstLine(title)}
         </Text>
       </Link>
     </View>

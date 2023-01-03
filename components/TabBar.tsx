@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { flushSync } from "react-dom";
 import { useIntl } from "react-intl";
 import { focusClassName } from "../lib/focusClassNames";
-import { AddModal } from "./AddModal";
+import { AddNodeModal } from "./AddNodeModal";
 import { Button } from "./Button";
 import { Link } from "./Link";
 import { View } from "./styled";
@@ -25,7 +25,7 @@ export const TabBar = () => {
   const renderModal = (): JSX.Element | null => {
     switch (modal) {
       case "add":
-        return <AddModal onRequestClose={handleRequestClose} />;
+        return <AddNodeModal onRequestClose={handleRequestClose} />;
       case "search":
         return null;
       case null:
