@@ -62,18 +62,20 @@ export const AddModal: FC<{
 
   // absolute inset-x-0 bottom-0
   // "mx-auto w-full max-w-[500px] p-3"
+  // We don't need useSyncExternalStore because it does not interact
+  // with React.
   useLayoutEffect(() => {
-    const layoutViewport = scrollViewRef.current;
+    const scrollView = scrollViewRef.current;
     const bottomBar = bottomBarRef.current;
     const viewport = visualViewport;
-    if (!layoutViewport || !bottomBar || !viewport) return;
+    if (!scrollView || !bottomBar || !viewport) return;
 
     const onChange = () => {
       const offsetX = viewport.offsetLeft;
       const offsetY =
         viewport.height -
         // @ts-expect-error RNfW
-        layoutViewport.getBoundingClientRect().height +
+        scrollView.getBoundingClientRect().height +
         viewport.offsetTop;
       // You could also do this by setting style.left and style.top if you
       // use width: 100% instead.
@@ -93,9 +95,18 @@ export const AddModal: FC<{
 
     visualViewport?.addEventListener("scroll", onChange);
     visualViewport?.addEventListener("resize", onChange);
+    window.addEventListener("scroll", onChange);
+    // @ts-expect-error RNfW
+    scrollView.addEventListener("scroll", onChange);
+    document.body.addEventListener("scroll", onChange);
+
     return () => {
       visualViewport?.removeEventListener("scroll", onChange);
       visualViewport?.removeEventListener("resize", onChange);
+      window.removeEventListener("scroll", onChange);
+      // @ts-expect-error RNfW
+      scrollView.removeEventListener("scroll", onChange);
+      document.body.removeEventListener("scroll", onChange);
     };
   });
 
@@ -122,7 +133,7 @@ export const AddModal: FC<{
       <ScrollView
         ref={scrollViewRef}
         className="bg-white dark:bg-black"
-        contentContainerStyle={{ flexGrow: 1 }}
+        // contentContainerStyle={{ flexGrow: 1 }}
       >
         <Container className="flex-1">
           <Text className="h-7" />
