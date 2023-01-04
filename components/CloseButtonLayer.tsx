@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { IO } from "fp-ts/IO";
 import { FC } from "react";
 import { useIntl } from "react-intl";
-import { appBg } from "../lib/appBg";
+import { appBg } from "../styles/appBg";
 import { Pressable } from "./styled";
 
 export const CloseButtonLayer: FC<{

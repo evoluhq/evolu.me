@@ -8,7 +8,7 @@ import { FC, memo, useLayoutEffect, useRef } from "react";
 import { useIntl } from "react-intl";
 import { Modal } from "react-native";
 import useEvent from "react-use-event-hook";
-import { appBg } from "../lib/appBg";
+import { appBg } from "../styles/appBg";
 import { newNodeAtom } from "../lib/atoms";
 import { createEdge, useMutation } from "../lib/db";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";

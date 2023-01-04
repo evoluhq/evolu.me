@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { styled } from "nativewind";
 import { View } from "react-native";
-import { appBg } from "../lib/appBg";
+import { appBg } from "../styles/appBg";
 
 export const Ring = styled(
   View,
