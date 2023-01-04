@@ -12,9 +12,6 @@ import { Text } from "./Text";
 export const TabBar = () => {
   const intl = useIntl();
   const router = useRouter();
-  // const ids = useLocationHashNodeIds();
-  // const addHref = pipe(useLocationHashNodeIds(), nodeIdsToLocationHash, (s) =>
-  //   s.length ? `/add#${s}` : "/add"
 
   const [modal, setModal] = useState<"add" | "search" | null>(null);
 

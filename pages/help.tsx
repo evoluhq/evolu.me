@@ -10,7 +10,7 @@ import { Text } from "../components/Text";
 // these are dynamic building blocks that you can connect to other pieces of
 // information. Beautiful visualisations of your knowledge...
 
-// Evolu Me is a tool for organizing thoughts.
+// EvoluMe is a tool for organizing thoughts.
 // Write thoughts your don't want to remember but also you don't want
 // to forget. Connect anything with anything. Here are some examples:
 // TODO: Keyboard.

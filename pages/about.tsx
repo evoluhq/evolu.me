@@ -14,20 +14,6 @@ const About = () => {
       centerContent
     >
       <Text mb>{appDescription}</Text>
-      <Text mb>
-        {intl.formatMessage({
-          defaultMessage:
-            "Focused on privacy means all data are end-to-end encrypted. You don't even have to create an account to use this app.",
-          id: "QhJpjX",
-        })}
-      </Text>
-      <Text mb>
-        {intl.formatMessage({
-          defaultMessage:
-            "The master plan is to build a foundation for the Semantic Desktop - one unified UI for all your local-first data.",
-          id: "lrqCiB",
-        })}
-      </Text>
       <View className="flex-row">
         <Text
           as="link"
