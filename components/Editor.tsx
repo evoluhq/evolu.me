@@ -81,6 +81,7 @@ export const Editor = forwardRef<
               autoCapitalize="none"
               // @ts-expect-error Wrong types.
               autoCorrect="off"
+              spellCheck={false}
               className={focusClassNames.editorContentEditable}
             />
           }

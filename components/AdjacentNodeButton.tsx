@@ -52,7 +52,7 @@ const NodeItemButtonPopoverButton: FC<{
   );
 };
 
-const NodeItemButtonPopover: FC<{
+const AdjacentNodeButtonPopover: FC<{
   id: NodeId;
   onRequestClose: IO<void>;
   ownerRef: MutableRefObject<View | null>;
@@ -163,13 +163,17 @@ const NodeItemButtonPopover: FC<{
   );
 };
 
-export interface NodeItemButton {
+export interface AdjacentNodeButton {
   focusable: boolean;
   id: NodeId;
   x: number;
 }
 
-export const NodeItemButton: FC<NodeItemButton> = ({ focusable, id, x }) => {
+export const AdjacentNodeButton: FC<AdjacentNodeButton> = ({
+  focusable,
+  id,
+  x,
+}) => {
   const intl = useIntl();
   const [popoverIsVisible, setPopoverIsVisible] = useState(false);
   const router = useRouter();
@@ -217,7 +221,7 @@ export const NodeItemButton: FC<NodeItemButton> = ({ focusable, id, x }) => {
         />
       </Button>
       {popoverIsVisible && (
-        <NodeItemButtonPopover
+        <AdjacentNodeButtonPopover
           id={id}
           onRequestClose={handleRequestClose}
           ownerRef={buttonRef}

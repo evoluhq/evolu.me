@@ -1,9 +1,8 @@
-import { has, model, NodeId } from "evolu";
-import { FC, useLayoutEffect, useMemo, useRef } from "react";
+import { NodeId, NonEmptyString1000 } from "evolu";
+import { FC, memo, useLayoutEffect, useRef } from "react";
 import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
 import Balancer from "react-wrap-balancer";
-import { useQuery } from "../lib/db";
 import { focusClassName } from "../lib/focusClassNames";
 import { useAppDescription } from "../lib/hooks/useAppDescription";
 import {
@@ -11,9 +10,8 @@ import {
   KeyboardNavigationProvider,
   KeyboardNavigationProviderRef,
 } from "../lib/hooks/useKeyNavigation";
-import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { useScrollRestoration } from "../lib/hooks/useScrollRestoration";
-import { NodeItem } from "./NodeItem";
+import { AdjacentNode } from "./AdjacentNode";
 import { View } from "./styled";
 import { Text } from "./Text";
 
@@ -22,11 +20,11 @@ let canDoAutoFocusOnInput = false;
 // It's impossible to detect a virtual keyboard, so we can't autoFocus input
 // naively. No touch detection is possible, and we can autoFocus only when
 // we are 100% sure a user used key navigation.
-const handleNodeItemKeyEnter = () => {
+const handleAdjacentNodeKeyEnter = () => {
   canDoAutoFocusOnInput = true;
 };
 
-const NodeListPlaceholder: FC<{ ids: readonly NodeId[] }> = ({ ids }) => {
+const AdjacentNodesPlaceholder: FC<{ ids: readonly NodeId[] }> = ({ ids }) => {
   const intl = useIntl();
   const description = useAppDescription();
 
@@ -56,39 +54,10 @@ The possibilities are endless.`,
   );
 };
 
-export const NodeList = () => {
-  const ids = useLocationHashNodeIds();
-
-  const { rows, isLoaded } = useQuery((db) => {
-    // https://inviqa.com/blog/storing-graphs-database-sql-meets-social-network
-    let q = db
-      .selectFrom("node")
-      .select(["id", "title"])
-      .orderBy("createdAt", "desc")
-      .where("isDeleted", "is not", model.cast(true));
-
-    ids.forEach((adjacentId) => {
-      q = q.where("id", "in", (qb) =>
-        qb
-          .selectFrom("edge")
-          .where("isDeleted", "is not", model.cast(true))
-          .where("b", "=", adjacentId)
-          .select("a as id")
-          .union(
-            qb
-              .selectFrom("edge")
-              .where("isDeleted", "is not", model.cast(true))
-              .where("a", "=", adjacentId)
-              .select("b as id")
-          )
-      );
-    });
-
-    return q;
-  });
-
-  const loadedRows = useMemo(() => rows.filter(has(["title"])), [rows]);
-
+export const AdjacentNodes = memo<{
+  ids: readonly NodeId[];
+  rows: readonly { id: NodeId; title: NonEmptyString1000 }[];
+}>(function AdjacentNodes({ ids, rows }) {
   const { scrollToEndAnimatedIfRequested } = useScrollRestoration();
   useLayoutEffect(() => scrollToEndAnimatedIfRequested());
 
@@ -112,9 +81,8 @@ export const NodeList = () => {
   const { restoreScroll, storeScroll } = useScrollRestoration();
 
   // We use useEvent to not rerun useLayoutEffect on loadedRows.length change.
-  const isEmpty = useEvent(() => loadedRows.length === 0);
+  const isEmpty = useEvent(() => rows.length === 0);
   useLayoutEffect(() => {
-    if (!isLoaded) return;
     if (isEmpty()) {
       if (canDoAutoFocusOnInput) {
         focusClassName("editorContentEditable")();
@@ -135,11 +103,9 @@ export const NodeList = () => {
       // y: 1 ensures "Add To Filter" will save focus to the link, not the button.
       storeScroll(idsString, position ? { x: position.x, y: 1 } : undefined);
     };
-  }, [idsString, isEmpty, isLoaded, restoreScroll, storeScroll]);
+  }, [idsString, isEmpty, restoreScroll, storeScroll]);
 
-  if (!isLoaded) return null;
-
-  if (loadedRows.length === 0) return <NodeListPlaceholder ids={ids} />;
+  if (rows.length === 0) return <AdjacentNodesPlaceholder ids={ids} />;
 
   return (
     <View
@@ -147,26 +113,26 @@ export const NodeList = () => {
       // className="py-[88px]" // A space for scrolling, 2x44
     >
       <KeyboardNavigationProvider
-        maxX={loadedRows.length - 1}
+        maxX={rows.length - 1}
         maxY={1}
         initialY={1}
         onFocus={handleKeyboardNavigationProviderFocus}
         ref={keyboardNavigationProviderRef}
       >
         {({ x, y }) =>
-          loadedRows.map((row, i) => (
-            <NodeItem
+          rows.map((row, i) => (
+            <AdjacentNode
               key={row.id}
               row={row}
               x={i}
               focusable={i === x && (y === 0 ? "button" : "input")}
               isFirst={i === 0}
               isLast={i === rows.length - 1}
-              onKeyEnter={handleNodeItemKeyEnter}
+              onKeyEnter={handleAdjacentNodeKeyEnter}
             />
           ))
         }
       </KeyboardNavigationProvider>
     </View>
   );
-};
+});

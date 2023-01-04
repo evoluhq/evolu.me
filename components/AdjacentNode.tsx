@@ -7,11 +7,11 @@ import { NodeId } from "../lib/db";
 import { getFirstLine } from "../lib/getFirstLine";
 import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
 import { Link } from "./Link";
-import { NodeItemButton } from "./NodeItemButton";
+import { AdjacentNodeButton } from "./AdjacentNodeButton";
 import { View } from "./styled";
 import { Text } from "./Text";
 
-interface NodeItemProps {
+interface AdjacentNodeProps {
   row: {
     id: NodeId;
     title: NonEmptyString1000;
@@ -23,7 +23,7 @@ interface NodeItemProps {
   onKeyEnter: IO<void>;
 }
 
-export const NodeItem = memo<NodeItemProps>(function NodeItem({
+export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
   row: { id, title },
   focusable,
   x,
@@ -51,7 +51,7 @@ export const NodeItem = memo<NodeItemProps>(function NodeItem({
 
   return (
     <View className="flex-row" accessibilityRole={"listitem" as "list"}>
-      <NodeItemButton focusable={focusable === "button"} id={id} x={x} />
+      <AdjacentNodeButton focusable={focusable === "button"} id={id} x={x} />
       <Link href={`/#${id}`}>
         <Text
           {...linkKeyNavigation}
