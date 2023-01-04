@@ -139,8 +139,8 @@ const NodeItemButtonPopover: FC<{
             <>
               <NodeItemButtonPopoverButton
                 title={intl.formatMessage({
-                  defaultMessage: "Filter",
-                  id: "9Obw6C",
+                  defaultMessage: "Add to Filter",
+                  id: "IRwSGb",
                 })}
                 x={2}
                 onPress={handleFilterPress}
