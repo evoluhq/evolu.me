@@ -110,11 +110,12 @@ export const AddNodeModal: FC<{
       safeParseToEither,
       either.match(constVoid, (title) => {
         setNewNode((a) => ({ ...a, title: "" }));
-        const { id } = mutate("node", { title });
+        const { id } = mutate("node", { title }, () => {
+          onRequestClose();
+        });
         ids.forEach((adjacentId) => {
           mutate("edge", createEdge(id, adjacentId));
         });
-        onRequestClose();
       })
     );
   });
