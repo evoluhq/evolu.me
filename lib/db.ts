@@ -1,4 +1,4 @@
-import { createHooks, model, NonEmptyString1000 } from "evolu";
+import { createHooks, model } from "evolu";
 import { Eq, eqStrict } from "fp-ts/Eq";
 
 // config.log = true;
@@ -7,13 +7,20 @@ export const NodeId = model.id<"Node">();
 export type NodeId = model.infer<typeof NodeId>;
 export const eqNodeId: Eq<NodeId> = eqStrict;
 
+export const NodeMarkdown = model
+  .string()
+  .min(1)
+  .max(32768)
+  .brand<"NodeMarkdown">();
+export type NodeMarkdown = model.infer<typeof NodeMarkdown>;
+
 export const EdgeId = model.id<"Edge">();
 export type EdgeId = model.infer<typeof EdgeId>;
 
 export const { useQuery, useMutation } = createHooks({
   node: {
     id: NodeId,
-    title: NonEmptyString1000,
+    md: NodeMarkdown,
   },
   // undirected graph
   edge: {

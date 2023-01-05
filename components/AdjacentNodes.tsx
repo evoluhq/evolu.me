@@ -1,7 +1,8 @@
-import { NodeId, NonEmptyString1000 } from "evolu";
+import { NodeId } from "evolu";
 import { FC, memo, useLayoutEffect, useRef } from "react";
 import useEvent from "react-use-event-hook";
 import Balancer from "react-wrap-balancer";
+import { NodeMarkdown } from "../lib/db";
 import { focusClassName } from "../lib/focusClassNames";
 import { useAppDescription } from "../lib/hooks/useAppDescription";
 import {
@@ -35,7 +36,7 @@ const AboutForEmptyContent: FC = () => {
 
 export const AdjacentNodes = memo<{
   ids: readonly NodeId[];
-  rows: readonly { id: NodeId; title: NonEmptyString1000 }[];
+  rows: readonly { id: NodeId; md: NodeMarkdown }[];
 }>(function AdjacentNodes({ ids, rows }) {
   const { scrollToEndAnimatedIfRequested } = useScrollRestoration();
   useLayoutEffect(() => scrollToEndAnimatedIfRequested());

@@ -1,10 +1,9 @@
 import clsx from "clsx";
-import { has, NonEmptyString1000 } from "evolu";
 import { option, readonlyArray } from "fp-ts";
 import { pipe } from "fp-ts/function";
 import { useRouter } from "next/router";
 import { FC, memo } from "react";
-import { NodeId } from "../lib/db";
+import { NodeId, NodeMarkdown } from "../lib/db";
 import { focusClassNames } from "../lib/focusClassNames";
 import { getFirstLine } from "../lib/getFirstLine";
 import {
@@ -21,9 +20,9 @@ const NodeFilterLink: FC<{
   focusable: boolean;
   id: NodeId;
   isFirst: boolean;
-  title: string;
+  md: string;
   x: number;
-}> = ({ focusable, id, isFirst, title, x }) => {
+}> = ({ focusable, id, isFirst, md, x }) => {
   const router = useRouter();
   const keyNavigation = useKeyNavigation({
     x,
@@ -48,7 +47,7 @@ const NodeFilterLink: FC<{
         // @ts-expect-error RNfW
         focusable={focusable}
       >
-        {title}
+        {md}
       </Text>
     </Link>
   );
@@ -56,23 +55,22 @@ const NodeFilterLink: FC<{
 
 export const NodeFilter = memo<{
   ids: readonly NodeId[];
-  rows: readonly { id: NodeId; title?: NonEmptyString1000 | null }[];
+  rows: readonly { id: NodeId; md: NodeMarkdown }[];
 }>(function NodeFilterLinks({ ids, rows }) {
   const sortedRowsWithTruncatedTitle = pipe(
     ids, // The same order like ids from location hash.
     readonlyArray.filterMap((id) =>
       option.fromNullable(rows.find((row) => row.id === id))
     ),
-    readonlyArray.filter(has(["title"])),
     readonlyArray.map((a) => ({
       ...a,
-      title: pipe(a.title, getFirstLine, truncate)({ maxLength: 21 }).text,
+      md: pipe(a.md, getFirstLine, truncate)({ maxLength: 21 }).text,
     }))
   );
 
   const title = pipe(
     sortedRowsWithTruncatedTitle,
-    readonlyArray.map((i) => i.title)
+    readonlyArray.map((i) => i.md)
   ).join(" | ");
 
   return (
@@ -91,7 +89,7 @@ export const NodeFilter = memo<{
                   focusable={x === i}
                   id={row.id}
                   isFirst={i === 0}
-                  title={row.title}
+                  md={row.md}
                   x={i}
                 />
               ))

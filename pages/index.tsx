@@ -1,31 +1,36 @@
 import { has, model } from "evolu";
 import { memo, useMemo } from "react";
+import { AdjacentNodes } from "../components/AdjacentNodes";
 import { ClientOnly } from "../components/ClientOnly";
 import { Container } from "../components/Container";
 import { Layout } from "../components/Layout";
+import { NodeEditor } from "../components/NodeEditor";
 import { NodeFilter } from "../components/NodeFilter";
-import { AdjacentNodes } from "../components/AdjacentNodes";
 import { TabBar } from "../components/TabBar";
 import { NodeId, useQuery } from "../lib/db";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
-import { NodeEditor } from "../components/NodeEditor";
 
-const IndexWithIds = memo<{ ids: readonly NodeId[] }>(function NodeFilterLinks({
+const IndexWithIds = memo<{ ids: readonly NodeId[] }>(function IndexWithIds({
   ids,
 }) {
   const nodes = useQuery((db) =>
     db
       .selectFrom("node")
-      .select(["id", "title"])
+      .select(["id", "md"])
       .where("isDeleted", "is not", model.cast(true))
       .where("id", "in", ids)
+  );
+
+  const loadedNodesRows = useMemo(
+    () => nodes.rows.filter(has(["md"])),
+    [nodes.rows]
   );
 
   const adjacentNodes = useQuery((db) => {
     // https://inviqa.com/blog/storing-graphs-database-sql-meets-social-network
     let q = db
       .selectFrom("node")
-      .select(["id", "title"])
+      .select(["id", "md"])
       .orderBy("createdAt", "desc")
       .where("isDeleted", "is not", model.cast(true));
 
@@ -49,13 +54,8 @@ const IndexWithIds = memo<{ ids: readonly NodeId[] }>(function NodeFilterLinks({
     return q;
   });
 
-  const nodesRows = useMemo(
-    () => nodes.rows.filter(has(["title"])),
-    [nodes.rows]
-  );
-
-  const adjacentNodesRows = useMemo(
-    () => adjacentNodes.rows.filter(has(["title"])),
+  const loadedAdjacentNodesRows = useMemo(
+    () => adjacentNodes.rows.filter(has(["md"])),
     [adjacentNodes.rows]
   );
 
@@ -66,7 +66,7 @@ const IndexWithIds = memo<{ ids: readonly NodeId[] }>(function NodeFilterLinks({
       centerContent
       header={
         <ClientOnly>
-          <NodeFilter ids={ids} rows={nodes.rows} />
+          <NodeFilter ids={ids} rows={loadedNodesRows} />
         </ClientOnly>
       }
       footer={
@@ -80,10 +80,10 @@ const IndexWithIds = memo<{ ids: readonly NodeId[] }>(function NodeFilterLinks({
       <ClientOnly>
         {nodes.isLoaded && adjacentNodes.isLoaded && (
           <>
-            {nodesRows.map((row) => (
+            {loadedNodesRows.map((row) => (
               <NodeEditor key={row.id} row={row} />
             ))}
-            <AdjacentNodes ids={ids} rows={adjacentNodesRows} />
+            <AdjacentNodes ids={ids} rows={loadedAdjacentNodesRows} />
           </>
         )}
       </ClientOnly>

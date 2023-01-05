@@ -1,9 +1,8 @@
-import { NonEmptyString1000 } from "evolu";
 import { constVoid } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
 import { useRouter } from "next/router";
 import { memo } from "react";
-import { NodeId } from "../lib/db";
+import { NodeId, NodeMarkdown } from "../lib/db";
 import { getFirstLine } from "../lib/getFirstLine";
 import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
 import { Link } from "./Link";
@@ -14,7 +13,7 @@ import { Text } from "./Text";
 interface AdjacentNodeProps {
   row: {
     id: NodeId;
-    title: NonEmptyString1000;
+    md: NodeMarkdown;
   };
   focusable: false | "button" | "input";
   x: number;
@@ -24,7 +23,7 @@ interface AdjacentNodeProps {
 }
 
 export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
-  row: { id, title },
+  row: { id, md },
   focusable,
   x,
   onKeyEnter,
@@ -61,7 +60,7 @@ export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
           // @ts-expect-error RNfW
           focusable={focusable === "input"}
         >
-          {getFirstLine(title)}
+          {getFirstLine(md)}
         </Text>
       </Link>
     </View>

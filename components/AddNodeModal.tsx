@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { NonEmptyString1000 } from "evolu";
 import { either } from "fp-ts";
 import { constVoid, pipe } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
@@ -10,7 +9,7 @@ import { Modal } from "react-native";
 import useEvent from "react-use-event-hook";
 import { appBg } from "../styles/appBg";
 import { newNodeAtom } from "../lib/atoms";
-import { createEdge, useMutation } from "../lib/db";
+import { createEdge, NodeMarkdown, useMutation } from "../lib/db";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { safeParseToEither } from "../lib/safeParseToEither";
 import { Button } from "./Button";
@@ -63,7 +62,7 @@ export const AddNodeModal: FC<{
   const [newNode, setNewNode] = useAtom(newNodeAtom);
 
   const handleEditorChange = useEvent((value: string) => {
-    setNewNode((a) => ({ ...a, title: value }));
+    setNewNode((a) => ({ ...a, md: value }));
   });
 
   const scrollViewRef = useRef<ScrollView>(null);
@@ -106,11 +105,11 @@ export const AddNodeModal: FC<{
   const handleButtonsAdd = useEvent(() => {
     pipe(
       // TODO: "too long text, it's x length, max is..."
-      NonEmptyString1000.safeParse(newNode.title),
+      NodeMarkdown.safeParse(newNode.md),
       safeParseToEither,
-      either.match(constVoid, (title) => {
-        setNewNode((a) => ({ ...a, title: "" }));
-        const { id } = mutate("node", { title }, () => {
+      either.match(constVoid, (md) => {
+        setNewNode((a) => ({ ...a, md: "" }));
+        const { id } = mutate("node", { md }, () => {
           onRequestClose();
         });
         ids.forEach((adjacentId) => {
@@ -134,7 +133,7 @@ export const AddNodeModal: FC<{
           {/* <Text className="h-7" /> */}
           <Editor
             ref={editorRef}
-            initialValue={newNode.title}
+            initialValue={newNode.md}
             onChange={handleEditorChange}
           />
           {/* <Text className="h-7" /> */}
