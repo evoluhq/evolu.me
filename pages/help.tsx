@@ -9,12 +9,13 @@ import { Text } from "../components/Text";
 // On a knowledge graph, you create nodes instead of notes,
 // these are dynamic building blocks that you can connect to other pieces of
 // information. Beautiful visualisations of your knowledge...
-
 // EvoluMe is a tool for organizing thoughts.
 // Write thoughts your don't want to remember but also you don't want
 // to forget. Connect anything with anything. Here are some examples:
 // TODO: Keyboard.
 // Remember, it's not trees, it's undirected graph... The difference is...
+// You have more than one item in the filter, and that's how you can filter or connect as many thoughts as necessary.
+// The possibilities are endless.`,
 
 const Help = () => {
   const intl = useIntl();

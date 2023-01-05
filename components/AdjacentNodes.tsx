@@ -1,6 +1,5 @@
 import { NodeId, NonEmptyString1000 } from "evolu";
 import { FC, memo, useLayoutEffect, useRef } from "react";
-import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
 import Balancer from "react-wrap-balancer";
 import { focusClassName } from "../lib/focusClassNames";
@@ -24,32 +23,12 @@ const handleAdjacentNodeKeyEnter = () => {
   canDoAutoFocusOnInput = true;
 };
 
-const AdjacentNodesPlaceholder: FC<{ ids: readonly NodeId[] }> = ({ ids }) => {
-  const intl = useIntl();
+const AboutForEmptyContent: FC = () => {
   const description = useAppDescription();
-
-  const getMessage = (): string => {
-    switch (ids.length) {
-      case 0:
-        return description;
-      case 1:
-        return intl.formatMessage({
-          defaultMessage: `No connections.`,
-          id: "o4TjqS",
-        });
-      default:
-        return intl.formatMessage({
-          defaultMessage: `You have more than one item in the filter, and that's how you can filter or connect as many thoughts as necessary.
-
-The possibilities are endless.`,
-          id: "Sbf3N/",
-        });
-    }
-  };
 
   return (
     <Text className="text-center">
-      <Balancer>{getMessage()}</Balancer>
+      <Balancer>{description}</Balancer>
     </Text>
   );
 };
@@ -105,11 +84,12 @@ export const AdjacentNodes = memo<{
     };
   }, [idsString, isEmpty, restoreScroll, storeScroll]);
 
-  if (rows.length === 0) return <AdjacentNodesPlaceholder ids={ids} />;
+  if (!rows.length && !ids.length) return <AboutForEmptyContent />;
 
   return (
     <View
       accessibilityRole="list"
+      // I'm still not sure whatever it's good idea or not.
       // className="py-[88px]" // A space for scrolling, 2x44
     >
       <KeyboardNavigationProvider
