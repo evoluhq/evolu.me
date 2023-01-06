@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { flushSync } from "react-dom";
 import { useIntl } from "react-intl";
+import { NodeId, NodeMarkdown } from "../lib/db";
 import { focusClassName } from "../lib/focusClassNames";
 import { AddNodeModal } from "./AddNodeModal";
 import { Button } from "./Button";
@@ -9,7 +10,10 @@ import { Link } from "./Link";
 import { View } from "./styled";
 import { Text } from "./Text";
 
-export const TabBar = () => {
+export const TabBar = memo<{
+  ids: readonly NodeId[];
+  rows: readonly { id: NodeId; md: NodeMarkdown }[];
+}>(function TabBar({ ids, rows }) {
   const intl = useIntl();
   const router = useRouter();
 
@@ -22,7 +26,13 @@ export const TabBar = () => {
   const renderModal = (): JSX.Element | null => {
     switch (modal) {
       case "add":
-        return <AddNodeModal onRequestClose={handleRequestClose} />;
+        return (
+          <AddNodeModal
+            ids={ids}
+            rows={rows}
+            onRequestClose={handleRequestClose}
+          />
+        );
       case "search":
         return null;
       case null:
@@ -63,4 +73,4 @@ export const TabBar = () => {
       </Button>
     </View>
   );
-};
+});

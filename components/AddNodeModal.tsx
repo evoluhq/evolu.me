@@ -8,8 +8,8 @@ import { FC, memo, useLayoutEffect, useRef } from "react";
 import { useIntl } from "react-intl";
 import { Modal } from "react-native";
 import useEvent from "react-use-event-hook";
-import { createEdge, NodeMarkdown, useMutation } from "../lib/db";
-import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
+import { createEdge, NodeId, NodeMarkdown, useMutation } from "../lib/db";
+import { getFirstLine } from "../lib/getFirstLine";
 import { createLocalStorageKey } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
 import { bg } from "../styles";
@@ -63,8 +63,10 @@ const Buttons = memo<{ onAdd: IO<void>; onRequestClose: IO<void> }>(
 );
 
 export const AddNodeModal: FC<{
+  ids: readonly NodeId[];
+  rows: readonly { id: NodeId; md: NodeMarkdown }[];
   onRequestClose: IO<void>;
-}> = ({ onRequestClose }) => {
+}> = ({ ids, rows, onRequestClose }) => {
   const intl = useIntl();
   const editorRef = useRef<EditorRef>(null);
   const [newNode, setNewNode] = useAtom(newNodeAtom);
@@ -77,6 +79,7 @@ export const AddNodeModal: FC<{
   const bottomBarRef = useRef<View>(null);
 
   // No useSyncExternalStore because it does not interact with React.
+  // https://developer.mozilla.org/en-US/docs/Web/API/VisualViewport#simulating_position_device-fixed
   useLayoutEffect(() => {
     const scrollView = scrollViewRef.current;
     const bottomBar = bottomBarRef.current;
@@ -84,7 +87,6 @@ export const AddNodeModal: FC<{
     if (!scrollView || !bottomBar || !viewport) return;
 
     const onChange = () => {
-      // https://developer.mozilla.org/en-US/docs/Web/API/VisualViewport#simulating_position_device-fixed
       const offsetX = viewport.offsetLeft;
       const offsetY =
         viewport.height -
@@ -108,7 +110,6 @@ export const AddNodeModal: FC<{
   }, []);
 
   const { mutate } = useMutation();
-  const ids = useLocationHashNodeIds();
 
   const handleButtonsAdd = useEvent(() => {
     pipe(
@@ -130,7 +131,15 @@ export const AddNodeModal: FC<{
     <Modal transparent onRequestClose={onRequestClose} visible>
       <ScrollView ref={scrollViewRef} contentContainerStyle={{ flexGrow: 1 }}>
         {/* pb-11 is bottomBar height */}
-        <Container className={clsx("mt-12 flex-1 pb-11", bg)}>
+        <Container className={clsx("flex-1 pb-11", bg)}>
+          {/* the same vertical position as other pages */}
+          <View className="flex-row gap-x-4 pt-2 pb-5">
+            {rows.map((row) => (
+              <Text className="" key={row.id} numberOfLines={1}>
+                {getFirstLine(row.md)}
+              </Text>
+            ))}
+          </View>
           <Editor
             ref={editorRef}
             initialValue={newNode.md}
@@ -140,12 +149,14 @@ export const AddNodeModal: FC<{
           {!newNode.md.length && (
             <View className="my-2">
               <Text size="sm" p transparent>
+                {/* <Balancer> */}
                 {intl.formatMessage({
                   defaultMessage: `Add anything: note, to-do, project, person, place, thing, thought…
                     
 The beauty of EvoluMe is that you can connect anything with anything.`,
                   id: "EcRJWC",
                 })}
+                {/* </Balancer> */}
               </Text>
             </View>
           )}

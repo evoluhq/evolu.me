@@ -1,5 +1,5 @@
 import { has, model } from "evolu";
-import { memo, useMemo } from "react";
+import { useMemo } from "react";
 import { useIntl } from "react-intl";
 import { AdjacentNodes } from "../components/AdjacentNodes";
 import { ClientOnly } from "../components/ClientOnly";
@@ -8,12 +8,11 @@ import { Layout } from "../components/Layout";
 import { NodeEditor } from "../components/NodeEditor";
 import { View } from "../components/styled";
 import { TabBar } from "../components/TabBar";
-import { NodeId, useQuery } from "../lib/db";
+import { useQuery } from "../lib/db";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 
-const IndexWithIds = memo<{ ids: readonly NodeId[] }>(function IndexWithIds({
-  ids,
-}) {
+const Index = () => {
+  const ids = useLocationHashNodeIds();
   const intl = useIntl();
   const nodes = useQuery((db) =>
     db
@@ -80,7 +79,7 @@ const IndexWithIds = memo<{ ids: readonly NodeId[] }>(function IndexWithIds({
       footer={
         <ClientOnly>
           <Container className="pb-0">
-            <TabBar />
+            <TabBar ids={ids} rows={loadedNodesRows} />
           </Container>
         </ClientOnly>
       }
@@ -99,14 +98,6 @@ const IndexWithIds = memo<{ ids: readonly NodeId[] }>(function IndexWithIds({
       </ClientOnly>
     </Layout>
   );
-});
-
-const Index = () => {
-  // useLocationHash uses useSyncExternalStore which can dispatch
-  // the same value twice. That's why we isolate it from useQuery.
-  // https://github.com/facebook/react/issues/25191#issuecomment-1244805920
-  const ids = useLocationHashNodeIds();
-  return <IndexWithIds ids={ids} />;
 };
 
 export default Index;

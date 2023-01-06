@@ -5,8 +5,8 @@ import { memo } from "react";
 import { NodeId, NodeMarkdown } from "../lib/db";
 import { getFirstLine } from "../lib/getFirstLine";
 import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
-import { Link } from "./Link";
 import { AdjacentNodeButton } from "./AdjacentNodeButton";
+import { Link } from "./Link";
 import { View } from "./styled";
 import { Text } from "./Text";
 
@@ -59,6 +59,7 @@ export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
           className="-ml-1 px-1"
           // @ts-expect-error RNfW
           focusable={focusable === "input"}
+          numberOfLines={1}
         >
           {getFirstLine(md)}
         </Text>
