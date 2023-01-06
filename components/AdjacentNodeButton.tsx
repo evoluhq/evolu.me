@@ -34,7 +34,7 @@ const NodeItemButtonPopoverButton: FC<{
   onPress: IO<void>;
   className?: string;
   onRequestClose?: IO<void>;
-}> = ({ title, x, onPress, className /*onRequestClose*/ }) => {
+}> = ({ title, x, onPress, className }) => {
   const keyNavigation = useKeyNavigation({
     x,
     keys: {
@@ -142,7 +142,7 @@ const AdjacentNodeButtonPopover: FC<{
                   defaultMessage: "Add to Filter",
                   id: "IRwSGb",
                 })}
-                x={2}
+                x={1}
                 onPress={handleFilterPress}
                 className={hasAdjacentNodes ? "rounded-none" : "rounded-l-none"}
               />
@@ -151,7 +151,7 @@ const AdjacentNodeButtonPopover: FC<{
                   defaultMessage: "Remove",
                   id: "G/yZLu",
                 })}
-                x={3}
+                x={2}
                 onPress={handleRemovePress}
                 className="rounded-l-none"
               />
