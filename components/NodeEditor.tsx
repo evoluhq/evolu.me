@@ -1,11 +1,14 @@
 import clsx from "clsx";
+import { either } from "fp-ts";
+import { constVoid, pipe } from "fp-ts/function";
 import { useAtom } from "jotai";
 import { RESET } from "jotai/utils";
 import { memo, useEffect } from "react";
 import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
 import { useEditNodeAtom } from "../lib/atoms";
-import { NodeId, NodeMarkdown } from "../lib/db";
+import { NodeId, NodeMarkdown, useMutation } from "../lib/db";
+import { safeParseToEither } from "../lib/safeParseToEither";
 import { Button } from "./Button";
 import { Editor } from "./Editor";
 import { View } from "./styled";
@@ -31,6 +34,20 @@ export const NodeEditor = memo<{
     };
   }, [setEditNode, shouldReset]);
 
+  const { mutate } = useMutation();
+
+  const handleSavePress = useEvent(() => {
+    pipe(
+      NodeMarkdown.safeParse(editNode.md),
+      safeParseToEither,
+      either.match(constVoid, (md) => {
+        mutate("node", { id, md }, () => {
+          setEditNode(RESET);
+        });
+      })
+    );
+  });
+
   return (
     <View className={clsx(!hasChange && "pb-11")}>
       <Editor
@@ -40,7 +57,7 @@ export const NodeEditor = memo<{
       />
       {hasChange && (
         <View className="flex-row justify-center">
-          <Button>
+          <Button onPress={handleSavePress}>
             <Text as="button">
               {intl.formatMessage({ defaultMessage: "Save", id: "jvo0vs" })}
             </Text>
