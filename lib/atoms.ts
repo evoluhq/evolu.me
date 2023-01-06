@@ -1,22 +1,29 @@
 import { atomWithStorage } from "jotai/utils";
-import { localStorageKeys } from "./localStorage";
+import { useState } from "react";
+import { NodeId, NodeMarkdown } from "./db";
+import { createLocalStorageKey } from "./localStorage";
 
-export const newNodeAtom = atomWithStorage(localStorageKeys.newNodeAtom, {
+export const newNodeAtom = atomWithStorage<{
+  md: string;
+}>(createLocalStorageKey("newNodeAtom"), {
   md: "",
 });
 
 // export const newNodeTitleAtom = selectAtom(newNodeAtom, (v) => v.md);
 
-// // TODO: Replace it with list of edited nodes.
-// export const editNodeAtom = atomWithStorage<null | {
-//   id: NodeId;
-//   title: string;
-//   originalTitle: string;
-// }>(localStorageKeys.editNodeAtom, null);
+export const useEditNodeAtom = (id: NodeId, md: NodeMarkdown) => {
+  // I'm too lazy to write useRef with lazy initialization and types.
+  const [atom] = useState(() =>
+    atomWithStorage<{
+      id: NodeId;
+      md: string;
+      originalMd: NodeMarkdown;
+    }>(createLocalStorageKey(`editNodeAtom${id}:`), {
+      id,
+      md,
+      originalMd: md,
+    })
+  );
 
-// export const editNodeIdAtom = selectAtom(editNodeAtom, (v) => v?.id);
-
-// export const editNodeHasChangeAtom = selectAtom(
-//   editNodeAtom,
-//   (v) => v?.title !== v?.originalTitle
-// );
+  return atom;
+};

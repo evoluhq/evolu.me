@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { IO } from "fp-ts/IO";
 import { FC } from "react";
 import { useIntl } from "react-intl";
-import { appBg } from "../styles/appBg";
+import { bg } from "../styles";
 import { Pressable } from "./styled";
 
 export const CloseButtonLayer: FC<{
@@ -20,7 +20,7 @@ export const CloseButtonLayer: FC<{
       })}
       className={clsx(
         "absolute inset-0 -z-10 cursor-default focus:outline-none",
-        withBg && clsx("opacity-80", appBg)
+        withBg && clsx("opacity-80", bg)
       )}
       onPress={onPress}
       focusable={false}

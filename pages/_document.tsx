@@ -2,7 +2,7 @@ import Document, { Head, Html, Main, NextScript } from "next/document";
 import { Children } from "react";
 import { AppRegistry } from "react-native";
 import config from "../app.json";
-import { appBg } from "../styles/appBg";
+import { bg } from "../styles";
 
 export default class MyDocument extends Document {
   // @ts-expect-error RNfW
@@ -19,7 +19,7 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head />
-        <body className={appBg}>
+        <body className={bg}>
           <Main />
           <NextScript />
         </body>

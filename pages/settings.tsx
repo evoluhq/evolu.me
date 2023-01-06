@@ -8,7 +8,7 @@ import { Layout } from "../components/Layout";
 import { View } from "../components/styled";
 import { Text } from "../components/Text";
 import { useQuery } from "../lib/db";
-import { clearAllLocalStorageKeys } from "../lib/localStorage";
+import { clearAllLocalStorageEvoluMeKeys } from "../lib/localStorage";
 
 const RoundedButtonWithDescription: FC<
   ButtonProps & { title: string; description: string }
@@ -122,7 +122,7 @@ const Settings = () => {
             })
           );
           if (mnemonic == null) return;
-          clearAllLocalStorageKeys();
+          clearAllLocalStorageEvoluMeKeys();
           const either = restoreOwner(mnemonic);
           if (either._tag === "Left")
             alert(JSON.stringify(either.left, null, 2));
@@ -171,7 +171,7 @@ const Settings = () => {
               })
             )
           ) {
-            clearAllLocalStorageKeys();
+            clearAllLocalStorageEvoluMeKeys();
             resetOwner();
           }
         }}

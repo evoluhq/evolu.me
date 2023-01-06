@@ -62,6 +62,7 @@ export const AdjacentNodes = memo<{
 
   // We use useEvent to not rerun useLayoutEffect on loadedRows.length change.
   const isEmpty = useEvent(() => rows.length === 0);
+
   useLayoutEffect(() => {
     if (isEmpty()) {
       if (canDoAutoFocusOnInput) {

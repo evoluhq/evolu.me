@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { IO } from "fp-ts/IO";
 import {
   FC,
@@ -7,9 +8,10 @@ import {
   useRef,
   useState,
 } from "react";
-import { Dimensions, Modal, View } from "react-native";
+import { Dimensions, Modal } from "react-native";
+import { bg, ring } from "../styles";
 import { CloseButtonLayer } from "./CloseButtonLayer";
-import { Ring } from "./Ring";
+import { View } from "./styled";
 
 type PopoverPosition =
   // what where
@@ -100,13 +102,13 @@ export const Popover: FC<PopoverProps> = ({
 
   return (
     <Modal transparent onRequestClose={onRequestClose} visible>
-      <Ring
+      <View
         ref={viewRef}
-        className="absolute"
+        className={clsx("absolute", ring, bg)}
         style={xy ? { left: xy.x, top: xy.y } : { opacity: 0 }}
       >
         {children}
-      </Ring>
+      </View>
       <CloseButtonLayer onPress={onRequestClose} />
     </Modal>
   );

@@ -7,7 +7,7 @@ import { FC, memo, useLayoutEffect, useRef } from "react";
 import { useIntl } from "react-intl";
 import { Modal } from "react-native";
 import useEvent from "react-use-event-hook";
-import { appBg } from "../styles/appBg";
+import { bg } from "../styles";
 import { newNodeAtom } from "../lib/atoms";
 import { createEdge, NodeMarkdown, useMutation } from "../lib/db";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
@@ -121,28 +121,20 @@ export const AddNodeModal: FC<{
 
   return (
     <Modal transparent onRequestClose={onRequestClose} visible>
-      <ScrollView
-        ref={scrollViewRef}
-        // className={appBg}
-        // className="flex-1"
-        contentContainerStyle={{ flexGrow: 1 }}
-      >
+      <ScrollView ref={scrollViewRef} contentContainerStyle={{ flexGrow: 1 }}>
         {/* pb-11 is bottomBar height */}
-        <Container className={clsx("mt-12 flex-1 pb-11", appBg)}>
-          {/* <Ring className=""> */}
-          {/* <Text className="h-7" /> */}
+        <Container className={clsx("mt-12 flex-1 pb-11", bg)}>
           <Editor
             ref={editorRef}
             initialValue={newNode.md}
             onChange={handleEditorChange}
           />
           {/* <Text className="h-7" /> */}
-          {/* </Ring> */}
         </Container>
         <CloseButtonLayer withBg onPress={onRequestClose} />
       </ScrollView>
       <View ref={bottomBarRef} className="fixed inset-x-0 bottom-0">
-        <Container className={clsx("py-0", appBg)}>
+        <Container className={clsx("py-0", bg)}>
           <Buttons onAdd={handleButtonsAdd} onRequestClose={onRequestClose} />
         </Container>
       </View>
