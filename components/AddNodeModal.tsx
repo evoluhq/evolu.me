@@ -104,7 +104,6 @@ export const AddNodeModal: FC<{
 
   const handleButtonsAdd = useEvent(() => {
     pipe(
-      // TODO: "too long text, it's x length, max is..."
       NodeMarkdown.safeParse(newNode.md),
       safeParseToEither,
       either.match(constVoid, (md) => {
