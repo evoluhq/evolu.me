@@ -72,7 +72,7 @@ const AdjacentNodeButtonPopover: FC<{
 
   const router = useRouter();
 
-  const handleFilterPress = () => {
+  const handleAddToContextPress = () => {
     pipe(
       locationNodeIds,
       readonlyArray.append(id),
@@ -139,11 +139,11 @@ const AdjacentNodeButtonPopover: FC<{
             <>
               <NodeItemButtonPopoverButton
                 title={intl.formatMessage({
-                  defaultMessage: "Add to Filter",
-                  id: "IRwSGb",
+                  defaultMessage: "Add to Context",
+                  id: "xdk4gG",
                 })}
                 x={1}
-                onPress={handleFilterPress}
+                onPress={handleAddToContextPress}
                 className={hasAdjacentNodes ? "rounded-none" : "rounded-l-none"}
               />
               <NodeItemButtonPopoverButton

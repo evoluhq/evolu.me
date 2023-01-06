@@ -2,12 +2,12 @@ import clsx from "clsx";
 import { either } from "fp-ts";
 import { constVoid, pipe } from "fp-ts/function";
 import { useAtom } from "jotai";
-import { RESET } from "jotai/utils";
-import { memo, useEffect } from "react";
+import { atomWithStorage, RESET } from "jotai/utils";
+import { memo, useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
-import { useEditNodeAtom } from "../lib/atoms";
 import { NodeId, NodeMarkdown, useMutation } from "../lib/db";
+import { createLocalStorageKey } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
 import { Button } from "./Button";
 import { Editor } from "./Editor";
@@ -18,21 +18,33 @@ export const NodeEditor = memo<{
   row: { id: NodeId; md: NodeMarkdown };
 }>(function NodeEditor({ row: { id, md } }) {
   const intl = useIntl();
-  const [editNode, setEditNode] = useAtom(useEditNodeAtom(id, md));
+  const [atom] = useState(() =>
+    atomWithStorage<{
+      id: NodeId;
+      md: string;
+      originalMd: NodeMarkdown;
+    }>(createLocalStorageKey(`editNodeAtom${id}:`), {
+      id,
+      md,
+      originalMd: md,
+    })
+  );
+  const [editNode, setEditNode] = useAtom(atom);
 
   const handleEditorChange = (value: string) => {
     setEditNode((a) => ({ ...a, md: value }));
   };
 
   const hasChange = editNode.md !== editNode.originalMd;
-  const shouldReset = useEvent(() => editNode.md === editNode.originalMd);
 
-  useEffect(() => {
-    return () => {
-      // Ensure dynamically created atomWithStorage is deleted from LocalStorage.
-      if (shouldReset()) setEditNode(RESET);
-    };
-  }, [setEditNode, shouldReset]);
+  const deleteDynamicallyCreatedAtomFromLocalStorage = useEvent(() => {
+    if (!hasChange) setEditNode(RESET);
+  });
+
+  useEffect(
+    () => deleteDynamicallyCreatedAtomFromLocalStorage,
+    [deleteDynamicallyCreatedAtomFromLocalStorage]
+  );
 
   const { mutate } = useMutation();
 
@@ -41,9 +53,8 @@ export const NodeEditor = memo<{
       NodeMarkdown.safeParse(editNode.md),
       safeParseToEither,
       either.match(constVoid, (md) => {
-        mutate("node", { id, md }, () => {
-          setEditNode(RESET);
-        });
+        setEditNode((a) => ({ ...a, originalMd: md }));
+        mutate("node", { id, md });
       })
     );
   });

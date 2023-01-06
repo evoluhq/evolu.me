@@ -1,11 +1,12 @@
 import { has, model } from "evolu";
 import { memo, useMemo } from "react";
+import { useIntl } from "react-intl";
 import { AdjacentNodes } from "../components/AdjacentNodes";
 import { ClientOnly } from "../components/ClientOnly";
 import { Container } from "../components/Container";
 import { Layout } from "../components/Layout";
 import { NodeEditor } from "../components/NodeEditor";
-import { NodeFilter } from "../components/NodeFilter";
+import { View } from "../components/styled";
 import { TabBar } from "../components/TabBar";
 import { NodeId, useQuery } from "../lib/db";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
@@ -13,6 +14,7 @@ import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 const IndexWithIds = memo<{ ids: readonly NodeId[] }>(function IndexWithIds({
   ids,
 }) {
+  const intl = useIntl();
   const nodes = useQuery((db) =>
     db
       .selectFrom("node")
@@ -22,8 +24,11 @@ const IndexWithIds = memo<{ ids: readonly NodeId[] }>(function IndexWithIds({
   );
 
   const loadedNodesRows = useMemo(
-    () => nodes.rows.filter(has(["md"])),
-    [nodes.rows]
+    () =>
+      nodes.rows
+        .filter(has(["md"]))
+        .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id)),
+    [ids, nodes.rows]
   );
 
   const adjacentNodes = useQuery((db) => {
@@ -62,11 +67,14 @@ const IndexWithIds = memo<{ ids: readonly NodeId[] }>(function IndexWithIds({
   return (
     <Layout
       waitForData
-      title=""
-      centerContent
+      title={intl.formatMessage({
+        defaultMessage: "EvoluMe - Personal Knowledge Graph Focused on Privacy",
+        id: "jznzji",
+      })}
       header={
         <ClientOnly>
-          <NodeFilter ids={ids} rows={loadedNodesRows} />
+          {/* Here will be menu, graph view, search, favorites, whatever. */}
+          <></>
         </ClientOnly>
       }
       footer={
@@ -79,12 +87,14 @@ const IndexWithIds = memo<{ ids: readonly NodeId[] }>(function IndexWithIds({
     >
       <ClientOnly>
         {nodes.isLoaded && adjacentNodes.isLoaded && (
-          <>
+          <View className="flex-1">
             {loadedNodesRows.map((row) => (
               <NodeEditor key={row.id} row={row} />
             ))}
-            <AdjacentNodes ids={ids} rows={loadedAdjacentNodesRows} />
-          </>
+            <View className="flex-1 justify-center">
+              <AdjacentNodes ids={ids} rows={loadedAdjacentNodesRows} />
+            </View>
+          </View>
         )}
       </ClientOnly>
     </Layout>

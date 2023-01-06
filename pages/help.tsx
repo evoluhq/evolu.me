@@ -23,7 +23,6 @@ const Help = () => {
   return (
     <Layout
       title={intl.formatMessage({ defaultMessage: "Help", id: "SENRqu" })}
-      centerContent
     >
       <Text className="text-center">
         {intl.formatMessage({

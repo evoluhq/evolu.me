@@ -3,21 +3,28 @@ import { either } from "fp-ts";
 import { constVoid, pipe } from "fp-ts/function";
 import { IO } from "fp-ts/IO";
 import { useAtom } from "jotai";
+import { atomWithStorage, RESET } from "jotai/utils";
 import { FC, memo, useLayoutEffect, useRef } from "react";
 import { useIntl } from "react-intl";
 import { Modal } from "react-native";
 import useEvent from "react-use-event-hook";
-import { bg } from "../styles";
-import { newNodeAtom } from "../lib/atoms";
 import { createEdge, NodeMarkdown, useMutation } from "../lib/db";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
+import { createLocalStorageKey } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
+import { bg } from "../styles";
 import { Button } from "./Button";
 import { CloseButtonLayer } from "./CloseButtonLayer";
 import { Container } from "./Container";
 import { Editor, EditorRef } from "./Editor";
 import { ScrollView, View } from "./styled";
 import { Text } from "./Text";
+
+const newNodeAtom = atomWithStorage<{
+  md: string;
+}>(createLocalStorageKey("newNodeAtom"), {
+  md: "",
+});
 
 const AddNodeModalButton: FC<{ onPress: IO<void>; title: string }> = ({
   onPress,
@@ -58,6 +65,7 @@ const Buttons = memo<{ onAdd: IO<void>; onRequestClose: IO<void> }>(
 export const AddNodeModal: FC<{
   onRequestClose: IO<void>;
 }> = ({ onRequestClose }) => {
+  const intl = useIntl();
   const editorRef = useRef<EditorRef>(null);
   const [newNode, setNewNode] = useAtom(newNodeAtom);
 
@@ -107,8 +115,8 @@ export const AddNodeModal: FC<{
       NodeMarkdown.safeParse(newNode.md),
       safeParseToEither,
       either.match(constVoid, (md) => {
-        setNewNode((a) => ({ ...a, md: "" }));
         const { id } = mutate("node", { md }, () => {
+          setNewNode(RESET);
           onRequestClose();
         });
         ids.forEach((adjacentId) => {
@@ -129,6 +137,18 @@ export const AddNodeModal: FC<{
             onChange={handleEditorChange}
           />
           {/* <Text className="h-7" /> */}
+          {!newNode.md.length && (
+            <View className="my-2">
+              <Text size="sm" p transparent>
+                {intl.formatMessage({
+                  defaultMessage: `Add anything: note, to-do, project, person, place, thing, thought…
+                    
+The beauty of EvoluMe is that you can connect anything with anything.`,
+                  id: "EcRJWC",
+                })}
+              </Text>
+            </View>
+          )}
         </Container>
         <CloseButtonLayer withBg onPress={onRequestClose} />
       </ScrollView>

@@ -41,6 +41,11 @@ export const TabBar = () => {
   return (
     <View className="flex-row">
       {renderModal()}
+      <Button className="flex-1" onPress={handleAddPress}>
+        <Text as="button">
+          {intl.formatMessage({ defaultMessage: "Add", id: "2/2yg+" })}
+        </Text>
+      </Button>
       <Link href={"/"}>
         <Text
           as="link"
@@ -51,11 +56,6 @@ export const TabBar = () => {
           {intl.formatMessage({ defaultMessage: "All", id: "zQvVDJ" })}
         </Text>
       </Link>
-      <Button className="flex-1" onPress={handleAddPress}>
-        <Text as="button">
-          {intl.formatMessage({ defaultMessage: "Add", id: "2/2yg+" })}
-        </Text>
-      </Button>
       <Button className="flex-1">
         <Text as="button">
           {intl.formatMessage({ defaultMessage: "Search", id: "xmcVZ0" })}

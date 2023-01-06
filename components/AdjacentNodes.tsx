@@ -1,19 +1,17 @@
 import { NodeId } from "evolu";
-import { FC, memo, useLayoutEffect, useRef } from "react";
+import { memo, useLayoutEffect, useRef } from "react";
 import useEvent from "react-use-event-hook";
-import Balancer from "react-wrap-balancer";
 import { NodeMarkdown } from "../lib/db";
 import { focusClassName } from "../lib/focusClassNames";
-import { useAppDescription } from "../lib/hooks/useAppDescription";
 import {
   FocusPosition,
   KeyboardNavigationProvider,
   KeyboardNavigationProviderRef,
 } from "../lib/hooks/useKeyNavigation";
 import { useScrollRestoration } from "../lib/hooks/useScrollRestoration";
+import { About } from "./About";
 import { AdjacentNode } from "./AdjacentNode";
 import { View } from "./styled";
-import { Text } from "./Text";
 
 let canDoAutoFocusOnInput = false;
 
@@ -22,16 +20,6 @@ let canDoAutoFocusOnInput = false;
 // we are 100% sure a user used key navigation.
 const handleAdjacentNodeKeyEnter = () => {
   canDoAutoFocusOnInput = true;
-};
-
-const AboutForEmptyContent: FC = () => {
-  const description = useAppDescription();
-
-  return (
-    <Text className="text-center">
-      <Balancer>{description}</Balancer>
-    </Text>
-  );
 };
 
 export const AdjacentNodes = memo<{
@@ -86,7 +74,7 @@ export const AdjacentNodes = memo<{
     };
   }, [idsString, isEmpty, restoreScroll, storeScroll]);
 
-  if (!rows.length && !ids.length) return <AboutForEmptyContent />;
+  if (!rows.length && !ids.length) return <About />;
 
   return (
     <View

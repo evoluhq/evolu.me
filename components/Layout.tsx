@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { useEvoluFirstDataAreLoaded } from "evolu";
 import { FC, ReactNode } from "react";
+import { StyleSheet } from "react-native";
 import { accessibility } from "../lib/accessibility";
 import { ScrollRestoration } from "../lib/hooks/useScrollRestoration";
 import { Container } from "./Container";
@@ -9,14 +10,19 @@ import { PageTitle } from "./PageTitle";
 import { ScrollView, View } from "./styled";
 import { Text } from "./Text";
 
+const styles = StyleSheet.create({
+  contentContainer: {
+    flexGrow: 1,
+  },
+});
+
 export const Layout: FC<{
   children: ReactNode;
   title: string;
   waitForData?: boolean;
   header?: ReactNode;
   footer?: ReactNode;
-  centerContent?: boolean;
-}> = ({ children, title, waitForData, header, footer, centerContent }) => {
+}> = ({ children, title, waitForData, header, footer }) => {
   // React Suspense would be better, but we are not there yet.
   const dataAreLoaded = useEvoluFirstDataAreLoaded();
   const isHidden = waitForData ? !dataAreLoaded : false;
@@ -25,7 +31,7 @@ export const Layout: FC<{
     <>
       <PageTitle title={title} />
       <View className={clsx("flex-1", isHidden && "hidden")}>
-        <Container>
+        <Container className="pb-0">
           <View className="flex-row-reverse">
             <MainNav />
             <View className="flex-1">
@@ -40,8 +46,11 @@ export const Layout: FC<{
         <ScrollRestoration>
           {(props) => (
             <>
-              <ScrollView centerContent={centerContent} {...props}>
-                <Container>{children}</Container>
+              <ScrollView
+                contentContainerStyle={styles.contentContainer}
+                {...props}
+              >
+                <Container className="flex-1">{children}</Container>
               </ScrollView>
               {footer}
             </>
