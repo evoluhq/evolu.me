@@ -9,14 +9,14 @@ import { useIntl } from "react-intl";
 import { Modal } from "react-native";
 import useEvent from "react-use-event-hook";
 import { createEdge, NodeId, NodeMarkdown, useMutation } from "../lib/db";
-import { getFirstLine } from "../lib/getFirstLine";
+import { getFirstLineAlwaysVisible } from "../lib/getFirstLineAlwaysVisible";
 import { createLocalStorageKey } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
 import { bg } from "../styles";
 import { Button } from "./Button";
 import { CloseButtonLayer } from "./CloseButtonLayer";
 import { Container } from "./Container";
-import { Editor, EditorRef } from "./Editor";
+import { Editor } from "./Editor";
 import { ScrollView, View } from "./styled";
 import { Text } from "./Text";
 
@@ -68,7 +68,6 @@ export const AddNodeModal: FC<{
   onRequestClose: IO<void>;
 }> = ({ ids, rows, onRequestClose }) => {
   const intl = useIntl();
-  const editorRef = useRef<EditorRef>(null);
   const [newNode, setNewNode] = useAtom(newNodeAtom);
 
   const handleEditorChange = useEvent((value: string) => {
@@ -136,15 +135,11 @@ export const AddNodeModal: FC<{
           <View className="flex-row gap-x-4 pt-2 pb-5">
             {rows.map((row) => (
               <Text className="" key={row.id} numberOfLines={1}>
-                {getFirstLine(row.md)}
+                {getFirstLineAlwaysVisible(row.md)}
               </Text>
             ))}
           </View>
-          <Editor
-            ref={editorRef}
-            initialValue={newNode.md}
-            onChange={handleEditorChange}
-          />
+          <Editor initialValue={newNode.md} onChange={handleEditorChange} />
           {/* <Text className="h-7" /> */}
           {!newNode.md.length && (
             <View className="my-2">

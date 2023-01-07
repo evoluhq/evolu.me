@@ -3,7 +3,7 @@ import { IO } from "fp-ts/IO";
 import { useRouter } from "next/router";
 import { memo } from "react";
 import { NodeId, NodeMarkdown } from "../lib/db";
-import { getFirstLine } from "../lib/getFirstLine";
+import { getFirstLineAlwaysVisible } from "../lib/getFirstLineAlwaysVisible";
 import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
 import { AdjacentNodeButton } from "./AdjacentNodeButton";
 import { Link } from "./Link";
@@ -61,7 +61,7 @@ export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
           focusable={focusable === "input"}
           numberOfLines={1}
         >
-          {getFirstLine(md)}
+          {getFirstLineAlwaysVisible(md)}
         </Text>
       </Link>
     </View>
