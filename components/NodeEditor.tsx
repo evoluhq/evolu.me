@@ -1,24 +1,19 @@
-import clsx from "clsx";
 import { either } from "fp-ts";
 import { constVoid, pipe } from "fp-ts/function";
 import { useAtom } from "jotai";
 import { atomWithStorage, RESET } from "jotai/utils";
-import { memo, useEffect, useState } from "react";
-import { useIntl } from "react-intl";
+import { memo, useEffect, useMemo, useState } from "react";
 import useEvent from "react-use-event-hook";
 import { NodeId, NodeMarkdown, useMutation } from "../lib/db";
 import { createLocalStorageKey } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
-import { Button } from "./Button";
 import { Editor } from "./Editor";
 import { View } from "./styled";
-import { Text } from "./Text";
 
 export const NodeEditor = memo<{
   row: { id: NodeId; md: NodeMarkdown };
 }>(function NodeEditor({ row: { id, md } }) {
-  const intl = useIntl();
-  const [atom] = useState(() =>
+  const createAtom = (md: NodeMarkdown) =>
     atomWithStorage<{
       id: NodeId;
       md: string;
@@ -27,54 +22,52 @@ export const NodeEditor = memo<{
       id,
       md,
       originalMd: md,
-    })
-  );
+    });
+
+  const [atom, setAtom] = useState(() => createAtom(md));
   const [editNode, setEditNode] = useAtom(atom);
 
-  const handleEditorChange = (value: string) => {
+  const handleEditorChange = useEvent((value: string) => {
+    if (editNode.md === value) return;
     setEditNode((a) => ({ ...a, md: value }));
-  };
+  });
+
+  const mdToSave = useMemo(
+    () => pipe(NodeMarkdown.safeParse(editNode.md), safeParseToEither),
+    [editNode.md]
+  );
 
   const hasChange = editNode.md !== editNode.originalMd;
 
-  const deleteDynamicallyCreatedAtomFromLocalStorage = useEvent(() => {
-    if (!hasChange) setEditNode(RESET);
-  });
-
-  useEffect(
-    () => deleteDynamicallyCreatedAtomFromLocalStorage,
-    [deleteDynamicallyCreatedAtomFromLocalStorage]
-  );
-
   const { mutate } = useMutation();
 
-  const handleSavePress = useEvent(() => {
+  const onBlurOrUnmount = useEvent(() => {
+    if (!hasChange) {
+      setEditNode(RESET);
+      return;
+    }
     pipe(
-      NodeMarkdown.safeParse(editNode.md),
-      safeParseToEither,
+      mdToSave,
       either.match(constVoid, (md) => {
-        setEditNode((a) => ({ ...a, originalMd: md }));
         mutate("node", { id, md });
+        setEditNode(RESET);
+        setAtom(createAtom(md));
       })
     );
   });
 
+  useEffect(() => {
+    return onBlurOrUnmount;
+  }, [onBlurOrUnmount]);
+
   return (
-    <View className={clsx(!hasChange && "pb-11")}>
+    <View className="pb-11">
       <Editor
         initialValue={editNode.md}
         onChange={handleEditorChange}
-        hasChange={hasChange}
+        state={hasChange ? "error" : undefined}
+        onBlur={onBlurOrUnmount}
       />
-      {hasChange && (
-        <View className="flex-row justify-center">
-          <Button onPress={handleSavePress}>
-            <Text as="button">
-              {intl.formatMessage({ defaultMessage: "Save", id: "jvo0vs" })}
-            </Text>
-          </Button>
-        </View>
-      )}
     </View>
   );
 });
