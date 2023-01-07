@@ -77,7 +77,7 @@ interface EditorProps {
   onChange: (value: string) => void;
   onFocus?: () => void;
   onBlur?: () => void;
-  state?: "error";
+  state?: "hasChange";
 }
 
 export const Editor = forwardRef<LexicalEditor, EditorProps>(function Editor(
@@ -94,7 +94,7 @@ export const Editor = forwardRef<LexicalEditor, EditorProps>(function Editor(
     <Text
       className={clsx(
         "rounded bg-gray-100 px-2 py-2 dark:bg-gray-900",
-        state === "error" && ring
+        state === "hasChange" && ring
       )}
     >
       <LexicalComposer

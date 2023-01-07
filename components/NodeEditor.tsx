@@ -65,7 +65,7 @@ export const NodeEditor = memo<{
       <Editor
         initialValue={editNode.md}
         onChange={handleEditorChange}
-        state={hasChange ? "error" : undefined}
+        state={hasChange ? "hasChange" : undefined}
         onBlur={onBlurOrUnmount}
       />
     </View>
