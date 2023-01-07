@@ -58,7 +58,7 @@ export const Editor = forwardRef<EditorRef, EditorProps>(function Editor(
 ) {
   const handleChange = useEvent((state: EditorState) => {
     state.read(() => {
-      pipe($getRoot().getTextContent().trim(), onChange);
+      pipe($getRoot().getTextContent(), onChange);
     });
   });
 
