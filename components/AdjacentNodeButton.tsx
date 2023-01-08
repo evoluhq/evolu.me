@@ -23,6 +23,7 @@ import {
 import { useLocationHash } from "../lib/hooks/useLocationHash";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
+import { BlankButton } from "./BlankButton";
 import { Button } from "./Button";
 import { Popover } from "./Popover";
 import { View } from "./styled";
@@ -200,8 +201,8 @@ export const AdjacentNodeButton: FC<AdjacentNodeButton> = ({
 
   return (
     <>
-      <Button
-        accessibilityLabel={intl.formatMessage({
+      <BlankButton
+        title={intl.formatMessage({
           defaultMessage: "Show popover",
           id: "opkU9o",
         })}
@@ -210,16 +211,8 @@ export const AdjacentNodeButton: FC<AdjacentNodeButton> = ({
         ref={handleRef}
         onPress={() => setPopoverIsVisible(true)}
         focusable={focusable}
-      >
-        <View
-          className={clsx(
-            "top-[17px] h-3 w-3 rounded-sm ring-current group-focus-visible:ring-1",
-            "bg-gray-200 group-hover:bg-gray-300",
-            "dark:bg-gray-800 dark:group-hover:bg-gray-900",
-            popoverIsVisible && "rotate-45"
-          )}
-        />
-      </Button>
+        state={popoverIsVisible ? "active" : undefined}
+      />
       {popoverIsVisible && (
         <AdjacentNodeButtonPopover
           id={id}

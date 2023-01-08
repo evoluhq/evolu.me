@@ -1,9 +1,9 @@
 import { styled } from "nativewind";
 import { Pressable, PressableProps } from "react-native";
 
-export type ButtonProps = PressableProps & {
-  className?: string | undefined;
-};
+export interface ButtonProps extends PressableProps {
+  className?: string;
+}
 
 export const Button = styled(
   Pressable,
