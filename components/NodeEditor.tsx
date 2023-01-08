@@ -3,16 +3,21 @@ import { constVoid, pipe } from "fp-ts/function";
 import { useAtom } from "jotai";
 import { atomWithStorage, RESET } from "jotai/utils";
 import { memo, useEffect, useMemo, useState } from "react";
+import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
 import { NodeId, NodeMarkdown, useMutation } from "../lib/db";
 import { createLocalStorageKey } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
+import { Button } from "./Button";
 import { Editor } from "./Editor";
 import { View } from "./styled";
+import { Text } from "./Text";
 
 export const NodeEditor = memo<{
   row: { id: NodeId; md: NodeMarkdown };
 }>(function NodeEditor({ row: { id, md } }) {
+  const intl = useIntl();
+
   const createAtom = (md: NodeMarkdown) =>
     atomWithStorage<{
       id: NodeId;
@@ -61,13 +66,20 @@ export const NodeEditor = memo<{
   }, [onBlurOrUnmount]);
 
   return (
-    <View className="pb-11">
+    <>
       <Editor
         initialValue={editNode.md}
         onChange={handleEditorChange}
         state={hasChange ? "hasChange" : undefined}
         onBlur={onBlurOrUnmount}
       />
-    </View>
+      <View className="flex-row justify-end">
+        <Button>
+          <Text as="button">
+            {intl.formatMessage({ defaultMessage: "⋯", id: "pxF25s" })}
+          </Text>
+        </Button>
+      </View>
+    </>
   );
 });
