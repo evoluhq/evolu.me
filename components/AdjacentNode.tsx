@@ -49,7 +49,7 @@ export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
   });
 
   return (
-    <View className="flex-row" accessibilityRole={"listitem" as "list"}>
+    <View className="-ml-3 flex-row" accessibilityRole={"listitem" as "list"}>
       <AdjacentNodeButton focusable={focusable === "button"} id={id} x={x} />
       <Link href={`/#${id}`}>
         <Text
