@@ -77,10 +77,10 @@ export const NodeEditor = memo<{
           state={hasChange ? "hasChange" : undefined}
           onBlur={onBlurOrUnmount}
         />
-        <View className="-mr-3 flex-row justify-end">
+        <View className="flex-row justify-end">
           <BlankButton
             ref={buttonRef}
-            type="square"
+            type="circle"
             title={intl.formatMessage({
               defaultMessage: "Show context node actions",
               id: "TZaFhe",
