@@ -8,10 +8,9 @@ import useEvent from "react-use-event-hook";
 import { NodeId, NodeMarkdown, useMutation } from "../lib/db";
 import { createLocalStorageKey } from "../lib/localStorage";
 import { safeParseToEither } from "../lib/safeParseToEither";
-import { Button } from "./Button";
+import { BlankButton } from "./BlankButton";
 import { Editor } from "./Editor";
 import { View } from "./styled";
-import { Text } from "./Text";
 
 export const NodeEditor = memo<{
   row: { id: NodeId; md: NodeMarkdown };
@@ -74,11 +73,15 @@ export const NodeEditor = memo<{
         onBlur={onBlurOrUnmount}
       />
       <View className="flex-row justify-end">
-        <Button>
-          <Text as="button">
-            {intl.formatMessage({ defaultMessage: "⋯", id: "pxF25s" })}
-          </Text>
-        </Button>
+        <BlankButton
+          type="circle"
+          title={intl.formatMessage({
+            defaultMessage: "Show context node actions",
+            id: "TZaFhe",
+          })}
+          // onPress={() => setPopoverIsVisible(true)}
+          // state={popoverIsVisible ? "active" : undefined}
+        />
       </View>
     </>
   );

@@ -8,7 +8,6 @@ import {
   MutableRefObject,
   useCallback,
   useContext,
-  useEffect,
   useRef,
   useState,
 } from "react";
@@ -20,7 +19,6 @@ import {
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/hooks/useKeyNavigation";
-import { useLocationHash } from "../lib/hooks/useLocationHash";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
 import { BlankButton } from "./BlankButton";
@@ -60,14 +58,6 @@ const AdjacentNodeButtonPopover: FC<{
 }> = ({ id, onRequestClose, ownerRef }) => {
   const intl = useIntl();
   const { mutate } = useMutation();
-
-  const hash = useLocationHash();
-  const prevHashRef = useRef(hash);
-  useEffect(() => {
-    if (hash === prevHashRef.current) return;
-    prevHashRef.current = hash;
-    onRequestClose();
-  });
 
   const locationNodeIds = useLocationHashNodeIds();
 
@@ -202,11 +192,11 @@ export const AdjacentNodeButton: FC<AdjacentNodeButton> = ({
   return (
     <>
       <BlankButton
+        type="square"
         title={intl.formatMessage({
-          defaultMessage: "Show popover",
-          id: "opkU9o",
+          defaultMessage: "Show adjacent node actions",
+          id: "f0JkVN",
         })}
-        className="group w-9 items-center"
         {...buttonKeyNavigation}
         ref={handleRef}
         onPress={() => setPopoverIsVisible(true)}
