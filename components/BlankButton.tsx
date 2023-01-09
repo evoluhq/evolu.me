@@ -9,6 +9,7 @@ export interface BlankButtonProps extends ButtonProps {
   state?: "active";
 }
 
+// It's blank because its functionality is determined by its placement.
 export const BlankButton = forwardRef<View, BlankButtonProps>(
   function BlankButton({ title, type, state, ...props }, ref) {
     return (

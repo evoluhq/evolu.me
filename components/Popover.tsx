@@ -12,25 +12,18 @@ import { bg, ring } from "../styles";
 import { CloseButtonLayer } from "./CloseButtonLayer";
 import { View } from "./styled";
 
+interface XY {
+  x: number;
+  y: number;
+}
+
 type PopoverPosition =
   // what where
   | "bottom right to bottom right"
   | "bottom left to bottom right"
   | "top right to top right"
-  | "top right to top left"
+  | "center right to center left"
   | "top left to top right";
-
-export type PopoverProps = {
-  ownerRef: MutableRefObject<View | null>;
-  position: PopoverPosition;
-  onRequestClose: IO<void>;
-  children: ReactNode;
-};
-
-interface XY {
-  x: number;
-  y: number;
-}
 
 const subscribe = (onChange: IO<void>) => {
   // https://github.com/necolas/react-native-web/issues/2430
@@ -40,6 +33,13 @@ const subscribe = (onChange: IO<void>) => {
     window.visualViewport?.removeEventListener("resize", onChange);
     subscription.remove();
   };
+};
+
+export type PopoverProps = {
+  ownerRef: MutableRefObject<View | null>;
+  position: PopoverPosition;
+  onRequestClose: IO<void>;
+  children: ReactNode;
 };
 
 export const Popover: FC<PopoverProps> = ({
@@ -77,10 +77,10 @@ export const Popover: FC<PopoverProps> = ({
           x: ownerRect.left - viewEl.offsetWidth + ownerRect.width,
           y: ownerRect.top - ownerRect.height + ownerRect.height,
         };
-      case "top right to top left":
+      case "center right to center left":
         return {
           x: ownerRect.left - viewEl.offsetWidth,
-          y: ownerRect.top - ownerRect.height + ownerRect.height,
+          y: ownerRect.top + (ownerRect.height - viewEl.offsetHeight) / 2,
         };
       case "top left to top right":
         return {

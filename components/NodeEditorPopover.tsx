@@ -33,7 +33,7 @@ const PopoverButton: FC<{
 
   return (
     <Button {...keyNavigation} onPress={onPress}>
-      <Text as="button" className={clsx("my-0 py-2", className)}>
+      <Text as="button" className={clsx("my-0 py-1", className)}>
         {title}
       </Text>
     </Button>
@@ -65,7 +65,7 @@ export const NodeEditorPopover: FC<{
   return (
     <Popover
       ownerRef={ownerRef}
-      position="top right to top right"
+      position="center right to center left"
       onRequestClose={onRequestClose}
     >
       <View className="flex-row">
@@ -77,6 +77,7 @@ export const NodeEditorPopover: FC<{
             })}
             x={0}
             onPress={handleRemoveFromContextPress}
+            className="rounded-r-none"
           />
           <PopoverButton
             title={intl.formatMessage({
@@ -85,6 +86,7 @@ export const NodeEditorPopover: FC<{
             })}
             x={1}
             onPress={handleRemoveFromContextPress}
+            className="rounded-none"
           />
           <PopoverButton
             title={intl.formatMessage({
@@ -93,6 +95,7 @@ export const NodeEditorPopover: FC<{
             })}
             x={2}
             onPress={handleRemoveFromContextPress}
+            className="rounded-l-none"
           />
         </KeyboardNavigationProvider>
       </View>

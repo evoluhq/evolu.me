@@ -77,7 +77,7 @@ export const NodeEditor = memo<{
           state={hasChange ? "hasChange" : undefined}
           onBlur={onBlurOrUnmount}
         />
-        <View className="flex-row justify-end">
+        <View className="-mr-3 flex-row justify-end">
           <BlankButton
             ref={buttonRef}
             type="square"

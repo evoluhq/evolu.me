@@ -42,7 +42,7 @@ export const AdjacentNodeButton: FC<AdjacentNodeButtonProps> = ({
   return (
     <>
       <BlankButton
-        type="circle"
+        type="square"
         title={intl.formatMessage({
           defaultMessage: "Show adjacent node actions",
           id: "f0JkVN",
