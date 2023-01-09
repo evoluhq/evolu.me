@@ -4,9 +4,8 @@ import {
   FC,
   MutableRefObject,
   ReactNode,
-  useLayoutEffect,
   useRef,
-  useState,
+  useSyncExternalStore,
 } from "react";
 import { Dimensions, Modal } from "react-native";
 import { bg, ring } from "../styles";
@@ -23,7 +22,6 @@ type PopoverPosition =
 export type PopoverProps = {
   ownerRef: MutableRefObject<View | null>;
   position: PopoverPosition;
-  yOffset?: number;
   onRequestClose: IO<void>;
   children: ReactNode;
 };
@@ -33,18 +31,26 @@ interface XY {
   y: number;
 }
 
+const subscribe = (onChange: IO<void>) => {
+  // https://github.com/necolas/react-native-web/issues/2430
+  window.visualViewport?.addEventListener("resize", onChange);
+  const subscription = Dimensions.addEventListener("change", onChange);
+  return () => {
+    window.visualViewport?.removeEventListener("resize", onChange);
+    subscription.remove();
+  };
+};
+
 export const Popover: FC<PopoverProps> = ({
   ownerRef,
   position,
-  yOffset,
   onRequestClose,
   children,
 }) => {
   const viewRef = useRef<View>(null);
-  const [xy, setXY] = useState<XY | null>(null);
 
-  useLayoutEffect(() => {
-    if (ownerRef.current == null || viewRef.current == null) return;
+  const getXY = (): XY | null => {
+    if (ownerRef.current == null || viewRef.current == null) return null;
 
     // This is web only for now.
     // Refactoring measureInWindow callbacks to Task would be better,
@@ -52,53 +58,46 @@ export const Popover: FC<PopoverProps> = ({
     const ownerEl = ownerRef.current as unknown as HTMLElement;
     const viewEl = viewRef.current as unknown as HTMLElement;
 
-    const handleChange = () => {
-      const ownerRect = ownerEl.getBoundingClientRect();
+    const ownerRect = ownerEl.getBoundingClientRect();
 
-      const getXY = (): XY => {
-        switch (position) {
-          case "bottom right to bottom right":
-            return {
-              x: ownerRect.left - viewEl.offsetWidth + ownerRect.width,
-              y: ownerRect.top - viewEl.offsetHeight + ownerRect.height,
-            };
-          case "bottom left to bottom right":
-            return {
-              x: ownerRect.left + ownerRect.width,
-              y: ownerRect.top - viewEl.offsetHeight + ownerRect.height,
-            };
-          case "top right to top right":
-            return {
-              x: ownerRect.left - viewEl.offsetWidth + ownerRect.width,
-              y: ownerRect.top - ownerRect.height + ownerRect.height,
-            };
-          case "top left to top right":
-            return {
-              x: ownerRect.left + ownerRect.width,
-              y: ownerRect.top - ownerRect.height + ownerRect.height,
-            };
-        }
-      };
+    switch (position) {
+      case "bottom right to bottom right":
+        return {
+          x: ownerRect.left - viewEl.offsetWidth + ownerRect.width,
+          y: ownerRect.top - viewEl.offsetHeight + ownerRect.height,
+        };
+      case "bottom left to bottom right":
+        return {
+          x: ownerRect.left + ownerRect.width,
+          y: ownerRect.top - viewEl.offsetHeight + ownerRect.height,
+        };
+      case "top right to top right":
+        return {
+          x: ownerRect.left - viewEl.offsetWidth + ownerRect.width,
+          y: ownerRect.top - ownerRect.height + ownerRect.height,
+        };
+      case "top left to top right":
+        return {
+          x: ownerRect.left + ownerRect.width,
+          y: ownerRect.top - ownerRect.height + ownerRect.height,
+        };
+    }
+  };
 
-      const xy = getXY();
-      if (yOffset != null) xy.y += yOffset;
-      setXY((previous) => {
-        if (previous && xy.x === previous.x && xy.y === previous.y)
-          return previous;
-        return xy;
-      });
-    };
+  const lastXyRef = useRef<XY | null>();
 
-    handleChange();
-
-    // https://github.com/necolas/react-native-web/issues/2430
-    window.visualViewport?.addEventListener("resize", handleChange);
-    const subscription = Dimensions.addEventListener("change", handleChange);
-    return () => {
-      window.visualViewport?.removeEventListener("resize", handleChange);
-      subscription.remove();
-    };
-  }, [ownerRef, position, yOffset]);
+  const xy = useSyncExternalStore<XY | null>(subscribe, () => {
+    const xy = getXY();
+    if (
+      lastXyRef.current &&
+      xy &&
+      lastXyRef.current.x === xy.x &&
+      lastXyRef.current.y === xy.y
+    )
+      return lastXyRef.current;
+    lastXyRef.current = xy;
+    return xy;
+  });
 
   return (
     <Modal transparent onRequestClose={onRequestClose} visible>
