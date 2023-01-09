@@ -84,9 +84,10 @@ export const MainNav = () => {
         onPress={() => setPopoverIsVisible(true)}
         {...buttonKeyNavigation}
         ref={handleRef}
+        className="w-9"
       >
         <Text as="button">
-          {intl.formatMessage({ defaultMessage: "⋮", id: "Z/OE6b" })}
+          {intl.formatMessage({ defaultMessage: "≡", id: "zpCxcz" })}
         </Text>
       </Button>
       {popoverIsVisible ? (
