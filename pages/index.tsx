@@ -85,16 +85,15 @@ const Index = () => {
       }
     >
       <ClientOnly>
-        {nodes.isLoaded && adjacentNodes.isLoaded && (
-          <View className="flex-1">
-            {loadedNodesRows.map((row) => (
-              <NodeEditor key={row.id} row={row} />
-            ))}
-            <View className="flex-1 justify-center">
-              <AdjacentNodes ids={ids} rows={loadedAdjacentNodesRows} />
-            </View>
+        {/* Do we really need it? nodes.isLoaded && adjacentNodes.isLoaded */}
+        <View className="flex-1">
+          {loadedNodesRows.map((row) => (
+            <NodeEditor key={row.id} row={row} />
+          ))}
+          <View className="flex-1 justify-center">
+            <AdjacentNodes ids={ids} rows={loadedAdjacentNodesRows} />
           </View>
-        )}
+        </View>
       </ClientOnly>
     </Layout>
   );

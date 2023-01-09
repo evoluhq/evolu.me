@@ -1,166 +1,20 @@
-import clsx from "clsx";
-import { readonlyArray } from "fp-ts";
-import { pipe } from "fp-ts/function";
-import { IO } from "fp-ts/IO";
 import { useRouter } from "next/router";
-import {
-  FC,
-  MutableRefObject,
-  useCallback,
-  useContext,
-  useRef,
-  useState,
-} from "react";
+import { FC, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
-import { createEdge, NodeId, useMutation, useQuery } from "../lib/db";
-import {
-  KeyboardNavigationContext,
-  KeyboardNavigationProvider,
-  useKeyNavigation,
-} from "../lib/hooks/useKeyNavigation";
-import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
-import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
+import { NodeId } from "../lib/db";
+import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
+import { AdjacentNodeButtonPopover } from "./AdjacentNodeButtonPopover";
 import { BlankButton } from "./BlankButton";
-import { Button } from "./Button";
-import { Popover } from "./Popover";
 import { View } from "./styled";
-import { Text } from "./Text";
 
-const NodeItemButtonPopoverButton: FC<{
-  title: string;
-  x: number;
-  onPress: IO<void>;
-  className?: string;
-  onRequestClose?: IO<void>;
-}> = ({ title, x, onPress, className }) => {
-  const keyNavigation = useKeyNavigation({
-    x,
-    keys: {
-      ArrowLeft: "previousX",
-      ArrowRight: "nextX",
-    },
-  });
-
-  return (
-    <Button {...keyNavigation} onPress={onPress}>
-      <Text as="button" className={clsx("my-0 py-2", className)}>
-        {title}
-      </Text>
-    </Button>
-  );
-};
-
-const AdjacentNodeButtonPopover: FC<{
-  id: NodeId;
-  onRequestClose: IO<void>;
-  ownerRef: MutableRefObject<View | null>;
-}> = ({ id, onRequestClose, ownerRef }) => {
-  const intl = useIntl();
-  const { mutate } = useMutation();
-
-  const locationNodeIds = useLocationHashNodeIds();
-
-  const router = useRouter();
-
-  const handleAddToContextPress = () => {
-    pipe(
-      locationNodeIds,
-      readonlyArray.append(id),
-      nodeIdsToLocationHash,
-      (s) => `/#${s}`,
-      (url) => {
-        router.push(url);
-      }
-    );
-  };
-
-  const { move } = useContext(KeyboardNavigationContext);
-
-  const handleDeletePress = () => {
-    mutate("node", { id, isDeleted: true }, () => {
-      move("current", true);
-    });
-  };
-
-  const { rows: edgeIdsRows, isLoaded } = useQuery((db) => {
-    const [a, b] = pipe(
-      locationNodeIds,
-      readonlyArray.map((locationNodeId) => createEdge(locationNodeId, id)),
-      readonlyArray.map(({ a, b }) => [a, b] as const),
-      readonlyArray.unzip
-    );
-
-    return db
-      .selectFrom("edge")
-      .select("id")
-      .where("a", "in", a)
-      .where("b", "in", b);
-  });
-
-  const handleRemovePress = () => {
-    if (!isLoaded) return;
-    edgeIdsRows.forEach(({ id }) => {
-      mutate("edge", { id, isDeleted: true }, () => {
-        move("current", true);
-      });
-    });
-  };
-
-  const hasAdjacentNodes = locationNodeIds.length > 0;
-
-  return (
-    <Popover
-      ownerRef={ownerRef}
-      position="top left to top right"
-      onRequestClose={onRequestClose}
-    >
-      <View className="flex-row">
-        <KeyboardNavigationProvider maxX={hasAdjacentNodes ? 2 : 0}>
-          <NodeItemButtonPopoverButton
-            title={intl.formatMessage({
-              defaultMessage: "Delete",
-              id: "K3r6DQ",
-            })}
-            x={0}
-            onPress={handleDeletePress}
-            className={clsx(hasAdjacentNodes && "rounded-r-none")}
-          />
-          {hasAdjacentNodes && (
-            <>
-              <NodeItemButtonPopoverButton
-                title={intl.formatMessage({
-                  defaultMessage: "Add to Context",
-                  id: "xdk4gG",
-                })}
-                x={1}
-                onPress={handleAddToContextPress}
-                className={hasAdjacentNodes ? "rounded-none" : "rounded-l-none"}
-              />
-              <NodeItemButtonPopoverButton
-                title={intl.formatMessage({
-                  defaultMessage: "Remove",
-                  id: "G/yZLu",
-                })}
-                x={2}
-                onPress={handleRemovePress}
-                className="rounded-l-none"
-              />
-            </>
-          )}
-        </KeyboardNavigationProvider>
-      </View>
-    </Popover>
-  );
-};
-
-export interface AdjacentNodeButton {
+export interface AdjacentNodeButtonProps {
   focusable: boolean;
   id: NodeId;
   x: number;
 }
 
-export const AdjacentNodeButton: FC<AdjacentNodeButton> = ({
+export const AdjacentNodeButton: FC<AdjacentNodeButtonProps> = ({
   focusable,
   id,
   x,
@@ -185,14 +39,10 @@ export const AdjacentNodeButton: FC<AdjacentNodeButton> = ({
     buttonRef.current = view;
   });
 
-  const handleRequestClose = useCallback(() => {
-    setPopoverIsVisible(false);
-  }, []);
-
   return (
     <>
       <BlankButton
-        type="square"
+        type="circle"
         title={intl.formatMessage({
           defaultMessage: "Show adjacent node actions",
           id: "f0JkVN",
@@ -206,7 +56,7 @@ export const AdjacentNodeButton: FC<AdjacentNodeButton> = ({
       {popoverIsVisible && (
         <AdjacentNodeButtonPopover
           id={id}
-          onRequestClose={handleRequestClose}
+          onRequestClose={() => setPopoverIsVisible(false)}
           ownerRef={buttonRef}
         />
       )}

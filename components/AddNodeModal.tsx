@@ -77,6 +77,7 @@ export const AddNodeModal: FC<{
   const scrollViewRef = useRef<ScrollView>(null);
   const bottomBarRef = useRef<View>(null);
 
+  // TODO: Refactor into a hook.
   // No useSyncExternalStore because it does not interact with React.
   // https://developer.mozilla.org/en-US/docs/Web/API/VisualViewport#simulating_position_device-fixed
   useLayoutEffect(() => {

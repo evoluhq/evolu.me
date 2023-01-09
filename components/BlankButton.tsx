@@ -15,7 +15,7 @@ export const BlankButton = forwardRef<View, BlankButtonProps>(
       <Button accessibilityLabel={title} {...props} ref={ref}>
         <View
           className={clsx(
-            "mx-3 my-4 h-3 w-3 bg-gray-200 ring-current group-hover:bg-gray-300 group-focus-visible:ring-1 dark:bg-gray-800 dark:group-hover:bg-gray-900",
+            "top-[1px] mx-3 my-4 h-3 w-3 bg-gray-200 ring-current group-hover:bg-gray-300 group-focus-visible:ring-1 dark:bg-gray-800 dark:group-hover:bg-gray-900",
             type === "square" ? "rounded-sm" : "rounded-md",
             state === "active" && "scale-90"
           )}

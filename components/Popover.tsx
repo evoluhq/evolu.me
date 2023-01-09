@@ -17,6 +17,7 @@ type PopoverPosition =
   | "bottom right to bottom right"
   | "bottom left to bottom right"
   | "top right to top right"
+  | "top right to top left"
   | "top left to top right";
 
 export type PopoverProps = {
@@ -74,6 +75,11 @@ export const Popover: FC<PopoverProps> = ({
       case "top right to top right":
         return {
           x: ownerRect.left - viewEl.offsetWidth + ownerRect.width,
+          y: ownerRect.top - ownerRect.height + ownerRect.height,
+        };
+      case "top right to top left":
+        return {
+          x: ownerRect.left - viewEl.offsetWidth,
           y: ownerRect.top - ownerRect.height + ownerRect.height,
         };
       case "top left to top right":
