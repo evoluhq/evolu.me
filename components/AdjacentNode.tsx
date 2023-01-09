@@ -56,7 +56,7 @@ export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
           {...linkKeyNavigation}
           as="link"
           p
-          className="px-0"
+          className="-ml-1 px-1"
           // @ts-expect-error RNfW
           focusable={focusable === "input"}
           numberOfLines={1}
