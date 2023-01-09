@@ -58,7 +58,7 @@ export const NodeEditorPopover: FC<{
       readonlyArray.filter((a) => a !== id),
       nodeIdsToLocationHash,
       (hash) => {
-        router.push(`/#${hash}`);
+        router.push(hash ? `/#${hash}` : "/");
       }
     );
   };
