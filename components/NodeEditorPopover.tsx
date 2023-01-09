@@ -5,6 +5,7 @@ import { IO } from "fp-ts/IO";
 import { useRouter } from "next/router";
 import { FC, MutableRefObject } from "react";
 import { useIntl } from "react-intl";
+import { alertTodo } from "../lib/alertTodo";
 import { NodeId } from "../lib/db";
 import {
   KeyboardNavigationProvider,
@@ -76,7 +77,7 @@ export const NodeEditorPopover: FC<{
               id: "K3r6DQ",
             })}
             x={0}
-            onPress={handleRemoveFromContextPress}
+            onPress={alertTodo}
             className="rounded-r-none"
           />
           <PopoverButton
@@ -94,7 +95,7 @@ export const NodeEditorPopover: FC<{
               id: "djJp6c",
             })}
             x={2}
-            onPress={handleRemoveFromContextPress}
+            onPress={alertTodo}
             className="rounded-l-none"
           />
         </KeyboardNavigationProvider>

@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { memo, useCallback, useState } from "react";
 import { flushSync } from "react-dom";
 import { useIntl } from "react-intl";
+import { alertTodo } from "../lib/alertTodo";
 import { NodeId, NodeMarkdown } from "../lib/db";
 import { focusClassName } from "../lib/focusClassNames";
 import { AddNodeModal } from "./AddNodeModal";
@@ -66,7 +67,7 @@ export const TabBar = memo<{
           {intl.formatMessage({ defaultMessage: "Add", id: "2/2yg+" })}
         </Text>
       </Button>
-      <Button className="flex-1">
+      <Button className="flex-1" onPress={alertTodo}>
         <Text as="button">
           {intl.formatMessage({ defaultMessage: "Search", id: "xmcVZ0" })}
         </Text>
