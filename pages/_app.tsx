@@ -1,5 +1,6 @@
 import { Provider as JotaiProvider } from "jotai";
 import { NativeWindStyleSheet } from "nativewind";
+import { Provider } from "react-wrap-balancer";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { FC, ReactNode } from "react";
@@ -50,9 +51,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <JotaiProvider>
         <IntlProvider locale="en">
-          <MetaDescription>
-            <Component {...pageProps} />
-          </MetaDescription>
+          <Provider>
+            <MetaDescription>
+              <Component {...pageProps} />
+            </MetaDescription>
+          </Provider>
         </IntlProvider>
       </JotaiProvider>
     </>
