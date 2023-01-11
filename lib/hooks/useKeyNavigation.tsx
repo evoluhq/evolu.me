@@ -186,15 +186,15 @@ export const KeyboardNavigationProvider = forwardRef<
 
   // Element focus doesn't have smooth scroll option.
   // https://github.com/WICG/proposals/issues/41
-  const workaroundMissingFocusWithSmoothScroll = useEvent((id: string) => {
+  const workaroundMissingFocusWithSmoothScroll = useCallback((id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
-    el.classList.add("scroll-smooth");
+    el.style.scrollBehavior = "smooth";
     clearTimeout(removeScrollSmoothClassTimerRef.current);
     removeScrollSmoothClassTimerRef.current = window.setTimeout(() => {
-      el.classList.remove("scroll-smooth");
+      el.style.scrollBehavior = "";
     });
-  });
+  }, []);
 
   const callFocus = (
     focusable: Focusable | undefined,
