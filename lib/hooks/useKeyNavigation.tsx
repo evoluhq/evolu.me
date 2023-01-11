@@ -189,10 +189,11 @@ export const KeyboardNavigationProvider = forwardRef<
   const workaroundMissingFocusWithSmoothScroll = useCallback((id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
+    const prevScrollBehavior = el.style.scrollBehavior;
     el.style.scrollBehavior = "smooth";
     clearTimeout(removeScrollSmoothClassTimerRef.current);
     removeScrollSmoothClassTimerRef.current = window.setTimeout(() => {
-      el.style.scrollBehavior = "";
+      el.style.scrollBehavior = prevScrollBehavior;
     });
   }, []);
 
