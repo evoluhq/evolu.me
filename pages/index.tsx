@@ -1,4 +1,7 @@
 import { has, model } from "evolu";
+import { option, readonlyArray } from "fp-ts";
+import { pipe } from "fp-ts/function";
+import { isNonEmpty } from "fp-ts/lib/ReadonlyArray";
 import { useMemo } from "react";
 import { useIntl } from "react-intl";
 import { AdjacentNodes } from "../components/AdjacentNodes";
@@ -9,6 +12,7 @@ import { NodeEditor } from "../components/NodeEditor";
 import { View } from "../components/styled";
 import { TabBar } from "../components/TabBar";
 import { useQuery } from "../lib/db";
+import { getFirstLineAlwaysVisible } from "../lib/getFirstLineAlwaysVisible";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 
 const Index = () => {
@@ -63,13 +67,23 @@ const Index = () => {
     [adjacentNodes.rows]
   );
 
+  const title = pipe(
+    loadedNodesRows,
+    option.fromPredicate(isNonEmpty),
+    option.map(readonlyArray.map((a) => getFirstLineAlwaysVisible(a.md))),
+    option.map((a) => a.join(" | ")),
+    option.getOrElse(() =>
+      intl.formatMessage({
+        defaultMessage: "EvoluMe - Personal Knowledge Graph Focused on Privacy",
+        id: "jznzji",
+      })
+    )
+  );
+
   return (
     <Layout
       waitForData
-      title={intl.formatMessage({
-        defaultMessage: "EvoluMe - Personal Knowledge Graph Focused on Privacy",
-        id: "jznzji",
-      })}
+      title={title}
       header={
         <ClientOnly>
           {/* Here will be menu, graph view, search, favorites, whatever. */}
