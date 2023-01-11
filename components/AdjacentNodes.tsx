@@ -1,8 +1,8 @@
 import { NodeId } from "evolu";
-import { memo, useLayoutEffect, useRef } from "react";
+import { memo, useCallback, useLayoutEffect, useRef } from "react";
 import useEvent from "react-use-event-hook";
 import { NodeMarkdown } from "../lib/db";
-import { focusId } from "../lib/focusIds";
+import { focusId, focusIds } from "../lib/focusIds";
 import {
   FocusPosition,
   KeyboardNavigationProvider,
@@ -60,6 +60,17 @@ export const AdjacentNodes = memo<{
     };
   });
 
+  const handleOnKeyUpDown = useCallback(() => {
+    // Element focus doesn't have smooth scroll option.
+    // https://github.com/WICG/proposals/issues/41
+    const el = document.getElementById(focusIds.layoutScrollView);
+    if (!el) return;
+    el.classList.add("scroll-smooth");
+    setTimeout(() => {
+      el.classList.remove("scroll-smooth");
+    });
+  }, []);
+
   if (!rows.length && !ids.length) return <About />;
 
   return (
@@ -82,6 +93,7 @@ export const AdjacentNodes = memo<{
               row={row}
               x={i}
               focusable={i === x && (y === 0 ? "button" : "input")}
+              onKeyUpDown={handleOnKeyUpDown}
             />
           ))
         }

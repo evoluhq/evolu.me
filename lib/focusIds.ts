@@ -14,7 +14,11 @@ const createFocusIds = <T extends string>(names: T[]): { [K in T]: string } => {
   return id as never;
 };
 
-export const focusIds = createFocusIds(["editorContentEditable", "allLink"]);
+export const focusIds = createFocusIds([
+  "editorContentEditable",
+  "allLink",
+  "layoutScrollView",
+]);
 
 type FocusId = keyof typeof focusIds;
 

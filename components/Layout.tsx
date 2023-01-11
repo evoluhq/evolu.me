@@ -3,6 +3,7 @@ import { useEvoluFirstDataAreLoaded } from "evolu";
 import { FC, ReactNode } from "react";
 import { StyleSheet } from "react-native";
 import { accessibility } from "../lib/accessibility";
+import { focusIds } from "../lib/focusIds";
 import { ScrollRestoration } from "../lib/hooks/useScrollRestoration";
 import { Container } from "./Container";
 import { MainNav } from "./MainNav";
@@ -48,6 +49,7 @@ export const Layout: FC<{
             <>
               <ScrollView
                 contentContainerStyle={styles.contentContainer}
+                nativeID={focusIds.layoutScrollView}
                 {...props}
               >
                 <Container className="flex-1">{children}</Container>
