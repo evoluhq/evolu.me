@@ -1,5 +1,6 @@
 import { useIntl } from "react-intl";
 import { Layout } from "../components/Layout";
+import { View } from "../components/styled";
 import { Text } from "../components/Text";
 
 // TODO: Explain graph, filter, key navigation, etc.
@@ -24,12 +25,14 @@ const Help = () => {
     <Layout
       title={intl.formatMessage({ defaultMessage: "Help", id: "SENRqu" })}
     >
-      <Text className="text-center">
-        {intl.formatMessage({
-          defaultMessage: "Under construction 🚧",
-          id: "Q4maGs",
-        })}
-      </Text>
+      <View className="flex-1 justify-center">
+        <Text className="text-center">
+          {intl.formatMessage({
+            defaultMessage: "Under construction 🚧",
+            id: "Q4maGs",
+          })}
+        </Text>
+      </View>
     </Layout>
   );
 };
