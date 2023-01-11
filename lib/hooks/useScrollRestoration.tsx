@@ -68,25 +68,10 @@ export const ScrollRestoration: FC<{
     const scrollPoint = getScrollPoints().get(id);
     if (!scrollPoint) return undefined;
     if (scrollPoint.point && scrollViewRef.current) {
-      // animated: false doesn't override scroll-smooth,
-      // so we have to temporally remove it. Tested with plain DOM too.
-      // Element focus doesn't have smooth scroll option.
-      // https://github.com/WICG/proposals/issues/41
-      // DOM manipulation is better because it's not part of React state.
-      // @ts-expect-error RNfW
-      scrollViewRef.current.classList.remove("scroll-smooth");
       scrollViewRef.current.scrollTo({
         ...scrollPoint.point,
         animated: false,
       });
-      try {
-        setTimeout(() => {
-          // @ts-expect-error RNfW
-          scrollViewRef.current.classList.add("scroll-smooth");
-        });
-      } catch (e) {
-        //
-      }
     }
     return scrollPoint.position;
   }, []);
