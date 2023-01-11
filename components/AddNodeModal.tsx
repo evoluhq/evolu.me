@@ -159,7 +159,7 @@ export const AddNodeModal: FC<{
             setNewNode(RESET);
             onRequestClose();
             // setTimeout, because onRequestClose side-effect is a focus
-            setTimeout(() => {
+            window.setTimeout(() => {
               document.getElementById(id)?.scrollIntoView({
                 behavior: "smooth",
               });

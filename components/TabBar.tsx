@@ -10,6 +10,7 @@ import {
   KeyboardNavigationProvider,
   useKeyNavigation,
 } from "../lib/hooks/useKeyNavigation";
+import { useRequestFocus } from "../lib/hooks/useRequestFocus";
 import { AddNodeModal } from "./AddNodeModal";
 import { Button } from "./Button";
 import { Link } from "./Link";
@@ -24,13 +25,20 @@ const TabBarButton: FC<{
   id?: string;
 }> = ({ hrefOrOnPress, title, focusable, x, id }) => {
   const router = useRouter();
+  const requestFocus = useRequestFocus();
 
   const keyNavigation = useKeyNavigation({
     x,
     keys: {
       ArrowLeft: "previousX",
       ArrowRight: "nextX",
-      Escape: () => router.back(),
+      Enter: () => {
+        requestFocus();
+      },
+      Escape: () => {
+        requestFocus();
+        router.back();
+      },
     },
   });
 

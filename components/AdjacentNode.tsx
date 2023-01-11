@@ -1,4 +1,3 @@
-import { IO } from "fp-ts/IO";
 import { useRouter } from "next/router";
 import { memo } from "react";
 import { NodeId, NodeMarkdown } from "../lib/db";
@@ -16,14 +15,12 @@ interface AdjacentNodeProps {
   };
   focusable: false | "button" | "input";
   x: number;
-  onKeyUpDown: IO<void>;
 }
 
 export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
   row: { id, md },
   focusable,
   x,
-  onKeyUpDown,
 }) {
   const router = useRouter();
 
@@ -31,20 +28,8 @@ export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
     x,
     y: 1,
     keys: {
-      ArrowUp: [
-        "previousX",
-        () => {
-          onKeyUpDown();
-          return true;
-        },
-      ],
-      ArrowDown: [
-        "nextX",
-        () => {
-          onKeyUpDown();
-          return true;
-        },
-      ],
+      ArrowUp: "previousX",
+      ArrowDown: "nextX",
       ArrowLeft: "previousY",
       Escape: () => router.back(),
     },

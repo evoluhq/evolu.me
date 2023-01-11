@@ -20,17 +20,17 @@ import {
 } from "react";
 import useEvent from "react-use-event-hook";
 
+// React Hook for keyboard navigation via Roving tabindex
+//  - fast, flexible, minimal, and universal
+//  - for lists and grids
+//  - without unnecessary re-renders
+// https://developer.mozilla.org/en-US/docs/Web/Accessibility/Keyboard-navigable_JavaScript_widgets
+// TODO: Add an option for rotation, aka jump from start to end.
+// TODO: Release as use-key-navigation in Evolu org.
+
 const IS_SERVER = typeof window === "undefined" || "Deno" in window;
 // https://github.com/facebook/react/issues/14927#issuecomment-572720368
 const useLayoutEffect_SAFE_FOR_SSR = IS_SERVER ? useEffect : useLayoutEffect;
-
-// React Hook for keyboard navigation via Roving tabindex
-//  - fast, flexible, minimal
-//  - for lists and grids
-//  - and without unnecessary re-renders
-// https://developer.mozilla.org/en-US/docs/Web/Accessibility/Keyboard-navigable_JavaScript_widgets
-// TODO: Add an option for rotation, aka jump from start to end.
-// TODO: Release as use-key-navigation
 
 export interface FocusPosition {
   x: number;
@@ -47,6 +47,8 @@ type OnFocus = (position: FocusPosition) => void;
 
 type OnBlur = () => void;
 
+type OnKey = (key: string) => void;
+
 export type Direction =
   | "nextX"
   | "previousX"
@@ -54,12 +56,20 @@ export type Direction =
   | "previousY"
   | "current";
 
-type Move = (directionOrPosition: Direction | FocusPosition) => void;
+type MoveOptions = {
+  smoothScroll?: boolean;
+};
+
+type Move = (
+  directionOrPosition: Direction | FocusPosition,
+  options?: MoveOptions
+) => void;
 
 interface ContextType {
   register: Register;
   onFocus: OnFocus;
   onBlur: OnBlur;
+  onKey: OnKey;
   move: Move;
 }
 
@@ -67,6 +77,7 @@ export const KeyboardNavigationContext = createContext<ContextType>({
   register: () => constVoid,
   onFocus: constVoid,
   onBlur: constVoid,
+  onKey: constVoid,
   move: constVoid,
 });
 
@@ -93,6 +104,8 @@ interface KeyboardNavigationProviderProps {
     | ReactNode
     | ((state: { x: number; y: number; hasFocus: boolean }) => ReactNode);
   onFocus?: (position: FocusPosition) => void;
+  onKey?: OnKey;
+  smoothScrollDomId?: string;
 }
 
 interface State {
@@ -121,7 +134,16 @@ export const KeyboardNavigationProvider = forwardRef<
   KeyboardNavigationProviderRef,
   KeyboardNavigationProviderProps
 >(function KeyboardNavigationProvider(
-  { maxX, maxY = 0, initialX = 0, initialY = 0, children, onFocus },
+  {
+    maxX,
+    maxY = 0,
+    initialX = 0,
+    initialY = 0,
+    children,
+    onFocus,
+    onKey,
+    smoothScrollDomId,
+  },
   ref
 ) {
   useImperativeHandle(ref, () => ({ move }));
@@ -160,38 +182,67 @@ export const KeyboardNavigationProvider = forwardRef<
     dispatch({ type: "onBlur" });
   });
 
-  const move = useEvent<Move>((directionOrPosition) => {
-    const focusables = getFocusables();
+  const removeScrollSmoothClassTimerRef = useRef<number>();
 
-    if (typeof directionOrPosition === "object") {
-      focusables[directionOrPosition.x]?.[directionOrPosition.y]?.focus();
-      return;
-    }
+  // Element focus doesn't have smooth scroll option.
+  // https://github.com/WICG/proposals/issues/41
+  const workaroundMissingFocusWithSmoothScroll = useEvent((id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add("scroll-smooth");
+    clearTimeout(removeScrollSmoothClassTimerRef.current);
+    removeScrollSmoothClassTimerRef.current = window.setTimeout(() => {
+      el.classList.remove("scroll-smooth");
+    });
+  });
 
-    const direction = directionOrPosition;
+  const callFocus = (
+    focusable: Focusable | undefined,
+    smoothScroll: boolean
+  ) => {
+    if (focusable == null) return;
+    if (smoothScrollDomId && smoothScroll)
+      workaroundMissingFocusWithSmoothScroll(smoothScrollDomId);
+    focusable.focus();
+  };
 
-    if (direction === "current") {
-      focusables[position.x]?.[position.y]?.focus();
-      return;
-    }
+  const move = useEvent<Move>(
+    (directionOrPosition, { smoothScroll = true } = {}) => {
+      const focusables = getFocusables();
 
-    const isX = direction === "nextX" || direction === "previousX";
-    const isNext = direction === "nextX" || direction === "nextY";
-    const increment = isNext ? 1 : -1;
+      if (typeof directionOrPosition === "object") {
+        callFocus(
+          focusables[directionOrPosition.x]?.[directionOrPosition.y],
+          smoothScroll
+        );
+        return;
+      }
 
-    for (
-      let i = (isX ? position.x : position.y) + increment;
-      isNext ? i <= (isX ? maxX : maxY) : i >= 0;
-      i += increment
-    ) {
-      const focusable =
-        focusables[isX ? i : position.x]?.[isX ? position.y : i];
-      if (focusable) {
-        focusable.focus();
-        break;
+      const direction = directionOrPosition;
+
+      if (direction === "current") {
+        callFocus(focusables[position.x]?.[position.y], smoothScroll);
+        return;
+      }
+
+      const isX = direction === "nextX" || direction === "previousX";
+      const isNext = direction === "nextX" || direction === "nextY";
+      const increment = isNext ? 1 : -1;
+
+      for (
+        let i = (isX ? position.x : position.y) + increment;
+        isNext ? i <= (isX ? maxX : maxY) : i >= 0;
+        i += increment
+      ) {
+        const focusable =
+          focusables[isX ? i : position.x]?.[isX ? position.y : i];
+        if (focusable) {
+          callFocus(focusable, smoothScroll);
+          break;
+        }
       }
     }
-  });
+  );
 
   const contextValueRef = useRef<ContextType>();
   const getContextValue = () => {
@@ -200,6 +251,7 @@ export const KeyboardNavigationProvider = forwardRef<
         register,
         onFocus: handleFocus,
         onBlur: handleBlur,
+        onKey: onKey || constVoid,
         move,
       };
     return contextValueRef.current;
@@ -249,7 +301,7 @@ export const useKeyNavigation = <E extends HTMLElement>({
   y?: number;
   keys: Keys<E>;
 }): KeyNavigation<E> => {
-  const { register, onFocus, onBlur, move } = useContext(
+  const { register, onFocus, onBlur, onKey, move } = useContext(
     KeyboardNavigationContext
   );
 
@@ -272,16 +324,18 @@ export const useKeyNavigation = <E extends HTMLElement>({
   const handleOnBlur = useEvent(onBlur);
 
   const handleKeyDown = useEvent<KeyDownHandler<E>>((e) => {
+    if (onKey) onKey(e.key);
+
     pipe(
       keys,
       record.lookup(e.key),
       option.map((arg) => (Array.isArray(arg) ? arg : ([arg, null] as const))),
       option.match(constVoid, ([action, predicate]) => {
         if (predicate && !predicate(e)) return;
-        e.preventDefault();
         switch (typeof action) {
           case "string":
           case "object":
+            e.preventDefault();
             move(action);
             break;
           case "function":

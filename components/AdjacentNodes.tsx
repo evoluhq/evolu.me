@@ -8,6 +8,7 @@ import {
   KeyboardNavigationProvider,
   KeyboardNavigationProviderRef,
 } from "../lib/hooks/useKeyNavigation";
+import { useRequestFocus } from "../lib/hooks/useRequestFocus";
 import { useScrollRestoration } from "../lib/hooks/useScrollRestoration";
 import { About } from "./About";
 import { AdjacentNode } from "./AdjacentNode";
@@ -16,8 +17,7 @@ import { View } from "./styled";
 export const AdjacentNodes = memo<{
   ids: readonly NodeId[];
   rows: readonly { id: NodeId; md: NodeMarkdown }[];
-  initialRender: boolean;
-}>(function AdjacentNodes({ ids, rows, initialRender }) {
+}>(function AdjacentNodes({ ids, rows }) {
   const focusPositionsRef = useRef<Map<string, FocusPosition>>();
 
   const getFocusPositions = () => {
@@ -27,30 +27,33 @@ export const AdjacentNodes = memo<{
 
   const idsString = ids.join();
 
-  const handleKeyboardNavigationProviderFocus = useEvent(
-    (position: FocusPosition) => {
-      getFocusPositions().set(idsString, position);
-    }
-  );
+  const handleKeyboardNavigationFocus = useEvent((position: FocusPosition) => {
+    getFocusPositions().set(idsString, position);
+  });
+
+  const prevIdsRef = useRef<string>();
 
   const keyboardNavigationProviderRef =
     useRef<KeyboardNavigationProviderRef>(null);
 
   const { restoreScroll, storeScroll } = useScrollRestoration();
 
-  const prevIdsRef = useRef<string>();
+  const requestFocus = useRequestFocus();
 
   useLayoutEffect(() => {
     if (prevIdsRef.current === idsString) return;
     prevIdsRef.current = idsString;
 
     if (rows.length === 0) {
-      focusId("allLink")();
+      requestFocus(focusId("allLink"));
     } else {
       const position = restoreScroll(idsString);
-      if (position) keyboardNavigationProviderRef.current?.move(position);
-      else if (!initialRender)
-        keyboardNavigationProviderRef.current?.move({ x: 0, y: 1 });
+      requestFocus(() => {
+        keyboardNavigationProviderRef.current?.move(
+          position || { x: 0, y: 1 },
+          { smoothScroll: false }
+        );
+      });
     }
 
     return () => {
@@ -60,16 +63,12 @@ export const AdjacentNodes = memo<{
     };
   });
 
-  const handleOnKeyUpDown = useCallback(() => {
-    // Element focus doesn't have smooth scroll option.
-    // https://github.com/WICG/proposals/issues/41
-    const el = document.getElementById(focusIds.layoutScrollView);
-    if (!el) return;
-    el.classList.add("scroll-smooth");
-    setTimeout(() => {
-      el.classList.remove("scroll-smooth");
-    });
-  }, []);
+  const handleKeyboardNavigationOnKey = useCallback(
+    (key: string) => {
+      if (key === "Enter" || key === "Escape") requestFocus();
+    },
+    [requestFocus]
+  );
 
   if (!rows.length && !ids.length) return <About />;
 
@@ -83,8 +82,10 @@ export const AdjacentNodes = memo<{
         maxX={rows.length - 1}
         maxY={1}
         initialY={1}
-        onFocus={handleKeyboardNavigationProviderFocus}
+        onFocus={handleKeyboardNavigationFocus}
         ref={keyboardNavigationProviderRef}
+        onKey={handleKeyboardNavigationOnKey}
+        smoothScrollDomId={focusIds.layoutScrollView}
       >
         {({ x, y }) =>
           rows.map((row, i) => (
@@ -93,7 +94,6 @@ export const AdjacentNodes = memo<{
               row={row}
               x={i}
               focusable={i === x && (y === 0 ? "button" : "input")}
-              onKeyUpDown={handleOnKeyUpDown}
             />
           ))
         }
