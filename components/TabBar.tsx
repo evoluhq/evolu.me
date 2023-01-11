@@ -51,7 +51,6 @@ const TabBarButton: FC<{
       <Text
         as="link"
         p
-        transparent={router.asPath !== hrefOrOnPress}
         className="my-1 flex-1 px-0 py-1 text-center"
         // @ts-expect-error RNfW
         focusable={focusable}
