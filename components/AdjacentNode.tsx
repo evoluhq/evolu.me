@@ -1,5 +1,3 @@
-import { constVoid } from "fp-ts/function";
-import { IO } from "fp-ts/IO";
 import { useRouter } from "next/router";
 import { memo } from "react";
 import { NodeId, NodeMarkdown } from "../lib/db";
@@ -19,14 +17,12 @@ interface AdjacentNodeProps {
   x: number;
   isFirst: boolean;
   isLast: boolean;
-  onKeyEnter: IO<void>;
 }
 
 export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
   row: { id, md },
   focusable,
   x,
-  onKeyEnter,
 }) {
   const router = useRouter();
 
@@ -38,20 +34,13 @@ export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
       ArrowDown: "nextX",
       ArrowLeft: "previousY",
       Escape: () => router.back(),
-      Enter: [
-        constVoid,
-        () => {
-          onKeyEnter();
-          return false;
-        },
-      ],
     },
   });
 
   return (
     <View className="-ml-3 flex-row" accessibilityRole={"listitem" as "list"}>
       <AdjacentNodeButton focusable={focusable === "button"} id={id} x={x} />
-      <Link href={`/#${id}`}>
+      <Link href={`/#${id}`} scroll={false}>
         <Text
           {...linkKeyNavigation}
           as="link"
@@ -60,6 +49,7 @@ export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
           // @ts-expect-error RNfW
           focusable={focusable === "input"}
           numberOfLines={1}
+          nativeID={id}
         >
           {getFirstLineAlwaysVisible(md)}
         </Text>

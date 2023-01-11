@@ -47,6 +47,8 @@ export const Layout: FC<{
           {(props) => (
             <>
               <ScrollView
+                // To ensure smooth scroll on key navigation focus.
+                className="scroll-smooth"
                 contentContainerStyle={styles.contentContainer}
                 {...props}
               >

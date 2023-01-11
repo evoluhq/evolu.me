@@ -2,7 +2,7 @@ import { NodeId } from "evolu";
 import { memo, useLayoutEffect, useRef } from "react";
 import useEvent from "react-use-event-hook";
 import { NodeMarkdown } from "../lib/db";
-import { focusClassName } from "../lib/focusClassNames";
+import { focusId } from "../lib/focusIds";
 import {
   FocusPosition,
   KeyboardNavigationProvider,
@@ -13,33 +13,23 @@ import { About } from "./About";
 import { AdjacentNode } from "./AdjacentNode";
 import { View } from "./styled";
 
-let canDoAutoFocusOnInput = false;
-
-// It's impossible to detect a virtual keyboard, so we can't autoFocus input
-// naively. No touch detection is possible, and we can autoFocus only when
-// we are 100% sure a user used key navigation.
-const handleAdjacentNodeKeyEnter = () => {
-  canDoAutoFocusOnInput = true;
-};
-
 export const AdjacentNodes = memo<{
   ids: readonly NodeId[];
   rows: readonly { id: NodeId; md: NodeMarkdown }[];
-}>(function AdjacentNodes({ ids, rows }) {
-  const { scrollToEndAnimatedIfRequested } = useScrollRestoration();
-  useLayoutEffect(() => scrollToEndAnimatedIfRequested());
+  initialRender: boolean;
+}>(function AdjacentNodes({ ids, rows, initialRender }) {
+  const focusPositionsRef = useRef<Map<string, FocusPosition>>();
+
+  const getFocusPositions = () => {
+    if (!focusPositionsRef.current) focusPositionsRef.current = new Map();
+    return focusPositionsRef.current;
+  };
 
   const idsString = ids.join();
 
-  const focusPositionRef = useRef<Map<string, FocusPosition>>();
-  const getFocusPosition = () => {
-    if (!focusPositionRef.current) focusPositionRef.current = new Map();
-    return focusPositionRef.current;
-  };
-
   const handleKeyboardNavigationProviderFocus = useEvent(
     (position: FocusPosition) => {
-      getFocusPosition().set(idsString, position);
+      getFocusPositions().set(idsString, position);
     }
   );
 
@@ -48,31 +38,27 @@ export const AdjacentNodes = memo<{
 
   const { restoreScroll, storeScroll } = useScrollRestoration();
 
-  // We use useEvent to not rerun useLayoutEffect on loadedRows.length change.
-  const isEmpty = useEvent(() => rows.length === 0);
+  const prevIdsRef = useRef<string>();
 
   useLayoutEffect(() => {
-    if (isEmpty()) {
-      if (canDoAutoFocusOnInput) {
-        focusClassName("editorContentEditable")();
-      }
+    if (prevIdsRef.current === idsString) return;
+    prevIdsRef.current = idsString;
+
+    if (rows.length === 0) {
+      focusId("allLink")();
     } else {
-      // AutoFocus on links is OK.
       const position = restoreScroll(idsString);
-      // We have a position, we know it's not the initial render.
       if (position) keyboardNavigationProviderRef.current?.move(position);
-      // We check it's not the initial render because something was focused.
-      else if (getFocusPosition().size > 0) {
+      else if (!initialRender)
         keyboardNavigationProviderRef.current?.move({ x: 0, y: 1 });
-      }
     }
 
     return () => {
-      const position = getFocusPosition().get(idsString);
-      // y: 1 ensures "Add To Filter" will save focus to the link, not the button.
-      storeScroll(idsString, position ? { x: position.x, y: 1 } : undefined);
+      const position = getFocusPositions().get(idsString);
+      // y: 1 ensures "With" will save position of a link, not a button
+      storeScroll(idsString, position && { x: position.x, y: 1 });
     };
-  }, [idsString, isEmpty, restoreScroll, storeScroll]);
+  });
 
   if (!rows.length && !ids.length) return <About />;
 
@@ -98,7 +84,6 @@ export const AdjacentNodes = memo<{
               focusable={i === x && (y === 0 ? "button" : "input")}
               isFirst={i === 0}
               isLast={i === rows.length - 1}
-              onKeyEnter={handleAdjacentNodeKeyEnter}
             />
           ))
         }

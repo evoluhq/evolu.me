@@ -68,7 +68,7 @@ export const AdjacentNodeButtonPopover: FC<{
 
   const handleDeletePress = () => {
     mutate("node", { id, isDeleted: true }, () => {
-      move("current", true);
+      move("current");
     });
   };
 
@@ -91,7 +91,7 @@ export const AdjacentNodeButtonPopover: FC<{
     if (!isLoaded) return;
     edgeIdsRows.forEach(({ id }) => {
       mutate("edge", { id, isDeleted: true }, () => {
-        move("current", true);
+        move("current");
       });
     });
   };

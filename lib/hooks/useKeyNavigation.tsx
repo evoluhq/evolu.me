@@ -12,7 +12,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useId,
   useImperativeHandle,
   useLayoutEffect,
   useMemo,
@@ -55,12 +54,7 @@ export type Direction =
   | "previousY"
   | "current";
 
-const moveAfterRender = new Map<string, Direction | FocusPosition>();
-
-type Move = (
-  directionOrPosition: Direction | FocusPosition,
-  afterRender?: boolean
-) => void;
+type Move = (directionOrPosition: Direction | FocusPosition) => void;
 
 interface ContextType {
   register: Register;
@@ -166,22 +160,7 @@ export const KeyboardNavigationProvider = forwardRef<
     dispatch({ type: "onBlur" });
   });
 
-  const id = useId();
-
-  useEffect(() => {
-    const direction = moveAfterRender.get(id);
-    if (direction) {
-      moveAfterRender.delete(id);
-      move(direction);
-    }
-  });
-
-  const move = useEvent<Move>((directionOrPosition, afterRender) => {
-    if (afterRender) {
-      moveAfterRender.set(id, directionOrPosition);
-      return;
-    }
-
+  const move = useEvent<Move>((directionOrPosition) => {
     const focusables = getFocusables();
 
     if (typeof directionOrPosition === "object") {

@@ -18,15 +18,11 @@ import { FocusPosition } from "./useKeyNavigation";
 interface ContextType {
   storeScroll: (id: string, position?: FocusPosition) => void;
   restoreScroll: (id: string) => FocusPosition | undefined;
-  requestScrollToEndAnimated: () => void;
-  scrollToEndAnimatedIfRequested: () => void;
 }
 
 export const ScrollRestorationContext = createContext<ContextType>({
   storeScroll: constVoid,
   restoreScroll: constUndefined,
-  requestScrollToEndAnimated: constVoid,
-  scrollToEndAnimatedIfRequested: constVoid,
 });
 
 export const ScrollRestoration: FC<{
@@ -48,6 +44,7 @@ export const ScrollRestoration: FC<{
       }
     >
   >();
+
   const getScrollPoints = () => {
     if (!scrollPointsRef.current) scrollPointsRef.current = new Map();
     return scrollPointsRef.current;
@@ -70,24 +67,28 @@ export const ScrollRestoration: FC<{
   const restoreScroll = useCallback((id: string) => {
     const scrollPoint = getScrollPoints().get(id);
     if (!scrollPoint) return undefined;
-    if (scrollPoint.point)
-      scrollViewRef.current?.scrollTo({
+    if (scrollPoint.point && scrollViewRef.current) {
+      // animated: false doesn't override scroll-smooth,
+      // so we have to temporally remove it. Tested with plain DOM too.
+      // Element focus doesn't have smooth scroll option.
+      // https://github.com/WICG/proposals/issues/41
+      // DOM manipulation is better because it's not part of React state.
+      // @ts-expect-error RNfW
+      scrollViewRef.current.classList.remove("scroll-smooth");
+      scrollViewRef.current.scrollTo({
         ...scrollPoint.point,
         animated: false,
       });
+      try {
+        setTimeout(() => {
+          // @ts-expect-error RNfW
+          scrollViewRef.current.classList.add("scroll-smooth");
+        });
+      } catch (e) {
+        //
+      }
+    }
     return scrollPoint.position;
-  }, []);
-
-  const requestScrollToEndAnimatedRef = useRef(false);
-
-  const requestScrollToEndAnimated = useCallback(() => {
-    requestScrollToEndAnimatedRef.current = true;
-  }, []);
-
-  const scrollToEndAnimatedIfRequested = useCallback(() => {
-    if (!requestScrollToEndAnimatedRef.current) return;
-    requestScrollToEndAnimatedRef.current = false;
-    scrollViewRef.current?.scrollToEnd({ animated: true });
   }, []);
 
   const contextValueRef = useRef<ContextType>();
@@ -96,8 +97,6 @@ export const ScrollRestoration: FC<{
       contextValueRef.current = {
         storeScroll,
         restoreScroll,
-        requestScrollToEndAnimated,
-        scrollToEndAnimatedIfRequested,
       };
     return contextValueRef.current;
   };

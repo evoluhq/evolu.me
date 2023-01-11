@@ -9,7 +9,6 @@ import { FC, memo, useLayoutEffect, useRef } from "react";
 import { useIntl } from "react-intl";
 import { Modal } from "react-native";
 import useEvent from "react-use-event-hook";
-import Balancer from "react-wrap-balancer";
 import { createEdge, NodeId, NodeMarkdown, useMutation } from "../lib/db";
 import { getFirstLineAlwaysVisible } from "../lib/getFirstLineAlwaysVisible";
 import { createLocalStorageKey } from "../lib/localStorage";
@@ -50,14 +49,10 @@ const Placeholder = memo(function Placeholder() {
   return (
     <View className="my-2">
       <Text size="sm" p transparent>
-        <Balancer>
-          {intl.formatMessage({
-            defaultMessage: `Add anything: note, to-do, project, person, place, thing, thought…
-        
-The beauty of EvoluMe is that you can connect anything with anything.`,
-            id: "wKEGmE",
-          })}
-        </Balancer>
+        {intl.formatMessage({
+          defaultMessage: `A note, to-do, project, person, place, thing…`,
+          id: "4wBU+/",
+        })}
       </Text>
     </View>
   );
@@ -163,6 +158,12 @@ export const AddNodeModal: FC<{
           const { id } = mutate("node", { md }, () => {
             setNewNode(RESET);
             onRequestClose();
+            // setTimeout, because onRequestClose side-effect is a focus
+            setTimeout(() => {
+              document.getElementById(id)?.scrollIntoView({
+                behavior: "smooth",
+              });
+            });
           });
           ids.forEach((adjacentId) => {
             mutate("edge", createEdge(id, adjacentId));

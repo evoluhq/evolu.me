@@ -2,7 +2,6 @@ import clsx from "clsx";
 import { useRouter } from "next/router";
 import { FC, ReactNode, useRef, useState } from "react";
 import { useIntl } from "react-intl";
-import useEvent from "react-use-event-hook";
 import { Text } from "../components/Text";
 import {
   KeyboardNavigationProvider,
@@ -64,26 +63,13 @@ const MainNavLinks = () => {
 export const MainNav = () => {
   const intl = useIntl();
   const [popoverIsVisible, setPopoverIsVisible] = useState(false);
-
-  const buttonKeyNavigation = useKeyNavigation({
-    keys: {
-      // ArrowLeft: { id: uniqueId.lastNodeFilterItem },
-      // ArrowUp: { id: uniqueId.editorContentEditable },
-    },
-  });
-
   const buttonRef = useRef<View | null>(null);
-  const handleRef = useEvent((view: View | null) => {
-    buttonKeyNavigation.ref(view);
-    buttonRef.current = view;
-  });
 
   return (
     <>
       <Button
         onPress={() => setPopoverIsVisible(true)}
-        {...buttonKeyNavigation}
-        ref={handleRef}
+        ref={buttonRef}
         className="w-9"
       >
         <Text as="button">

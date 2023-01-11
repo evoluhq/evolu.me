@@ -1,5 +1,5 @@
 import { has, model } from "evolu";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import { AdjacentNodes } from "../components/AdjacentNodes";
 import { ClientOnly } from "../components/ClientOnly";
@@ -63,6 +63,16 @@ const Index = () => {
     [adjacentNodes.rows]
   );
 
+  const [initialRender, setInitialRender] = useState(true);
+
+  const initialIdsRef = useRef(ids);
+
+  // This only works for the root page aka without a hash.
+  // A page with the hash will be rendered twice (without then with a hash).
+  useEffect(() => {
+    if (initialRender && initialIdsRef.current !== ids) setInitialRender(false);
+  }, [ids, initialRender]);
+
   return (
     <Layout
       waitForData
@@ -91,7 +101,11 @@ const Index = () => {
               <NodeEditor key={row.id} row={row} />
             ))}
             <View className="flex-1 justify-center">
-              <AdjacentNodes ids={ids} rows={loadedAdjacentNodesRows} />
+              <AdjacentNodes
+                ids={ids}
+                rows={loadedAdjacentNodesRows}
+                initialRender={initialRender}
+              />
             </View>
           </View>
         )}

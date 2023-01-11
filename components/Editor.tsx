@@ -26,7 +26,7 @@ import {
   useLayoutEffect,
 } from "react";
 import useEvent from "react-use-event-hook";
-import { focusClassNames } from "../lib/focusClassNames";
+import { focusIds } from "../lib/focusIds";
 import { ring } from "../styles";
 import { Text } from "./Text";
 
@@ -120,7 +120,7 @@ export const Editor = forwardRef<LexicalEditor, EditorProps>(function Editor(
               // @ts-expect-error Wrong types.
               autoCorrect="off"
               spellCheck={false}
-              className={focusClassNames.editorContentEditable}
+              id={focusIds.editorContentEditable}
             />
           }
           placeholder={null}
