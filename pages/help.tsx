@@ -16,6 +16,7 @@ import { Text } from "../components/Text";
 // TODO: Keyboard.
 // Remember, it's not trees, it's undirected graph... The difference is...
 // You have more than one item in the filter, and that's how you can filter or connect as many thoughts as necessary.
+// The beauty is that you can connect anything with anything.
 // The possibilities are endless.`,
 
 const Help = () => {
@@ -28,8 +29,11 @@ const Help = () => {
       <View className="flex-1 justify-center">
         <Text className="text-center">
           {intl.formatMessage({
-            defaultMessage: "Under construction 🚧",
-            id: "Q4maGs",
+            defaultMessage: `Under construction 🚧
+            
+For keyboard navigation, you can use:
+a tab, arrows, enter, escape`,
+            id: "02TW27",
           })}
         </Text>
       </View>
