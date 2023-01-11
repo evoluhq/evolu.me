@@ -52,7 +52,7 @@ export const Layout: FC<{
                 nativeID={focusIds.layoutScrollView}
                 {...props}
               >
-                <Container className="flex-1 pt-0">{children}</Container>
+                <Container className="flex-1">{children}</Container>
               </ScrollView>
               {footer}
             </>
