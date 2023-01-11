@@ -3,10 +3,6 @@ import { useRouter } from "next/router";
 import { FC, ReactNode, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import { Text } from "../components/Text";
-import {
-  KeyboardNavigationProvider,
-  useKeyNavigation,
-} from "../lib/hooks/useKeyNavigation";
 import { Button } from "./Button";
 import { Link } from "./Link";
 import { Popover } from "./Popover";
@@ -15,13 +11,8 @@ import { View } from "./styled";
 const MainNavLink: FC<{
   children: ReactNode;
   href: string;
-  x: number;
   className: string;
-}> = ({ children, href, x, className }) => {
-  const keyNavigation = useKeyNavigation({
-    x,
-    keys: { ArrowUp: "previousX", ArrowDown: "nextX" },
-  });
+}> = ({ children, href, className }) => {
   const isCurrent = href === useRouter().pathname;
 
   return (
@@ -31,7 +22,6 @@ const MainNavLink: FC<{
         p
         transparent={!isCurrent}
         className={clsx("px-3", className)}
-        {...keyNavigation}
       >
         {children}
       </Text>
@@ -44,16 +34,16 @@ const MainNavLinks = () => {
 
   return (
     <>
-      <MainNavLink href="/" x={0} className="rounded-b-none">
+      <MainNavLink href="/" className="rounded-b-none">
         {intl.formatMessage({ defaultMessage: "Home", id: "ejEGdx" })}
       </MainNavLink>
-      <MainNavLink href="/settings" x={1} className="rounded-none">
+      <MainNavLink href="/settings" className="rounded-none">
         {intl.formatMessage({ defaultMessage: "Settings", id: "D3idYv" })}
       </MainNavLink>
-      <MainNavLink href="/help" x={2} className="rounded-none">
+      <MainNavLink href="/help" className="rounded-none">
         {intl.formatMessage({ defaultMessage: "Help", id: "SENRqu" })}
       </MainNavLink>
-      <MainNavLink href="/about" x={3} className="rounded-t-none">
+      <MainNavLink href="/about" className="rounded-t-none">
         {intl.formatMessage({ defaultMessage: "About", id: "g5pX+a" })}
       </MainNavLink>
     </>
@@ -82,9 +72,7 @@ export const MainNav = () => {
           position="top right to top right"
           onRequestClose={() => setPopoverIsVisible(false)}
         >
-          <KeyboardNavigationProvider maxX={3}>
-            <MainNavLinks />
-          </KeyboardNavigationProvider>
+          <MainNavLinks />
         </Popover>
       ) : (
         // SEO
