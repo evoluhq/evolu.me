@@ -15,8 +15,6 @@ interface AdjacentNodeProps {
   };
   focusable: false | "button" | "input";
   x: number;
-  isFirst: boolean;
-  isLast: boolean;
 }
 
 export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
