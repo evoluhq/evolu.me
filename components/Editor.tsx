@@ -109,6 +109,7 @@ export const Editor = forwardRef<LexicalEditor, EditorProps>(function Editor(
             $getRoot().append(
               $createParagraphNode().append($createTextNode(initialValue))
             );
+            $getRoot().selectEnd();
           },
         }}
       >
