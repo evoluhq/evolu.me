@@ -70,13 +70,8 @@ export const NodeEditor = memo<{
     const [popoverIsVisible, setPopoverIsVisible] = useState(false);
 
     return (
-      <>
-        <Editor
-          initialValue={editNode.md}
-          onChange={handleEditorChange}
-          state={hasChange ? "hasChange" : undefined}
-          onBlur={onBlurOrUnmount}
-        />
+      // flex-col-reverse to improve key tab navigation (fewer steps)
+      <View className="flex-col-reverse">
         <View className="flex-row justify-end">
           <BlankButton
             ref={buttonRef}
@@ -89,6 +84,12 @@ export const NodeEditor = memo<{
             state={popoverIsVisible ? "active" : undefined}
           />
         </View>
+        <Editor
+          initialValue={editNode.md}
+          onChange={handleEditorChange}
+          state={hasChange ? "hasChange" : undefined}
+          onBlur={onBlurOrUnmount}
+        />
         {popoverIsVisible && (
           <NodeEditorPopover
             id={id}
@@ -96,7 +97,7 @@ export const NodeEditor = memo<{
             ownerRef={buttonRef}
           />
         )}
-      </>
+      </View>
     );
   },
   (prev, next) => prev.row.id === next.row.id && prev.row.md === next.row.md
