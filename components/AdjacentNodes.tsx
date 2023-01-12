@@ -94,6 +94,7 @@ export const AdjacentNodes = memo<{
               row={row}
               x={i}
               focusable={i === x && (y === 0 ? "button" : "input")}
+              isLast={rows.length === 1}
             />
           ))
         }

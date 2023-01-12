@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { FC, MutableRefObject, useContext } from "react";
 import { useIntl } from "react-intl";
 import { createEdge, NodeId, useMutation, useQuery } from "../lib/db";
+import { focusId } from "../lib/focusIds";
 import {
   KeyboardNavigationContext,
   KeyboardNavigationProvider,
@@ -41,11 +42,19 @@ const PopoverButton: FC<{
   );
 };
 
-export const AdjacentNodeButtonPopover: FC<{
+interface AdjacentNodeButtonPopover {
   id: NodeId;
   onRequestClose: IO<void>;
   ownerRef: MutableRefObject<View | null>;
-}> = ({ id, onRequestClose, ownerRef }) => {
+  isLast: boolean;
+}
+
+export const AdjacentNodeButtonPopover: FC<AdjacentNodeButtonPopover> = ({
+  id,
+  onRequestClose,
+  ownerRef,
+  isLast,
+}) => {
   const intl = useIntl();
   const { mutate } = useMutation();
 
@@ -66,10 +75,13 @@ export const AdjacentNodeButtonPopover: FC<{
 
   const { move } = useContext(KeyboardNavigationContext);
 
+  const onDeleteOrRemoveOnComplete = () => {
+    if (isLast) focusId("allLink")();
+    else move("current");
+  };
+
   const handleDeletePress = () => {
-    mutate("node", { id, isDeleted: true }, () => {
-      move("current");
-    });
+    mutate("node", { id, isDeleted: true }, onDeleteOrRemoveOnComplete);
   };
 
   const { rows: edgeIdsRows, isLoaded } = useQuery((db) => {
@@ -90,9 +102,7 @@ export const AdjacentNodeButtonPopover: FC<{
   const handleRemovePress = () => {
     if (!isLoaded) return;
     edgeIdsRows.forEach(({ id }) => {
-      mutate("edge", { id, isDeleted: true }, () => {
-        move("current");
-      });
+      mutate("edge", { id, isDeleted: true }, onDeleteOrRemoveOnComplete);
     });
   };
 

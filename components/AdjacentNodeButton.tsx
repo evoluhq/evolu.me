@@ -12,12 +12,14 @@ export interface AdjacentNodeButtonProps {
   focusable: boolean;
   id: NodeId;
   x: number;
+  isLast: boolean;
 }
 
 export const AdjacentNodeButton: FC<AdjacentNodeButtonProps> = ({
   focusable,
   id,
   x,
+  isLast,
 }) => {
   const intl = useIntl();
   const [popoverIsVisible, setPopoverIsVisible] = useState(false);
@@ -58,6 +60,7 @@ export const AdjacentNodeButton: FC<AdjacentNodeButtonProps> = ({
           id={id}
           onRequestClose={() => setPopoverIsVisible(false)}
           ownerRef={buttonRef}
+          isLast={isLast}
         />
       )}
     </>

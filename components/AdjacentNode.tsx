@@ -15,12 +15,14 @@ interface AdjacentNodeProps {
   };
   focusable: false | "button" | "input";
   x: number;
+  isLast: boolean;
 }
 
 export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
   row: { id, md },
   focusable,
   x,
+  isLast,
 }) {
   const router = useRouter();
 
@@ -37,7 +39,12 @@ export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
 
   return (
     <View className="-ml-3 flex-row" accessibilityRole={"listitem" as "list"}>
-      <AdjacentNodeButton focusable={focusable === "button"} id={id} x={x} />
+      <AdjacentNodeButton
+        focusable={focusable === "button"}
+        id={id}
+        x={x}
+        isLast={isLast}
+      />
       <Link href={`/#${id}`} scroll={false}>
         <Text
           {...linkKeyNavigation}
