@@ -13,7 +13,7 @@ export const useQueryNodesByIds = (ids: readonly NodeId[]) => {
   );
 };
 
-export const useQueryConnectedNodesSortedByCreatedAtDesc = (
+export const useQueryNodesByContextNodesSortedByCreatedAtDesc = (
   ids: readonly NodeId[]
 ) => {
   return useQuery((db) => {
@@ -23,18 +23,18 @@ export const useQueryConnectedNodesSortedByCreatedAtDesc = (
       .orderBy("createdAt", "desc")
       .where("isDeleted", "is not", model.cast(true));
 
-    ids.forEach((adjacentId) => {
+    ids.forEach((id) => {
       q = q.where("id", "in", (qb) =>
         qb
           .selectFrom("edge")
           .where("isDeleted", "is not", model.cast(true))
-          .where("b", "=", adjacentId)
+          .where("b", "=", id)
           .select("a as id")
           .union(
             qb
               .selectFrom("edge")
               .where("isDeleted", "is not", model.cast(true))
-              .where("a", "=", adjacentId)
+              .where("a", "=", id)
               .select("b as id")
           )
       );

@@ -4,7 +4,7 @@ import { pipe } from "fp-ts/function";
 import { isNonEmpty } from "fp-ts/lib/ReadonlyArray";
 import { useMemo } from "react";
 import { useIntl } from "react-intl";
-import { AdjacentNodes } from "../components/AdjacentNodes";
+import { NodeList } from "../components/NodeList";
 import { ClientOnly } from "../components/ClientOnly";
 import { Container } from "../components/Container";
 import { Layout } from "../components/Layout";
@@ -14,7 +14,7 @@ import { TabBar } from "../components/TabBar";
 import { getFirstLineAlwaysVisible } from "../lib/getFirstLineAlwaysVisible";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import {
-  useQueryConnectedNodesSortedByCreatedAtDesc,
+  useQueryNodesByContextNodesSortedByCreatedAtDesc,
   useQueryNodesByIds,
 } from "../lib/queries";
 
@@ -23,7 +23,7 @@ const Index = () => {
   const intl = useIntl();
 
   const contextNodes = useQueryNodesByIds(ids);
-  const connectedNodes = useQueryConnectedNodesSortedByCreatedAtDesc(ids);
+  const connectedNodes = useQueryNodesByContextNodesSortedByCreatedAtDesc(ids);
 
   const loadedAndSortedContextNodesRows = useMemo(
     () =>
@@ -33,7 +33,7 @@ const Index = () => {
     [ids, contextNodes.rows]
   );
 
-  const loadedAdjacentNodesRows = useMemo(
+  const loadedConnectedNodesRows = useMemo(
     () => connectedNodes.rows.filter(has(["md"])),
     [connectedNodes.rows]
   );
@@ -76,7 +76,7 @@ const Index = () => {
               <NodeEditor key={row.id} row={row} />
             ))}
             <View className="flex-1 justify-center">
-              <AdjacentNodes ids={ids} rows={loadedAdjacentNodesRows} />
+              <NodeList ids={ids} rows={loadedConnectedNodesRows} />
             </View>
           </View>
         )}

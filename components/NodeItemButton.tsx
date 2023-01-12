@@ -4,18 +4,18 @@ import { useIntl } from "react-intl";
 import useEvent from "react-use-event-hook";
 import { NodeId } from "../lib/db";
 import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
-import { AdjacentNodeButtonPopover } from "./AdjacentNodeButtonPopover";
+import { NodeItemButtonPopover } from "./NodeItemButtonPopover";
 import { BlankButton } from "./BlankButton";
 import { View } from "./styled";
 
-export interface AdjacentNodeButtonProps {
+export interface NodeItemButtonProps {
   focusable: boolean;
   id: NodeId;
   x: number;
   isLast: boolean;
 }
 
-export const AdjacentNodeButton: FC<AdjacentNodeButtonProps> = ({
+export const NodeItemButton: FC<NodeItemButtonProps> = ({
   focusable,
   id,
   x,
@@ -46,8 +46,8 @@ export const AdjacentNodeButton: FC<AdjacentNodeButtonProps> = ({
       <BlankButton
         type="square"
         title={intl.formatMessage({
-          defaultMessage: "Show adjacent node actions",
-          id: "f0JkVN",
+          defaultMessage: "Show connected node actions",
+          id: "8G/aQx",
         })}
         {...buttonKeyNavigation}
         ref={handleRef}
@@ -56,7 +56,7 @@ export const AdjacentNodeButton: FC<AdjacentNodeButtonProps> = ({
         state={popoverIsVisible ? "active" : undefined}
       />
       {popoverIsVisible && (
-        <AdjacentNodeButtonPopover
+        <NodeItemButtonPopover
           id={id}
           onRequestClose={() => setPopoverIsVisible(false)}
           ownerRef={buttonRef}

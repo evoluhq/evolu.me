@@ -11,13 +11,15 @@ import {
 import { useRequestFocus } from "../lib/hooks/useRequestFocus";
 import { useScrollRestoration } from "../lib/hooks/useScrollRestoration";
 import { About } from "./About";
-import { AdjacentNode } from "./AdjacentNode";
+import { NodeItem } from "./NodeItem";
 import { View } from "./styled";
 
-export const AdjacentNodes = memo<{
+interface NodeListProps {
   ids: readonly NodeId[];
   rows: readonly { id: NodeId; md: NodeMarkdown }[];
-}>(function AdjacentNodes({ ids, rows }) {
+}
+
+export const NodeList = memo<NodeListProps>(function NodeList({ ids, rows }) {
   const focusPositionsRef = useRef<Map<string, FocusPosition>>();
 
   const getFocusPositions = () => {
@@ -89,7 +91,7 @@ export const AdjacentNodes = memo<{
       >
         {({ x, y }) =>
           rows.map((row, i) => (
-            <AdjacentNode
+            <NodeItem
               key={row.id}
               row={row}
               x={i}

@@ -166,8 +166,8 @@ export const AddNodeModal: FC<{
               });
             });
           });
-          ids.forEach((adjacentId) => {
-            mutate("edge", createEdge(id, adjacentId));
+          ids.forEach((connectedId) => {
+            mutate("edge", createEdge(id, connectedId));
           });
         }
       )

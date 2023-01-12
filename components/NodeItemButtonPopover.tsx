@@ -15,7 +15,7 @@ import {
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
 import {
-  useQueryConnectedNodesSortedByCreatedAtDesc,
+  useQueryNodesByContextNodesSortedByCreatedAtDesc,
   useQueryNodesByIds,
 } from "../lib/queries";
 import { Button } from "./Button";
@@ -46,14 +46,14 @@ const PopoverButton: FC<{
   );
 };
 
-interface AdjacentNodeButtonPopover {
+interface NodeItemButtonPopover {
   id: NodeId;
   onRequestClose: IO<void>;
   ownerRef: MutableRefObject<View | null>;
   isLast: boolean;
 }
 
-export const AdjacentNodeButtonPopover: FC<AdjacentNodeButtonPopover> = ({
+export const NodeItemButtonPopover: FC<NodeItemButtonPopover> = ({
   id,
   onRequestClose,
   ownerRef,
@@ -67,7 +67,7 @@ export const AdjacentNodeButtonPopover: FC<AdjacentNodeButtonPopover> = ({
   const idsWithId = pipe(ids, readonlyArray.append(id));
   // Preload for with button to suppress UI flickering.
   useQueryNodesByIds(idsWithId);
-  useQueryConnectedNodesSortedByCreatedAtDesc(idsWithId);
+  useQueryNodesByContextNodesSortedByCreatedAtDesc(idsWithId);
 
   const router = useRouter();
 
@@ -111,7 +111,7 @@ export const AdjacentNodeButtonPopover: FC<AdjacentNodeButtonPopover> = ({
     });
   };
 
-  const hasAdjacentNodes = ids.length > 0;
+  const hasContextNodes = ids.length > 0;
 
   return (
     <Popover
@@ -120,7 +120,7 @@ export const AdjacentNodeButtonPopover: FC<AdjacentNodeButtonPopover> = ({
       onRequestClose={onRequestClose}
     >
       <View className="flex-row">
-        <KeyboardNavigationProvider maxX={hasAdjacentNodes ? 2 : 0}>
+        <KeyboardNavigationProvider maxX={hasContextNodes ? 2 : 0}>
           <PopoverButton
             title={intl.formatMessage({
               defaultMessage: "Delete",
@@ -128,9 +128,9 @@ export const AdjacentNodeButtonPopover: FC<AdjacentNodeButtonPopover> = ({
             })}
             x={0}
             onPress={handleDeletePress}
-            className={clsx(hasAdjacentNodes && "rounded-r-none")}
+            className={clsx(hasContextNodes && "rounded-r-none")}
           />
-          {hasAdjacentNodes && (
+          {hasContextNodes && (
             <>
               <PopoverButton
                 title={intl.formatMessage({
@@ -139,7 +139,7 @@ export const AdjacentNodeButtonPopover: FC<AdjacentNodeButtonPopover> = ({
                 })}
                 x={1}
                 onPress={handleWithPress}
-                className={hasAdjacentNodes ? "rounded-none" : "rounded-l-none"}
+                className={hasContextNodes ? "rounded-none" : "rounded-l-none"}
               />
               <PopoverButton
                 title={intl.formatMessage({

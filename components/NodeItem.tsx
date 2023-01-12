@@ -3,12 +3,12 @@ import { memo } from "react";
 import { NodeId, NodeMarkdown } from "../lib/db";
 import { getFirstLineAlwaysVisible } from "../lib/getFirstLineAlwaysVisible";
 import { useKeyNavigation } from "../lib/hooks/useKeyNavigation";
-import { AdjacentNodeButton } from "./AdjacentNodeButton";
+import { NodeItemButton } from "./NodeItemButton";
 import { Link } from "./Link";
 import { View } from "./styled";
 import { Text } from "./Text";
 
-interface AdjacentNodeProps {
+interface NodeItemProps {
   row: {
     id: NodeId;
     md: NodeMarkdown;
@@ -18,7 +18,7 @@ interface AdjacentNodeProps {
   isLast: boolean;
 }
 
-export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
+export const NodeItem = memo<NodeItemProps>(function NodeItem({
   row: { id, md },
   focusable,
   x,
@@ -39,7 +39,7 @@ export const AdjacentNode = memo<AdjacentNodeProps>(function AdjacentNode({
 
   return (
     <View className="-ml-3 flex-row" accessibilityRole={"listitem" as "list"}>
-      <AdjacentNodeButton
+      <NodeItemButton
         focusable={focusable === "button"}
         id={id}
         x={x}
