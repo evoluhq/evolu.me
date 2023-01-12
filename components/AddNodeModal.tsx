@@ -146,10 +146,11 @@ export const AddNodeModal: FC<{
 
   const editorRef = useRef<LexicalEditor>(null);
 
+  const parsedMd = pipe(NodeMarkdown.safeParse(newNode.md), safeParseToEither);
+
   const handleButtonsAdd = useEvent(() => {
     pipe(
-      NodeMarkdown.safeParse(newNode.md),
-      safeParseToEither,
+      parsedMd,
       either.match(
         () => {
           editorRef.current?.focus();
@@ -172,6 +173,17 @@ export const AddNodeModal: FC<{
       )
     );
   });
+
+  // const foo = useQuery(
+  //   either.isRight(parsedMd) &&
+  //     ((db) =>
+  //       db
+  //         .selectFrom("node")
+  //         .select("md")
+  //         .where("isDeleted", "is not", model.cast(true))
+  //         .where("md", "like", `${parsedMd.right}%` as NodeMarkdown))
+  // );
+  // console.log(foo);
 
   return (
     <Modal transparent onRequestClose={onRequestClose} visible>

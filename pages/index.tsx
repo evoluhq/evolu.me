@@ -1,4 +1,4 @@
-import { has, model } from "evolu";
+import { has } from "evolu";
 import { option, readonlyArray } from "fp-ts";
 import { pipe } from "fp-ts/function";
 import { isNonEmpty } from "fp-ts/lib/ReadonlyArray";
@@ -11,64 +11,35 @@ import { Layout } from "../components/Layout";
 import { NodeEditor } from "../components/NodeEditor";
 import { View } from "../components/styled";
 import { TabBar } from "../components/TabBar";
-import { useQuery } from "../lib/db";
 import { getFirstLineAlwaysVisible } from "../lib/getFirstLineAlwaysVisible";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
+import {
+  useQueryConnectedNodesSortedByCreatedAtDesc,
+  useQueryNodesByIds,
+} from "../lib/queries";
 
 const Index = () => {
   const ids = useLocationHashNodeIds();
   const intl = useIntl();
-  const nodes = useQuery((db) =>
-    db
-      .selectFrom("node")
-      .select(["id", "md"])
-      .where("isDeleted", "is not", model.cast(true))
-      .where("id", "in", ids)
-  );
 
-  const loadedNodesRows = useMemo(
+  const contextNodes = useQueryNodesByIds(ids);
+  const connectedNodes = useQueryConnectedNodesSortedByCreatedAtDesc(ids);
+
+  const loadedAndSortedContextNodesRows = useMemo(
     () =>
-      nodes.rows
+      contextNodes.rows
         .filter(has(["md"]))
         .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id)),
-    [ids, nodes.rows]
+    [ids, contextNodes.rows]
   );
 
-  const adjacentNodes = useQuery((db) => {
-    // https://inviqa.com/blog/storing-graphs-database-sql-meets-social-network
-    let q = db
-      .selectFrom("node")
-      .select(["id", "md"])
-      .orderBy("createdAt", "desc")
-      .where("isDeleted", "is not", model.cast(true));
-
-    ids.forEach((adjacentId) => {
-      q = q.where("id", "in", (qb) =>
-        qb
-          .selectFrom("edge")
-          .where("isDeleted", "is not", model.cast(true))
-          .where("b", "=", adjacentId)
-          .select("a as id")
-          .union(
-            qb
-              .selectFrom("edge")
-              .where("isDeleted", "is not", model.cast(true))
-              .where("a", "=", adjacentId)
-              .select("b as id")
-          )
-      );
-    });
-
-    return q;
-  });
-
   const loadedAdjacentNodesRows = useMemo(
-    () => adjacentNodes.rows.filter(has(["md"])),
-    [adjacentNodes.rows]
+    () => connectedNodes.rows.filter(has(["md"])),
+    [connectedNodes.rows]
   );
 
   const title = pipe(
-    loadedNodesRows,
+    loadedAndSortedContextNodesRows,
     option.fromPredicate(isNonEmpty),
     option.map(readonlyArray.map((a) => getFirstLineAlwaysVisible(a.md))),
     option.map((a) => a.join(" | ")),
@@ -93,15 +64,15 @@ const Index = () => {
       footer={
         <ClientOnly>
           <Container className="pb-0">
-            <TabBar ids={ids} rows={loadedNodesRows} />
+            <TabBar ids={ids} rows={loadedAndSortedContextNodesRows} />
           </Container>
         </ClientOnly>
       }
     >
       <ClientOnly>
-        {nodes.isLoaded && adjacentNodes.isLoaded && (
+        {contextNodes.isLoaded && connectedNodes.isLoaded && (
           <View className="flex-1">
-            {loadedNodesRows.map((row) => (
+            {loadedAndSortedContextNodesRows.map((row) => (
               <NodeEditor key={row.id} row={row} />
             ))}
             <View className="flex-1 justify-center">

@@ -14,6 +14,10 @@ import {
 } from "../lib/hooks/useKeyNavigation";
 import { useLocationHashNodeIds } from "../lib/hooks/useLocationHashNodeIds";
 import { nodeIdsToLocationHash } from "../lib/nodeIdsToLocationHash";
+import {
+  useQueryConnectedNodesSortedByCreatedAtDesc,
+  useQueryNodesByIds,
+} from "../lib/queries";
 import { Button } from "./Button";
 import { Popover } from "./Popover";
 import { View } from "./styled";
@@ -58,19 +62,19 @@ export const AdjacentNodeButtonPopover: FC<AdjacentNodeButtonPopover> = ({
   const intl = useIntl();
   const { mutate } = useMutation();
 
-  const locationNodeIds = useLocationHashNodeIds();
+  const ids = useLocationHashNodeIds();
+
+  const idsWithId = pipe(ids, readonlyArray.append(id));
+  // Preload for with button to suppress UI flickering.
+  useQueryNodesByIds(idsWithId);
+  useQueryConnectedNodesSortedByCreatedAtDesc(idsWithId);
 
   const router = useRouter();
 
-  const handleAddToContextPress = () => {
-    pipe(
-      locationNodeIds,
-      readonlyArray.append(id),
-      nodeIdsToLocationHash,
-      (hash) => {
-        router.push(`/#${hash}`);
-      }
-    );
+  const handleWithPress = () => {
+    pipe(idsWithId, nodeIdsToLocationHash, (hash) => {
+      router.push(`/#${hash}`);
+    });
   };
 
   const { move } = useContext(KeyboardNavigationContext);
@@ -84,9 +88,10 @@ export const AdjacentNodeButtonPopover: FC<AdjacentNodeButtonPopover> = ({
     mutate("node", { id, isDeleted: true }, onDeleteOrRemoveOnComplete);
   };
 
-  const { rows: edgeIdsRows, isLoaded } = useQuery((db) => {
+  // Preloading for remove button.
+  const edgesToDelete = useQuery((db) => {
     const [a, b] = pipe(
-      locationNodeIds,
+      ids,
       readonlyArray.map((locationNodeId) => createEdge(locationNodeId, id)),
       readonlyArray.map(({ a, b }) => [a, b] as const),
       readonlyArray.unzip
@@ -100,13 +105,13 @@ export const AdjacentNodeButtonPopover: FC<AdjacentNodeButtonPopover> = ({
   });
 
   const handleRemovePress = () => {
-    if (!isLoaded) return;
-    edgeIdsRows.forEach(({ id }) => {
+    if (!edgesToDelete.isLoaded) return;
+    edgesToDelete.rows.forEach(({ id }) => {
       mutate("edge", { id, isDeleted: true }, onDeleteOrRemoveOnComplete);
     });
   };
 
-  const hasAdjacentNodes = locationNodeIds.length > 0;
+  const hasAdjacentNodes = ids.length > 0;
 
   return (
     <Popover
@@ -133,7 +138,7 @@ export const AdjacentNodeButtonPopover: FC<AdjacentNodeButtonPopover> = ({
                   id: "E8dH1q",
                 })}
                 x={1}
-                onPress={handleAddToContextPress}
+                onPress={handleWithPress}
                 className={hasAdjacentNodes ? "rounded-none" : "rounded-l-none"}
               />
               <PopoverButton
