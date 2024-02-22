@@ -4,6 +4,7 @@ import {
   forwardRef,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useRef,
 } from "react";
 
@@ -35,49 +36,51 @@ export const Modal = forwardRef<ModalRef, ModalProps>(function Modal(
 
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
-  const onRequestCloseRef = useRef(onRequestClose);
-  const suppressRequestCloseRef = useRef(suppressRequestClose);
-  useEffect(() => {
-    onRequestCloseRef.current = onRequestClose;
-    suppressRequestCloseRef.current = suppressRequestClose;
-  });
-
-  /**
-   * This must be run once because dialog.showModal() can't be called when
-   * dialog is already shown.
-   */
   useEffect(() => {
     const { current: dialog } = dialogRef;
     if (!dialog) return;
 
     const handleClose = () => {
-      if (onRequestCloseRef.current) onRequestCloseRef.current();
+      if (onRequestClose) onRequestClose();
     };
 
     const handleClick = (e: MouseEvent) => {
-      if (suppressRequestCloseRef.current) return;
+      if (suppressRequestClose) return;
       if (e.target === dialog) dialog.close();
     };
 
     const handleCancel = (e: Event) => {
-      if (suppressRequestCloseRef.current) e.preventDefault();
+      if (suppressRequestClose) e.preventDefault();
     };
 
     dialog.addEventListener("close", handleClose);
     dialog.addEventListener("click", handleClick);
     dialog.addEventListener("cancel", handleCancel);
 
-    dialog.showModal();
-
     return () => {
       dialog.removeEventListener("close", handleClose);
       dialog.removeEventListener("click", handleClick);
       dialog.removeEventListener("cancel", handleCancel);
     };
+  }, [onRequestClose, suppressRequestClose]);
+
+  useLayoutEffect(() => {
+    const { current: dialog } = dialogRef;
+    if (!dialog) return;
+    // It must be removed before calling showModal.
+    dialog.removeAttribute("open");
+    dialog.showModal();
   }, []);
 
   return (
     <dialog
+      /**
+       * Dialog has to be rendered open; otherwise, reading DOM values like
+       * offsetWidth returns 0 because, without an open attribute, the Dialog
+       * display style is set to none. Unfortunately, there is no attribute for
+       * modality; the showModal method is the only way to make Dialog modal.
+       */
+      open
       {...props(styles.dialog, background && styles.background)}
       ref={dialogRef}
     >
