@@ -25,6 +25,7 @@ export const DayAddNote: FC<{
   day: Temporal.PlainDate;
   isVisible: boolean;
 }> = ({ day, isVisible }) => {
+  // Make NoteId from a day.
   const id = S.decodeSync(Id)(day.toString().padEnd(21, "0")) as NoteId;
   const { row } = useQuery(newNoteById(id), { once: true });
 
@@ -46,14 +47,14 @@ export const DayAddNote: FC<{
     (content: ContentMax10k) => {
       const start = castTemporal(
         now.timeZoneId(),
-        now.plainDateTimeISO().with({ day: day.day }),
+        now.plainDateTimeISO().withPlainDate(day),
       );
       evolu.create("note", { content, start });
       evolu.update("_newNote", { id, isDeleted: true }, () => {
         editorRef.current?.clear();
       });
     },
-    [day.day, evolu, id, now],
+    [day, evolu, id, now],
   );
 
   const handleEditorKeyEnter = useCallback(() => {
