@@ -1,6 +1,6 @@
 # Evolu.me
 
-Local-first calendar and notes. Plan privately and note securely.
+Local-first calendar and notes.
 
 Made with [Evolu](https://github.com/evoluhq/evolu).
 
