@@ -1,0 +1,22 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  color-scheme: "light dark";
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  overflow: hidden;
+  /* https://www.joshwcomeau.com/css/custom-css-reset/#four-font-smoothing-5 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#__next {
+  height: 100%;
+}
