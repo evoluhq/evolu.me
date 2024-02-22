@@ -2,6 +2,8 @@
 
 Local-first calendar and notes. Plan privately and note securely.
 
+Made with [Evolu](https://github.com/evoluhq/evolu).
+
 ## Getting Started
 
 First, run the development server:
