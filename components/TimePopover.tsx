@@ -27,18 +27,21 @@ export const TimePopover: FC<{
 }> = ({ initialValue, onDone }) => {
   const hoursScrollViewRef = useRef<HTMLDivElement>(null);
   const minutesScrollViewRef = useRef<HTMLDivElement>(null);
+  const scrollViewsRef = useRef<HTMLDivElement>(null);
 
   const reset = useCallback(
     ({ animated }: { animated: boolean }) => {
       const { current: hoursScrollView } = hoursScrollViewRef;
       const { current: minutesScrollView } = minutesScrollViewRef;
-      if (!hoursScrollView || !minutesScrollView) return;
+      const { current: scrollViews } = scrollViewsRef;
+      if (!hoursScrollView || !minutesScrollView || !scrollViews) return;
+      const { offsetHeight } = scrollViews;
       hoursScrollView.scrollTo({
-        y: (initialValue.hour * hoursScrollView.offsetHeight) / 5,
+        y: (initialValue.hour * offsetHeight) / 5,
         animated,
       } as RNfW);
       minutesScrollView.scrollTo({
-        y: (initialValue.minute * hoursScrollView.offsetHeight) / 5,
+        y: (initialValue.minute * offsetHeight) / 5,
         animated,
       } as RNfW);
     },
@@ -86,7 +89,7 @@ export const TimePopover: FC<{
       <div {...props(styles.strip)} />
       <div {...props(styles.gradient1)} />
       <div {...props(styles.gradient2)} />
-      <div {...props(styles.scrollViews)}>
+      <div ref={scrollViewsRef} {...props(styles.scrollViews)}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={styles.scrollView as RNfW}
