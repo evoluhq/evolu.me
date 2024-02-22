@@ -131,7 +131,6 @@ export const TimePopover: FC<{
   );
 };
 
-/** Is required for ScrollView pagingEnabled feature. */
 const Spacer = memo(function Spacer() {
   return (
     <>
