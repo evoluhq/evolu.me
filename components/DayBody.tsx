@@ -58,10 +58,8 @@ const CarouselItem = memo<{
         style={styles.scrollView as RNfW}
         showsVerticalScrollIndicator={false}
       >
-        {/* <NoteItem /> */}
         <DayNotes day={day} isVisible={isVisible} />
         <DayAddNote day={day} isVisible={isVisible} />
-        {/* TODO: Add abs pos invisible Pressable to focus DayAddNote. */}
       </ScrollView>
     );
   },
