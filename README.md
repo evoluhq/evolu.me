@@ -7,6 +7,9 @@ Local-first calendar and notes. Plan privately and note securely.
 First, run the development server:
 
 ```bash
+# Enable pre/post scripts
+pnpm config set enable-pre-post-scripts true
+
 pnpm dev
 ```
 
