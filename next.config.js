@@ -25,24 +25,6 @@ const nextConfig = {
     };
     return config;
   },
-
-  async headers() {
-    return [
-      {
-        source: "/(.*?)",
-        headers: [
-          {
-            key: "cross-origin-embedder-policy",
-            value: "require-corp",
-          },
-          {
-            key: "cross-origin-opener-policy",
-            value: "same-origin",
-          },
-        ],
-      },
-    ];
-  },
 };
 
 // From https://github.com/facebook/stylex/blob/main/apps/nextjs-example/next.config.js
