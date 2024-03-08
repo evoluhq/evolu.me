@@ -9,6 +9,7 @@ export interface FormattedProps {
 
 type HoursOrMinutes = `${number}${"hours" | "minutes"}`;
 
+/** To ensure unified formatting across the whole app. */
 export const Formatted = memo<FormattedProps>(function Formatted({ value }) {
   if (value instanceof Temporal.PlainDate) return <PlainDate value={value} />;
   if (value instanceof Temporal.PlainTime) return <PlainTime value={value} />;
@@ -27,8 +28,8 @@ export const Formatted = memo<FormattedProps>(function Formatted({ value }) {
 
 const PlainDate: FC<{ value: Temporal.PlainDate }> = ({ value }) => {
   return useContext(IntlContext).toLocaleString(value, {
-    weekday: "short",
-    month: "short",
+    weekday: "long",
+    month: "long",
     day: "numeric",
   });
 };
