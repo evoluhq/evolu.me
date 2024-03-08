@@ -29,6 +29,7 @@ export interface ButtonProps {
   onPress?: (e: GestureResponderEvent) => void;
   tabIndex?: -1 | 0;
   disabled?: boolean;
+  selected?: boolean;
 }
 
 export const Button = forwardRef<ButtonRef, ButtonProps>(function Button(
@@ -42,6 +43,7 @@ export const Button = forwardRef<ButtonRef, ButtonProps>(function Button(
     onPress,
     tabIndex,
     disabled,
+    selected,
   },
   ref,
 ) {
@@ -74,7 +76,7 @@ export const Button = forwardRef<ButtonRef, ButtonProps>(function Button(
               styles.titleHover,
               titleHoverStyle != null && titleHoverStyle,
             ],
-            pressed && [
+            (pressed || selected === true) && [
               styles.titlePressed,
               titlePressedStyle != null && titlePressedStyle,
             ],
