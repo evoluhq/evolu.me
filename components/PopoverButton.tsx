@@ -55,7 +55,12 @@ export const PopoverButton = forwardRef<PopoverButtonRef, PopoverButtonProps>(
 
     return (
       <>
-        <Button ref={buttonRef} {...buttonProps} onPress={handleButtonPress} />
+        <Button
+          ref={buttonRef}
+          {...buttonProps}
+          onPress={handleButtonPress}
+          selected={popoverIsShown}
+        />
         {popoverIsShown && (
           <Popover
             onClose={handlePopoverClose}
