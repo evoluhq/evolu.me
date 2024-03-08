@@ -6,9 +6,9 @@ export default function Privacy() {
     <PageWithTitle title="Privacy">
       <Text tag="p">
         Your privacy is not just a policy; it&apos;s built into every aspect of
-        this app. As a local-first and end-to-end encrypted web application, we
-        are deeply committed to safeguarding your personal information and
-        ensuring your use of this app is secure and private.
+        this app. As a local-first and end-to-end encrypted web application,
+        Evolu.me is deeply committed to safeguarding your personal information
+        and ensuring your use of this app is secure and private.
       </Text>
       <Text tag="h2">Local-First Approach </Text>
       <Text tag="p">
@@ -20,12 +20,12 @@ export default function Privacy() {
       </Text>
       <Text tag="h2">End-to-End Encryption </Text>
       <Text tag="p">
-        We employ end-to-end encryption for all data transmitted between your
-        device and our services. This means your data is encrypted before it
-        leaves your device and can only be decrypted by the intended recipient.
-        Even where your data must interact with our servers, we cannot access or
-        view your information. This encryption ensures that your conversations,
-        files, and data remain confidential and secure from prying eyes.
+        Evolu.me uses end-to-end encryption for all data transmitted between
+        your device and our services. This means your data is encrypted before
+        it leaves your device and can only be decrypted by the intended
+        recipient. Even where your data must interact with our servers, we
+        cannot access or view your information. This encryption ensures that
+        your data remains confidential and secure from prying eyes.
       </Text>
       <Text tag="h2">No Cookies, No Tracking </Text>
       <Text tag="p">
