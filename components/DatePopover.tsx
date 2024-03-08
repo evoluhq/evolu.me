@@ -102,7 +102,7 @@ export const DatePopover: FC<{
         style={styles.carousel}
       />
       <PopoverFooter>
-        <Button title="Reset" disabled={false} onPress={handleResetPress} />
+        <Button title="Reset" onPress={handleResetPress} />
         <Button title="Done" onPress={handleDonePress} />
       </PopoverFooter>
     </PopoverContainer>
