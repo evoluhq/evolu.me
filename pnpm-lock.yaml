@@ -10,7 +10,7 @@ dependencies:
     version: 0.63.2(effect@2.4.1)(fast-check@3.16.0)
   '@evolu/react':
     specifier: ^6.0.1
-    version: 6.0.1(@evolu/common-react@6.0.1)(@evolu/common-web@6.0.2)(@evolu/common@4.0.1)(react-dom@18.2.0)
+    version: 6.0.1(@evolu/common-react@6.0.2)(@evolu/common-web@6.0.3)(@evolu/common@4.0.2)(react-dom@18.2.0)
   '@lexical/react':
     specifier: ^0.13.1
     version: 0.13.1(lexical@0.13.1)(react-dom@18.2.0)(react@18.2.0)(yjs@13.6.14)
@@ -1555,30 +1555,30 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@evolu/common-react@6.0.1(@evolu/common@4.0.1)(react@18.2.0):
-    resolution: {integrity: sha512-FdpyGfjZBGNsvRUIhVyPEc62gDRcMJZDmDtlUSm0krIFS7BXc8czfIvjwmeDJ5TzrE47BM0CYtoM+Y+SsMUpgw==}
+  /@evolu/common-react@6.0.2(@evolu/common@4.0.2)(react@18.2.0):
+    resolution: {integrity: sha512-lK9QL8Gm5qF+1SoiusM9wCcoXU7DHazClJWTXTBn8XotZwr+HDXUSZYbvyd6q/5E5YAtzOIlrhG5ko49x5SfBA==}
     engines: {node: '>=18.16'}
     peerDependencies:
-      '@evolu/common': ^4.0.1
+      '@evolu/common': ^4.0.2
       react: ^18.2.0
     dependencies:
-      '@evolu/common': 4.0.1(@effect/schema@0.63.2)(effect@2.4.1)
+      '@evolu/common': 4.0.2(@effect/schema@0.63.2)(effect@2.4.1)
       react: 18.2.0
     dev: false
 
-  /@evolu/common-web@6.0.2(@evolu/common@4.0.1)(@sqlite.org/sqlite-wasm@3.45.1-build1):
-    resolution: {integrity: sha512-sDR5v+k+zJdpwHfEUhp/RQc2xaSsX/2q2tBrRpZ7Cg61m3bygV2JnL2hPVlQCXm2xJbdJR+irzprm6h7LzwVZQ==}
+  /@evolu/common-web@6.0.3(@evolu/common@4.0.2)(@sqlite.org/sqlite-wasm@3.45.1-build1):
+    resolution: {integrity: sha512-t2uaughO5BCeOi/txQGMOxzmXrY0F6GAjiWk9Kr1iHYaWaouCy/HhwtpdI8CHohgjvtGxTsdDlwXPpxpJQhRoA==}
     engines: {node: '>=18.16'}
     peerDependencies:
-      '@evolu/common': ^4.0.1
+      '@evolu/common': ^4.0.2
       '@sqlite.org/sqlite-wasm': 3.45.1-build1
     dependencies:
-      '@evolu/common': 4.0.1(@effect/schema@0.63.2)(effect@2.4.1)
+      '@evolu/common': 4.0.2(@effect/schema@0.63.2)(effect@2.4.1)
       '@sqlite.org/sqlite-wasm': 3.45.1-build1
     dev: false
 
-  /@evolu/common@4.0.1(@effect/schema@0.63.2)(effect@2.4.1):
-    resolution: {integrity: sha512-srk9amJUi3yDtSAFXf+kx7feHy3/XPSWpl3JnQc/K3G7yW5kpfKTl+zLR1J3ri0qRMljWkAv40L+yk+lQeiOKw==}
+  /@evolu/common@4.0.2(@effect/schema@0.63.2)(effect@2.4.1):
+    resolution: {integrity: sha512-h4tiVyF3h/BSbw3Er9/oHn3zP3yu0YjksFJmfDLRXOhyOokqdk+ZRe0F+NhRSIGvuwgdefBT8Ir+5VJ8qesT0Q==}
     engines: {node: '>=18.16'}
     peerDependencies:
       '@effect/schema': ^0.63.2
@@ -1594,7 +1594,7 @@ packages:
       nanoid: 5.0.6
     dev: false
 
-  /@evolu/react@6.0.1(@evolu/common-react@6.0.1)(@evolu/common-web@6.0.2)(@evolu/common@4.0.1)(react-dom@18.2.0):
+  /@evolu/react@6.0.1(@evolu/common-react@6.0.2)(@evolu/common-web@6.0.3)(@evolu/common@4.0.2)(react-dom@18.2.0):
     resolution: {integrity: sha512-uFRsbk8zyAzSsx3qgFLe5XnICsoIN7giQRdSH0fSHGy+NycuU8jJFM4yPfAPGhTBTxmwodMZLN9MWeuM1fNwYA==}
     engines: {node: '>=18.16'}
     peerDependencies:
@@ -1603,9 +1603,9 @@ packages:
       '@evolu/common-web': ^6.0.1
       react-dom: ^18.2.0
     dependencies:
-      '@evolu/common': 4.0.1(@effect/schema@0.63.2)(effect@2.4.1)
-      '@evolu/common-react': 6.0.1(@evolu/common@4.0.1)(react@18.2.0)
-      '@evolu/common-web': 6.0.2(@evolu/common@4.0.1)(@sqlite.org/sqlite-wasm@3.45.1-build1)
+      '@evolu/common': 4.0.2(@effect/schema@0.63.2)(effect@2.4.1)
+      '@evolu/common-react': 6.0.2(@evolu/common@4.0.2)(react@18.2.0)
+      '@evolu/common-web': 6.0.3(@evolu/common@4.0.2)(@sqlite.org/sqlite-wasm@3.45.1-build1)
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
@@ -3228,7 +3228,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001596
-      electron-to-chromium: 1.4.696
+      electron-to-chromium: 1.4.697
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
 
@@ -3691,8 +3691,8 @@ packages:
     resolution: {integrity: sha512-YsoMB/EGCohGKFyTPYqaFe2B7UCU2MM303dkoowF8DNOdks/4q/00cyhTbBUmM/0FMDoUPmUi/AJ0Aj3E7vO1A==}
     dev: false
 
-  /electron-to-chromium@1.4.696:
-    resolution: {integrity: sha512-SOr0bHP52OvYg2chCsz/0+FUSMGFm8L8HKwPpx3cbwRY24EOemVJtbgTm+IFO8LzhcnPy+hXmTq7ZcZ8uUuaYg==}
+  /electron-to-chromium@1.4.697:
+    resolution: {integrity: sha512-iPS+iUNUrqTkPRFjMYv1FGXIUYhj2K4rc/93nrDsDtQGMUqyRouCq/xABOSOljKbriEiwg0bEQHGaeD4OaU56g==}
 
   /emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
