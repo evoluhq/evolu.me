@@ -56,6 +56,7 @@ const CarouselItem = memo<{
     return (
       <ScrollView
         style={styles.scrollView as RNfW}
+        contentContainerStyle={styles.scrollViewContentContainer as RNfW}
         showsVerticalScrollIndicator={false}
       >
         <DayNotes day={day} isVisible={isVisible} />
@@ -71,5 +72,8 @@ const CarouselItem = memo<{
 const styles = create({
   scrollView: {
     height: "100%", // The parent isn't flex.
+  },
+  scrollViewContentContainer: {
+    flex: 1,
   },
 });

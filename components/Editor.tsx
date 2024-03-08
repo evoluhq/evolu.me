@@ -31,7 +31,7 @@ import { EnsureBaseline } from "./EnsureBaseline";
 
 // TODO: Check LexicalEditorRefPlugin.
 
-export interface EditorRef extends ClearEditorPluginRef {}
+export interface EditorRef extends ClearEditorPluginRef, FocusEditorPluginRef {}
 
 export interface EditorProps {
   initialValue: Root;
@@ -64,6 +64,9 @@ export const Editor = memo(
         clear: () => {
           clearEditorPluginRef.current?.clear();
         },
+        focus: () => {
+          focusEditorPluginRef.current?.focus();
+        },
       }),
       [],
     );
@@ -87,6 +90,7 @@ export const Editor = memo(
     );
 
     const clearEditorPluginRef = useRef<ClearEditorPluginRef>(null);
+    const focusEditorPluginRef = useRef<FocusEditorPluginRef>(null);
 
     const initialConfig = useMemo(
       () => ({
@@ -153,6 +157,7 @@ export const Editor = memo(
               <ClearEditorPlugin ref={clearEditorPluginRef} />
               {autoFocus && <AutoFocusPlugin />}
               {onKeyEnter && <OnKeyEnterPlugin onKeyEnter={onKeyEnter} />}
+              <FocusEditorPlugin ref={focusEditorPluginRef} />
             </>
           )
         }
@@ -261,3 +266,23 @@ const OnKeyEnterPlugin: FC<{
   }, [editor, onKeyEnter]);
   return null;
 };
+
+interface FocusEditorPluginRef {
+  focus: () => void;
+}
+
+const FocusEditorPlugin = forwardRef<FocusEditorPluginRef>(
+  function FocusEditorPlugin(props, ref) {
+    const [editor] = useLexicalComposerContext();
+    useImperativeHandle(
+      ref,
+      () => ({
+        focus: () => {
+          editor.focus();
+        },
+      }),
+      [editor],
+    );
+    return null;
+  },
+);

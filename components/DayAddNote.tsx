@@ -68,10 +68,14 @@ export const DayAddNote: FC<{
     );
   }, [addNewNote]);
 
+  const handleMainColumnClick = useCallback(() => {
+    editorRef.current?.focus();
+  }, []);
+
   return (
     <div {...props(styles.container)}>
       <div {...props(styles.firstColumn)} />
-      <div {...props(styles.mainColumn)}>
+      <div {...props(styles.mainColumn)} onClick={handleMainColumnClick}>
         <Editor
           initialValue={row?.content?.root || emptyRoot}
           isVisible={isVisible}
@@ -97,5 +101,6 @@ const styles = create({
   mainColumn: {
     display: "flex",
     flex: 6,
+    alignSelf: "stretch",
   },
 });
