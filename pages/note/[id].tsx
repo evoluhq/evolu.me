@@ -183,6 +183,6 @@ const styles = create({
     justifyContent: "space-evenly",
   },
   buttonTitle: {
-    color: colors.inactive,
+    color: colors.secondary,
   },
 });

@@ -120,7 +120,7 @@ const styles = create({
     color: colors.primary,
   },
   titleDisabled: {
-    color: colors.inactive,
+    color: colors.secondary,
   },
   // Variants
   app: {
@@ -131,7 +131,7 @@ const styles = create({
     paddingBlock: spacing.xxxs,
   },
   appSmall: {
-    color: colors.inactive,
+    color: colors.secondary,
     fontSize: fontSizes.step_2,
     fontWeight: 600,
     lineHeight: spacing.xxs as unknown as number,

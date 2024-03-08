@@ -193,7 +193,7 @@ const styles = create({
     top: 0,
     left: 0,
     pointerEvents: "none",
-    color: colors.inactive,
+    color: colors.secondary,
     whiteSpace: "nowrap",
     backgroundColor: null,
   },

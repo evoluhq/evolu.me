@@ -179,7 +179,7 @@ const styles = create({
     outlineWidth: "1px",
     outlineColor: "currentcolor",
     outlineOffset: -1,
-    color: colors.inactive,
+    color: colors.secondary,
     animationName: attentionAnimation,
     animationTimingFunction: "ease-out",
     animationPlayState: "paused",

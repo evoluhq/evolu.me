@@ -44,7 +44,7 @@ const styles = create({
     height: spacing.s,
   },
   short: {
-    color: colors.inactive,
+    color: colors.secondary,
     textTransform: "uppercase",
   },
   ensureBaseline: {

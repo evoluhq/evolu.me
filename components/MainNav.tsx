@@ -89,7 +89,7 @@ const styles = create({
   link: {
     paddingInline: spacing.s,
     paddingBlock: spacing.xxs,
-    color: colors.inactive,
+    color: colors.secondary,
     backgroundColor: "none",
     lineHeight: spacing.s as unknown as number,
   },

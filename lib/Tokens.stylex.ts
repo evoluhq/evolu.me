@@ -54,11 +54,9 @@ const DARK = "@media (prefers-color-scheme: dark)";
 
 export const colors = defineVars({
   primary: { default: "#191919", [DARK]: "#f1f3f5" },
-  inactive: { default: "#868e96", [DARK]: "#868e96" },
-  // gray3: "#dee2e6", gray4: "#ced4da", gray5: "#adb5bd",
+  secondary: { default: "#868e96", [DARK]: "#868e96" },
   border: { default: "#ced4da", [DARK]: "#212529" },
   borderLighter: { default: "#dee2e6", [DARK]: "#212529" },
-  // "#191919"  "#000"
   background: { default: "#f8f9fa", [DARK]: "#191919" },
   hoverAndFocusBackground: { default: "#dee2e6", [DARK]: "#262626" },
 });
