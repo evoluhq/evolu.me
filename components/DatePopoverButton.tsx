@@ -28,8 +28,6 @@ export const DatePopoverButton: FC<DatePopoverButtonProps> = ({
     onChange(value);
   };
 
-  // Temporal.PlainYearMonth
-
   return (
     <PopoverButton
       ref={popoverButtonRef}
