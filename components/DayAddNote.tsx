@@ -12,8 +12,8 @@ import {
   emptyRoot,
   rootsAreEqual,
 } from "../lib/Lexical";
-import { castTemporal } from "../lib/castTemporal";
 import { NowContext } from "../lib/contexts/NowContext";
+import { useCastTemporal } from "../lib/hooks/useCastTemporal";
 import { Editor, EditorRef } from "./Editor";
 
 const newNoteById = (id: NoteId) =>
@@ -41,20 +41,18 @@ export const DayAddNote: FC<{
   );
 
   const now = useContext(NowContext);
+  const castTemporal = useCastTemporal();
   const editorRef = useRef<EditorRef>(null);
 
   const addNewNote = useCallback(
     (content: ContentMax10k) => {
-      const start = castTemporal(
-        now.timeZoneId(),
-        now.plainDateTimeISO().withPlainDate(day),
-      );
+      const start = castTemporal(now.plainDateTimeISO().withPlainDate(day));
       evolu.create("note", { content, start });
       evolu.update("_newNote", { id, isDeleted: true }, () => {
         editorRef.current?.clear();
       });
     },
-    [day, evolu, id, now],
+    [castTemporal, day, evolu, id, now],
   );
 
   const handleEditorKeyEnter = useCallback(() => {

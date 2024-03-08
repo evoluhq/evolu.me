@@ -1,16 +1,15 @@
 import { create, props } from "@stylexjs/stylex";
-import { FC, useCallback, useContext, useState } from "react";
+import { FC, useCallback, useState } from "react";
+import { Temporal } from "temporal-polyfill";
 import { useEvolu } from "../lib/Db";
 import { colors } from "../lib/Tokens.stylex";
-import { castTemporal } from "../lib/castTemporal";
-import { NowContext } from "../lib/contexts/NowContext";
+import { useCastTemporal } from "../lib/hooks/useCastTemporal";
 import { Button } from "./Button";
 import { DatePopoverButton } from "./DatePopoverButton";
 import type { NotesByDayRow } from "./DayNotes";
 import { Dialog } from "./Dialog";
 import { EditorOneLine } from "./EditorOneLine";
 import { TimePopoverButton } from "./TimePopoverButton";
-import { Temporal } from "temporal-polyfill";
 
 export const NoteDialog: FC<{
   row: NotesByDayRow;
@@ -18,9 +17,9 @@ export const NoteDialog: FC<{
 }> = ({ row, onRequestClose }) => {
   const { update } = useEvolu();
 
-  const now = useContext(NowContext);
-  const start = castTemporal(now.timeZoneId(), row.start);
-  // const end = castTemporal(now.timeZoneId(), row.start);
+  const castTemporal = useCastTemporal();
+  const start = castTemporal(row.start);
+  // const end = castTemporal( row.start);
 
   const [startTime, setStartTime] = useState(start.toPlainTime());
   const [startDate, setStartDate] = useState(start.toPlainDate());
@@ -37,7 +36,6 @@ export const NoteDialog: FC<{
 
   const handleDialogDone = useCallback(() => {
     const start = castTemporal(
-      now.timeZoneId(),
       new Temporal.PlainDateTime(
         startDate.year,
         startDate.month,
@@ -48,7 +46,7 @@ export const NoteDialog: FC<{
     );
     update("note", { id: row.id, start }, onRequestClose);
   }, [
-    now,
+    castTemporal,
     onRequestClose,
     row.id,
     startDate.day,

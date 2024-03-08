@@ -21,11 +21,7 @@ export type SqliteDate = S.Schema.To<typeof SqliteDate>;
 export const SqliteTime = TemporalString.pipe(S.brand("SqliteTime"));
 export type SqliteTime = S.Schema.To<typeof SqliteTime>;
 
-/**
- * Cast plain Temporal values to UTC strings and vice-versa.
- *
- * TODO: Make a wrapper using useNow for timeZoneId.
- */
+/** Cast plain Temporal values to UTC strings and vice-versa. */
 export function castTemporal(
   timeZoneId: string,
   value: SqliteDateTime,

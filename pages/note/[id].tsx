@@ -4,7 +4,7 @@ import { create, props } from "@stylexjs/stylex";
 import { Either } from "effect";
 import Error from "next/error";
 import { useRouter } from "next/router";
-import { FC, memo, useCallback, useContext, useRef, useState } from "react";
+import { FC, memo, useCallback, useRef, useState } from "react";
 import { ScrollView } from "react-native";
 import { Button } from "../../components/Button";
 import { Editor } from "../../components/Editor";
@@ -18,8 +18,8 @@ import {
 import { appSpacing } from "../../lib/Themes";
 import { baseline, colors, consts, spacing } from "../../lib/Tokens.stylex";
 import { RNfW } from "../../lib/Types";
-import { SqliteDateTime, castTemporal } from "../../lib/castTemporal";
-import { NowContext } from "../../lib/contexts/NowContext";
+import { SqliteDateTime } from "../../lib/castTemporal";
+import { useCastTemporal } from "../../lib/hooks/useCastTemporal";
 import { useGetDayUrl } from "../../lib/hooks/useGetDayUrl";
 import { useOnUserLeave } from "../../lib/hooks/useOnUserLeave";
 
@@ -141,12 +141,10 @@ const NoteLoaded = memo<{
 const Footer = memo<{ start: SqliteDateTime }>(function Footer({ start }) {
   const router = useRouter();
   const getDayUrl = useGetDayUrl();
-  const now = useContext(NowContext);
+  const castTemporal = useCastTemporal();
 
   const handleCalendarPress = () => {
-    void router.push(
-      getDayUrl(castTemporal(now.timeZoneId(), start).toPlainDate()),
-    );
+    void router.push(getDayUrl(castTemporal(start).toPlainDate()));
   };
 
   return (

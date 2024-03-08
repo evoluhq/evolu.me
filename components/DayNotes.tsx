@@ -1,12 +1,12 @@
 import { ExtractRow, NotNull, cast, useQuery } from "@evolu/react";
 import { create, props } from "@stylexjs/stylex";
-import { FC, memo, useContext, useState } from "react";
+import { FC, memo, useState } from "react";
 import { Temporal } from "temporal-polyfill";
 import { evolu } from "../lib/Db";
 import { getNoteUrl } from "../lib/Routing";
 import { spacing } from "../lib/Tokens.stylex";
-import { SqliteDateTime, castTemporal } from "../lib/castTemporal";
-import { NowContext } from "../lib/contexts/NowContext";
+import { SqliteDateTime } from "../lib/castTemporal";
+import { useCastTemporal } from "../lib/hooks/useCastTemporal";
 import { Button } from "./Button";
 import { EditorOneLine } from "./EditorOneLine";
 import { Formatted } from "./Formatted";
@@ -39,13 +39,11 @@ export const DayNotes: FC<{
   day: Temporal.PlainDate;
   isVisible: boolean;
 }> = ({ day, isVisible }) => {
-  const now = useContext(NowContext);
+  const castTemporal = useCastTemporal();
   const startOfDay = castTemporal(
-    now.timeZoneId(),
     day.toPlainDateTime(Temporal.PlainTime.from("00:00")),
   );
   const endOfDay = castTemporal(
-    now.timeZoneId(),
     day.toPlainDateTime(Temporal.PlainTime.from("23:59:59")),
   );
   const { rows } = useQuery(notesByDay(startOfDay, endOfDay));
@@ -95,8 +93,8 @@ const TimeButton: FC<{
     setDialogIsShown(false);
   };
 
-  const now = useContext(NowContext);
-  const start = castTemporal(now.timeZoneId(), row.start).toPlainTime();
+  const castTemporal = useCastTemporal();
+  const start = castTemporal(row.start).toPlainTime();
 
   return (
     <>
