@@ -31,6 +31,7 @@
     "temporal-polyfill": "^0.2.3"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
     "@stylexjs/eslint-plugin": "^0.5.1",
     "@stylexjs/nextjs-plugin": "^0.5.1",
     "@types/node": "^20.11.25",
