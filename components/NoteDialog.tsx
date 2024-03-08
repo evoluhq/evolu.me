@@ -120,6 +120,6 @@ const styles = create({
     justifyContent: "center",
   },
   deleteTitle: {
-    color: colors.inactive,
+    color: colors.secondary,
   },
 });
