@@ -18,7 +18,7 @@ import {
 import { appSpacing } from "../../lib/Themes";
 import { baseline, colors, consts, spacing } from "../../lib/Tokens.stylex";
 import { RNfW } from "../../lib/Types";
-import { SqliteDateTime } from "../../lib/castTemporal";
+import { SqliteDateTime } from "../../lib/temporal/castTemporal";
 import { useCastTemporal } from "../../lib/hooks/useCastTemporal";
 import { useGetDayUrl } from "../../lib/hooks/useGetDayUrl";
 import { useOnUserLeave } from "../../lib/hooks/useOnUserLeave";

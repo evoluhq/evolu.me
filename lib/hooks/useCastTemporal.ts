@@ -5,7 +5,7 @@ import {
   SqliteDateTime,
   SqliteTime,
   castTemporal,
-} from "../castTemporal";
+} from "../temporal/castTemporal";
 import { NowContext } from "../contexts/NowContext";
 
 export const useCastTemporal = () => {
