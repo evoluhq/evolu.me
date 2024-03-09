@@ -84,7 +84,7 @@ export const baseline = defineVars({
 
 export const transitions = defineVars({
   color:
-    "color 0.1s ease, background-color 0.1s ease, outline-color 0.1s ease, border-color 0.1s ease",
+    "color 0.15s ease, background-color 0.15s ease, outline-color 0.15s ease, border-color 0.15s ease",
 });
 
 // https://github.com/facebook/stylex/blob/main/packages/open-props/src/shadows.stylex.js
