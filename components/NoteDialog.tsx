@@ -1,4 +1,5 @@
 import { create, props } from "@stylexjs/stylex";
+import { Function, Match } from "effect";
 import { FC, useCallback, useState } from "react";
 import { Temporal } from "temporal-polyfill";
 import { useEvolu } from "../lib/Db";
@@ -15,84 +16,115 @@ export const NoteDialog: FC<{
   row: NotesByDayRow;
   onRequestClose: () => void;
 }> = ({ row, onRequestClose }) => {
+  const castTemporal = useCastTemporal();
   const { update } = useEvolu();
 
-  const castTemporal = useCastTemporal();
-  const start = castTemporal(row.start);
-  // const end = castTemporal( row.start);
+  const initialStart = castTemporal(row.start);
+  const initialEnd = row.end ? castTemporal(row.end) : castTemporal(row.start);
 
-  const [startTime, setStartTime] = useState(start.toPlainTime());
-  const [startDate, setStartDate] = useState(start.toPlainDate());
-  // const [endTime, setEndTime] = useState(end.toPlainTime());
-  // const [endDate /*, setEndDate*/] = useState(end.toPlainDate());
+  const [start, setStart] = useState(initialStart);
+  const [end, setEnd] = useState(initialEnd);
 
-  const handleDeleteButtonPress = () => {
-    update("note", { id: row.id, isDeleted: true }, onRequestClose);
-  };
-
-  const handleDialogCancel = useCallback(() => {
-    onRequestClose();
-  }, [onRequestClose]);
+  const startEndComparison = Temporal.PlainDateTime.compare(start, end);
 
   const handleDialogDone = useCallback(() => {
-    const start = castTemporal(
-      new Temporal.PlainDateTime(
-        startDate.year,
-        startDate.month,
-        startDate.day,
-        startTime.hour,
-        startTime.minute,
-      ),
-    );
-    update("note", { id: row.id, start }, onRequestClose);
+    if (startEndComparison === 1) {
+      alert("The start date must be before the end date.");
+      return;
+    }
+
+    const values = {
+      start: castTemporal(start),
+      // Don't duplicate the start if it's not necessary.
+      end: startEndComparison === 0 ? null : castTemporal(end),
+    };
+
+    if (values.start === row.start && values.end === row.end) {
+      onRequestClose();
+    } else {
+      update("note", { id: row.id, ...values }, onRequestClose);
+    }
   }, [
     castTemporal,
+    end,
     onRequestClose,
+    row.end,
     row.id,
-    startDate.day,
-    startDate.month,
-    startDate.year,
-    startTime.hour,
-    startTime.minute,
+    row.start,
+    start,
+    startEndComparison,
     update,
   ]);
+
+  const endTitleStyle = Match.value(startEndComparison).pipe(
+    Match.when(0, () => styles.secondaryColor),
+    Match.when(1, () => styles.lineThroughTextDecoration),
+    Match.orElse(Function.constNull),
+  );
 
   return (
     <Dialog
       onRequestClose={onRequestClose}
-      onCancel={handleDialogCancel}
+      onCancel={() => {
+        onRequestClose();
+      }}
       onDone={handleDialogDone}
       containerStyle={styles.dialogContainer}
     >
       <div {...props(styles.editorWrapperForEllipsis)}>
         <EditorOneLine initialValue={row.content.root} />
       </div>
-      <div {...props(styles.timeGrid)}>
-        <Button title="Starts" variant="app" style={styles.label} />
+      <div {...props(styles.buttons)}>
         <DatePopoverButton
-          value={startDate}
+          value={start.toPlainDate()}
           variant="app"
-          onChange={setStartDate}
+          onChange={({ day, month, year }) => {
+            setStart(start.with({ day, month, year }));
+            // If the start and end were equal, update the end as well.
+            if (startEndComparison === 0) {
+              setEnd(start.with({ day, month, year }));
+            }
+          }}
         />
         <TimePopoverButton
-          value={startTime}
+          value={start.toPlainTime()}
           variant="app"
-          onChange={setStartTime}
+          onChange={({ hour, minute }) => {
+            setStart(start.with({ hour, minute }));
+            // If the start and end were equal, update the end as well.
+            if (startEndComparison === 0) {
+              setEnd(start.with({ hour, minute }));
+            }
+          }}
         />
-        {/* <Button title="Ends" variant="app" style={styles.label} />
-        <DatePopoverButton value={endDate} variant="app" onChange={() => {}} />
-        <TimePopoverButton
-          value={endTime}
-          variant="app"
-          onChange={setEndTime}
-        /> */}
       </div>
-      <div {...props(styles.actions)}>
+      <div {...props(styles.buttons)}>
+        <DatePopoverButton
+          value={end.toPlainDate()}
+          variant="app"
+          onChange={({ day, month, year }) => {
+            setEnd(end.with({ day, month, year }));
+          }}
+          titleStyle={endTitleStyle}
+        />
+        <TimePopoverButton
+          value={end.toPlainTime()}
+          variant="app"
+          onChange={({ hour, minute }) => {
+            setEnd(end.with({ hour, minute }));
+          }}
+          titleStyle={endTitleStyle}
+        />
+      </div>
+      <div {...props(styles.buttons)}>
         <Button
           variant="app"
           title="Delete"
-          onPress={handleDeleteButtonPress}
-          titleStyle={styles.deleteTitle}
+          onPress={() => {
+            update("note", { id: row.id, isDeleted: true }, onRequestClose);
+          }}
+          style={styles.centeredButton}
+          titleStyle={styles.secondaryColor}
         />
       </div>
     </Dialog>
@@ -101,25 +133,25 @@ export const NoteDialog: FC<{
 
 const styles = create({
   dialogContainer: {
-    maxWidth: "22rem",
+    maxWidth: "20rem",
   },
   editorWrapperForEllipsis: {
     display: "flex",
     flexDirection: "row",
     alignItems: "baseline",
   },
-  timeGrid: {
-    display: "grid",
-    gridTemplateColumns: "1fr auto auto",
-  },
-  label: {
-    justifySelf: "start",
-  },
-  actions: {
+  buttons: {
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "space-between",
   },
-  deleteTitle: {
-    color: colors.inactive,
+  centeredButton: {
+    // No flex: 1 because we don't want full width.
+    margin: "auto",
+  },
+  secondaryColor: {
+    color: colors.secondary,
+  },
+  lineThroughTextDecoration: {
+    textDecoration: "line-through",
   },
 });

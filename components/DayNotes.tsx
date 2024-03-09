@@ -5,7 +5,7 @@ import { Temporal } from "temporal-polyfill";
 import { evolu } from "../lib/Db";
 import { getNoteUrl } from "../lib/Routing";
 import { spacing } from "../lib/Tokens.stylex";
-import { SqliteDateTime } from "../lib/castTemporal";
+import { SqliteDateTime } from "../lib/temporal/castTemporal";
 import { useCastTemporal } from "../lib/hooks/useCastTemporal";
 import { Button } from "./Button";
 import { EditorOneLine } from "./EditorOneLine";
@@ -23,14 +23,14 @@ const notesByDay = (startOfDay: SqliteDateTime, endOfDay: SqliteDateTime) =>
   evolu.createQuery((db) =>
     db
       .selectFrom("note")
-      .select(["id", "content", "start"])
+      .select(["id", "content", "start", "end"])
       .where("isDeleted", "is not", cast(true))
       // Filter null value and ensure non-null type.
       .where("content", "is not", null)
       .where("start", "is not", null)
+      .$narrowType<{ content: NotNull; start: NotNull }>()
       .where((eb) => eb.between("start", startOfDay, endOfDay))
-      .orderBy(["start"])
-      .$narrowType<{ content: NotNull; start: NotNull }>(),
+      .orderBy(["start"]),
   );
 
 export type NotesByDayRow = ExtractRow<ReturnType<typeof notesByDay>>;
