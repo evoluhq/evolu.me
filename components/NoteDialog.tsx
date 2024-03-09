@@ -3,7 +3,7 @@ import { Function, Match } from "effect";
 import { FC, useCallback, useState } from "react";
 import { Temporal } from "temporal-polyfill";
 import { useEvolu } from "../lib/Db";
-import { colors } from "../lib/Tokens.stylex";
+import { colors, transitions } from "../lib/Tokens.stylex";
 import { useCastTemporal } from "../lib/hooks/useCastTemporal";
 import { Button } from "./Button";
 import { DatePopoverButton } from "./DatePopoverButton";
@@ -133,7 +133,7 @@ export const NoteDialog: FC<{
 
 const styles = create({
   dialogContainer: {
-    maxWidth: "20rem",
+    maxWidth: "22rem",
   },
   editorWrapperForEllipsis: {
     display: "flex",
@@ -150,6 +150,7 @@ const styles = create({
   },
   secondaryColor: {
     color: colors.secondary,
+    transition: transitions.color,
   },
   lineThroughTextDecoration: {
     textDecoration: "line-through",
