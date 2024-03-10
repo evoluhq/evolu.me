@@ -77,6 +77,7 @@ export const Root = Element.pipe(
 export type Root = S.Schema.To<typeof Root>;
 
 export const rootsAreEqual = (root1: Root, root2: Root): boolean =>
+  // TODO: Remove when Effect supports deep equality (soon)
   dequal(root1, root2);
 
 /**

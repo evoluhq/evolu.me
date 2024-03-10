@@ -1,7 +1,7 @@
 import * as S from "@effect/schema/Schema";
 import * as Evolu from "@evolu/react";
 import { createEvolu, database, id, table } from "@evolu/react";
-import { SqliteDateTime } from "./castTemporal";
+import { SqliteDateTime } from "./temporal/castTemporal";
 import { Content, ContentMax10k } from "./Lexical";
 
 export const NoteId = id("Note");
@@ -11,8 +11,7 @@ export const NoteTable = table({
   id: NoteId,
   content: ContentMax10k,
   start: SqliteDateTime,
-  // TODO:
-  // end: S.nullable(SqliteDateTime),
+  end: S.nullable(SqliteDateTime),
 });
 export type NoteTable = S.Schema.To<typeof NoteTable>;
 

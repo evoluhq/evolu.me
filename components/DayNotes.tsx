@@ -1,59 +1,101 @@
 import { ExtractRow, NotNull, cast, useQuery } from "@evolu/react";
 import { create, props } from "@stylexjs/stylex";
-import { FC, memo, useState } from "react";
+import { FC, memo, useMemo, useState } from "react";
 import { Temporal } from "temporal-polyfill";
 import { evolu } from "../lib/Db";
 import { getNoteUrl } from "../lib/Routing";
 import { spacing } from "../lib/Tokens.stylex";
-import { SqliteDateTime } from "../lib/castTemporal";
 import { useCastTemporal } from "../lib/hooks/useCastTemporal";
+import { SqliteDateTime } from "../lib/temporal/castTemporal";
 import { Button } from "./Button";
 import { EditorOneLine } from "./EditorOneLine";
 import { Formatted } from "./Formatted";
 import { Link } from "./Link";
 import { NoteDialog } from "./NoteDialog";
+import { ReadonlyArray, pipe } from "effect";
 
-// TODO:
-// SELECT *
-// FROM Note
-// WHERE start BETWEEN '2024-02-08 00:00:00' AND '2024-02-08 23:59:59'
-//    OR COALESCE(end, start) BETWEEN '2024-02-08 00:00:00' AND '2024-02-08 23:59:59'
-//    OR (start <= '2024-02-08 00:00:00' AND COALESCE(end, start) >= '2024-02-08 23:59:59');
 const notesByDay = (startOfDay: SqliteDateTime, endOfDay: SqliteDateTime) =>
   evolu.createQuery((db) =>
     db
       .selectFrom("note")
-      .select(["id", "content", "start"])
-      .where("isDeleted", "is not", cast(true))
+      .select(["id", "content", "start", "end"])
       // Filter null value and ensure non-null type.
       .where("content", "is not", null)
       .where("start", "is not", null)
-      .where((eb) => eb.between("start", startOfDay, endOfDay))
-      .orderBy(["start"])
-      .$narrowType<{ content: NotNull; start: NotNull }>(),
+      .$narrowType<{ content: NotNull; start: NotNull }>()
+      .where("isDeleted", "is not", cast(true))
+      .where((eb) =>
+        eb.or([
+          // Note starts on the date.
+          eb.between("start", startOfDay, endOfDay),
+          // Note ends on the date.
+          eb.between(eb.fn.coalesce("end", "start"), startOfDay, endOfDay),
+          // Note spans over the date.
+          eb.and([
+            eb("start", "<=", startOfDay),
+            eb(eb.fn.coalesce("end", "start"), ">=", endOfDay),
+          ]),
+        ]),
+      )
+      .orderBy(["start"]),
   );
 
 export type NotesByDayRow = ExtractRow<ReturnType<typeof notesByDay>>;
+
+type NotesByDayRowWithComparison = NotesByDayRow & {
+  startsBefore: boolean;
+  endsAfter: boolean;
+};
 
 export const DayNotes: FC<{
   day: Temporal.PlainDate;
   isVisible: boolean;
 }> = ({ day, isVisible }) => {
   const castTemporal = useCastTemporal();
-  const startOfDay = castTemporal(
-    day.toPlainDateTime(Temporal.PlainTime.from("00:00")),
+
+  const startOfDay = day.toPlainDateTime(Temporal.PlainTime.from("00:00"));
+  const endOfDay = day.toPlainDateTime(Temporal.PlainTime.from("23:59:59"));
+
+  const { rows } = useQuery(
+    notesByDay(castTemporal(startOfDay), castTemporal(endOfDay)),
   );
-  const endOfDay = castTemporal(
-    day.toPlainDateTime(Temporal.PlainTime.from("23:59:59")),
+
+  const sortedRowsWithComparison = useMemo(
+    () =>
+      pipe(
+        rows.map(
+          (row): NotesByDayRowWithComparison => ({
+            ...row,
+            startsBefore:
+              Temporal.PlainDateTime.compare(
+                castTemporal(row.start),
+                startOfDay,
+              ) === -1,
+            endsAfter:
+              row.end != null &&
+              Temporal.PlainDateTime.compare(
+                castTemporal(row.end),
+                endOfDay,
+              ) === 1,
+          }),
+        ),
+        // Overlapping notes first, then startsBefore, then rest.
+        ReadonlyArray.partition((row) => row.startsBefore && row.endsAfter),
+        ([rest, overlapping]) =>
+          overlapping.concat(
+            ...ReadonlyArray.partition(rest, (row) => !row.startsBefore),
+          ),
+      ),
+    [castTemporal, endOfDay, rows, startOfDay],
   );
-  const { rows } = useQuery(notesByDay(startOfDay, endOfDay));
-  return rows.map((row) => (
+
+  return sortedRowsWithComparison.map((row) => (
     <DayNote key={row.id} row={row} isVisible={isVisible} />
   ));
 };
 
 const DayNote = memo<{
-  row: NotesByDayRow;
+  row: NotesByDayRowWithComparison;
   isVisible: boolean;
 }>(function DayNote({ row, isVisible }) {
   return (
@@ -80,9 +122,10 @@ const DayNote = memo<{
 });
 
 const TimeButton: FC<{
-  row: NotesByDayRow;
+  row: NotesByDayRowWithComparison;
   isVisible: boolean;
 }> = ({ row, isVisible }) => {
+  const castTemporal = useCastTemporal();
   const [dialogIsShown, setDialogIsShown] = useState(false);
 
   const handleButtonPress = () => {
@@ -93,9 +136,6 @@ const TimeButton: FC<{
     setDialogIsShown(false);
   };
 
-  const castTemporal = useCastTemporal();
-  const start = castTemporal(row.start).toPlainTime();
-
   return (
     <>
       {dialogIsShown && (
@@ -103,23 +143,37 @@ const TimeButton: FC<{
       )}
       <Button
         /**
-         * TODO: tabIndex must be allowed only for the current DayBody Carousel
-         * item. Otherwise, tab navigation will scroll to the previous day. Add
-         * scrolling by key left/right arrows.
+         * The tabIndex must be allowed only for the current DayBody Carousel
+         * item. Otherwise, tab navigation will scroll to the previous day.
          */
         tabIndex={isVisible ? 0 : -1}
         variant="appSmall"
         style={styles.timeButtonPressable}
         title={
-          <>
-            <Formatted value={start} />
-            {/* {end && (
-              <>
-                <br />
-                <TimeButtonDigits time={end} />
-              </>
-            )} */}
-          </>
+          row.startsBefore && row.endsAfter ? (
+            <>
+              <span {...props(styles.arrowLeft)}>←</span>
+              <span {...props(styles.arrowRight)}>→</span>
+            </>
+          ) : (
+            <>
+              {row.startsBefore ? (
+                <span {...props(styles.arrowLeft)}>←</span>
+              ) : (
+                <Formatted value={castTemporal(row.start).toPlainTime()} />
+              )}
+              {row.end && (
+                <>
+                  <br />
+                  {row.endsAfter ? (
+                    <span {...props(styles.arrowRight)}>→</span>
+                  ) : (
+                    <Formatted value={castTemporal(row.end).toPlainTime()} />
+                  )}
+                </>
+              )}
+            </>
+          )
         }
         onPress={handleButtonPress}
       />
@@ -157,6 +211,16 @@ const styles = create({
     zIndex: 1,
     paddingTop: spacing.xxs,
     marginBottom: `calc(-1 * ${spacing.xxxs})`, // compensate paddingTop
+  },
+  arrowLeft: {
+    display: "inline-block",
+    width: "100%",
+    textAlign: "left",
+  },
+  arrowRight: {
+    display: "inline-block",
+    width: "100%",
+    textAlign: "right",
   },
   secondColumn: {
     flex: 6,
