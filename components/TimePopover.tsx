@@ -11,6 +11,7 @@ import {
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Pressable,
   ScrollView,
 } from "react-native";
 import { Temporal } from "temporal-polyfill";
@@ -21,60 +22,113 @@ import { Formatted } from "./Formatted";
 import { PopoverContainer, PopoverFooter } from "./Popover";
 import { Text } from "./Text";
 
+const numberOfVisibleItems = 5;
+const minuteRoundingMultiple = 5;
+
+const roundPlainTimeToNearestMultiple = (time: Temporal.PlainTime) => {
+  const totalMinutes = time.hour * 60 + time.minute;
+  const roundedMinutes =
+    Math.round(totalMinutes / minuteRoundingMultiple) * minuteRoundingMultiple;
+  return Temporal.PlainTime.from({
+    hour: Math.floor(roundedMinutes / 60),
+    minute: roundedMinutes % 60,
+  });
+};
+
 export const TimePopover: FC<{
   initialValue: Temporal.PlainTime;
   onDone: (value: Temporal.PlainTime) => void;
   onCancel: () => void;
 }> = ({ initialValue, onDone, onCancel }) => {
+  const initialRoundedValue = roundPlainTimeToNearestMultiple(initialValue);
+
   const hoursScrollViewRef = useRef<HTMLDivElement>(null);
   const minutesScrollViewRef = useRef<HTMLDivElement>(null);
   const scrollViewsRef = useRef<HTMLDivElement>(null);
 
   const reset = useCallback(
-    ({ animated }: { animated: boolean }) => {
+    ({
+      animated,
+      hour,
+      minute,
+    }: {
+      animated: boolean;
+      hour?: number;
+      minute?: number;
+    }) => {
       const { current: hoursScrollView } = hoursScrollViewRef;
       const { current: minutesScrollView } = minutesScrollViewRef;
       const { current: scrollViews } = scrollViewsRef;
       if (!hoursScrollView || !minutesScrollView || !scrollViews) return;
       const { offsetHeight } = scrollViews;
-      hoursScrollView.scrollTo({
-        y: (initialValue.hour * offsetHeight) / 5,
-        animated,
-      } as RNfW);
-      minutesScrollView.scrollTo({
-        y: (initialValue.minute * offsetHeight) / 5,
-        animated,
-      } as RNfW);
+      if (hour != null)
+        hoursScrollView.scrollTo({
+          y: (hour * offsetHeight) / numberOfVisibleItems,
+          animated,
+        } as RNfW);
+      if (minute != null)
+        minutesScrollView.scrollTo({
+          y:
+            (minute * offsetHeight) /
+            minuteRoundingMultiple /
+            numberOfVisibleItems,
+          animated,
+        } as RNfW);
     },
-    [initialValue.hour, initialValue.minute],
+    [],
   );
 
   useLayoutEffect(() => {
-    reset({ animated: false });
-  }, [reset]);
+    reset({
+      animated: false,
+      hour: initialRoundedValue.hour,
+      minute: initialRoundedValue.minute,
+    });
+  }, [initialRoundedValue.hour, initialRoundedValue.minute, reset]);
 
-  const [hour, setHour] = useState(initialValue.hour);
+  const [hour, setHour] = useState(initialRoundedValue.hour);
   const handleHoursScrollViewScroll = useCallback(
     ({
       nativeEvent: { contentOffset, layoutMeasurement },
     }: NativeSyntheticEvent<NativeScrollEvent>) => {
       setHour(
-        Math.floor((contentOffset.y * 5) / layoutMeasurement.height + 0.5),
+        Math.floor(
+          (contentOffset.y * numberOfVisibleItems) / layoutMeasurement.height +
+            0.5,
+        ),
       );
     },
     [],
   );
 
-  const [minute, setMinute] = useState(initialValue.minute);
+  const [minute, setMinute] = useState(initialRoundedValue.minute);
   const handleMinutesScrollViewScroll = useCallback(
     ({
       nativeEvent: { contentOffset, layoutMeasurement },
     }: NativeSyntheticEvent<NativeScrollEvent>) => {
       setMinute(
-        Math.floor((contentOffset.y * 5) / layoutMeasurement.height + 0.5),
+        Math.floor(
+          (contentOffset.y * numberOfVisibleItems) /
+            (layoutMeasurement.height / minuteRoundingMultiple) +
+            0.5,
+        ),
       );
     },
     [],
+  );
+
+  const handleHoursPress = useCallback(
+    (hour: number) => {
+      reset({ animated: true, hour });
+    },
+    [reset],
+  );
+
+  const handleMinutesPress = useCallback(
+    (minute: number) => {
+      reset({ animated: true, minute });
+    },
+    [reset],
   );
 
   return (
@@ -93,7 +147,7 @@ export const TimePopover: FC<{
           scrollEventThrottle={16}
         >
           <Spacer />
-          <Hours />
+          <Hours onPress={handleHoursPress} />
           <Spacer />
         </ScrollView>
         <ScrollView
@@ -106,7 +160,7 @@ export const TimePopover: FC<{
           scrollEventThrottle={16}
         >
           <Spacer />
-          <Minutes />
+          <Minutes onPress={handleMinutesPress} />
           <Spacer />
         </ScrollView>
       </div>
@@ -132,21 +186,40 @@ const Spacer = memo(function Spacer() {
   );
 });
 
-// TODO: Scroll on press.
-const Hours = memo(function Hours() {
+const Hours = memo<{ onPress: (hour: number) => void }>(function Hours({
+  onPress,
+}) {
   return ReadonlyArray.makeBy(24, Function.identity).map((hour) => (
-    <Text key={hour} style={styles.hour}>
-      <Formatted value={`${hour}hours`} />
-    </Text>
+    <Pressable
+      key={hour}
+      onPress={() => {
+        onPress(hour);
+      }}
+    >
+      <Text style={styles.hour}>
+        <Formatted value={`${hour}hours`} />
+      </Text>
+    </Pressable>
   ));
 });
 
-// TODO: Scroll on press.
-const Minutes = memo(function Hours() {
-  return ReadonlyArray.makeBy(60, Function.identity).map((minute) => (
-    <Text key={minute} style={styles.minute}>
-      <Formatted value={`${minute}minutes`} />
-    </Text>
+const Minutes = memo<{ onPress: (hour: number) => void }>(function Hours({
+  onPress,
+}) {
+  return ReadonlyArray.makeBy(
+    60 / minuteRoundingMultiple,
+    (n) => n * minuteRoundingMultiple,
+  ).map((minute) => (
+    <Pressable
+      key={minute}
+      onPress={() => {
+        onPress(minute);
+      }}
+    >
+      <Text style={styles.minute}>
+        <Formatted value={`${minute}minutes`} />
+      </Text>
+    </Pressable>
   ));
 });
 
@@ -185,7 +258,7 @@ const styles = create({
   },
   scrollViews: {
     display: "flex",
-    height: `calc(5 * ${spacing.m})`,
+    height: `calc(${numberOfVisibleItems} * ${spacing.m})`,
   },
   scrollView: {
     scrollSnapType: "y mandatory",
