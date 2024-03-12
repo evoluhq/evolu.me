@@ -1,5 +1,17 @@
 # evolu.me
 
+## 0.5.0
+
+### Minor Changes
+
+- 7aeeb89: Replace the Date and Time reset button with cancel
+
+  Reset really doesn't make sense. I copied that feature from native iOS HTML input and am not too fond of it.
+
+- 7aeeb89: Improve TimePopover UX
+
+  Minutes are clickable and rounded to a multiple of five.
+
 ## 0.4.0
 
 ### Minor Changes
