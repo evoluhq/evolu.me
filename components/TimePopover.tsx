@@ -24,7 +24,8 @@ import { Text } from "./Text";
 export const TimePopover: FC<{
   initialValue: Temporal.PlainTime;
   onDone: (value: Temporal.PlainTime) => void;
-}> = ({ initialValue, onDone }) => {
+  onCancel: () => void;
+}> = ({ initialValue, onDone, onCancel }) => {
   const hoursScrollViewRef = useRef<HTMLDivElement>(null);
   const minutesScrollViewRef = useRef<HTMLDivElement>(null);
   const scrollViewsRef = useRef<HTMLDivElement>(null);
@@ -76,14 +77,6 @@ export const TimePopover: FC<{
     [],
   );
 
-  const handleResetPress = () => {
-    reset({ animated: true });
-  };
-
-  const handleDonePress = () => {
-    onDone(new Temporal.PlainTime(hour, minute));
-  };
-
   return (
     <PopoverContainer>
       <div {...props(styles.strip)} />
@@ -118,14 +111,13 @@ export const TimePopover: FC<{
         </ScrollView>
       </div>
       <PopoverFooter>
+        <Button title="Cancel" onPress={onCancel} />
         <Button
-          title="Reset"
-          disabled={
-            initialValue.hour === hour && initialValue.minute === minute
-          }
-          onPress={handleResetPress}
+          title="Done"
+          onPress={() => {
+            onDone(new Temporal.PlainTime(hour, minute));
+          }}
         />
-        <Button title="Done" onPress={handleDonePress} />
       </PopoverFooter>
     </PopoverContainer>
   );

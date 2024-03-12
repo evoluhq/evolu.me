@@ -37,24 +37,13 @@ export type DatePopoverButtonProps = Omit<
 export const DatePopover: FC<{
   initialValue: Temporal.PlainDate;
   onDone: (value: Temporal.PlainDate) => void;
-}> = ({ initialValue, onDone }) => {
+  onCancel: () => void;
+}> = ({ initialValue, onDone, onCancel }) => {
   const intl = useContext(IntlContext);
   const [value, setValue] = useState(initialValue);
   const carouselRef = useRef<CarouselRef>(null);
 
   const [carouselOffset, setCarouselOffset] = useState(initialCarouselOffset);
-
-  const handleResetPress = useCallback(() => {
-    setValue(initialValue);
-    setCarouselOffset(initialCarouselOffset);
-    const { current: carousel } = carouselRef;
-    if (!carousel) return;
-    if (!carousel.isCentered()) carousel.scrollToCenter();
-  }, [initialValue]);
-
-  const handleDonePress = useCallback(() => {
-    onDone(value);
-  }, [onDone, value]);
 
   const handleDatePress = useCallback((date: Temporal.PlainDate) => {
     setValue((previousDate) =>
@@ -102,8 +91,13 @@ export const DatePopover: FC<{
         style={styles.carousel}
       />
       <PopoverFooter>
-        <Button title="Reset" onPress={handleResetPress} />
-        <Button title="Done" onPress={handleDonePress} />
+        <Button title="Cancel" onPress={onCancel} />
+        <Button
+          title="Done"
+          onPress={() => {
+            onDone(value);
+          }}
+        />
       </PopoverFooter>
     </PopoverContainer>
   );

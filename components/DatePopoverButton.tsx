@@ -23,11 +23,6 @@ export const DatePopoverButton: FC<DatePopoverButtonProps> = ({
 }) => {
   const popoverButtonRef = useRef<PopoverButtonRef>(null);
 
-  const handleDone = (value: Temporal.PlainDate) => {
-    popoverButtonRef.current?.close();
-    onChange(value);
-  };
-
   return (
     <PopoverButton
       ref={popoverButtonRef}
@@ -35,7 +30,16 @@ export const DatePopoverButton: FC<DatePopoverButtonProps> = ({
       anchorOrigin={{ block: "end", inline: "center" }}
       transformOrigin={{ block: "start", inline: "center" }}
       renderPopover={() => (
-        <DatePopover initialValue={value} onDone={handleDone} />
+        <DatePopover
+          initialValue={value}
+          onDone={(value: Temporal.PlainDate) => {
+            popoverButtonRef.current?.close();
+            onChange(value);
+          }}
+          onCancel={() => {
+            popoverButtonRef.current?.close();
+          }}
+        />
       )}
       {...rest}
     />

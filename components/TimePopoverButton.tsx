@@ -23,11 +23,6 @@ export const TimePopoverButton: FC<TimePopoverButtonProps> = ({
 }) => {
   const popoverButtonRef = useRef<PopoverButtonRef>(null);
 
-  const handleDone = (value: Temporal.PlainTime) => {
-    popoverButtonRef.current?.close();
-    onChange(value);
-  };
-
   return (
     <PopoverButton
       ref={popoverButtonRef}
@@ -35,7 +30,16 @@ export const TimePopoverButton: FC<TimePopoverButtonProps> = ({
       anchorOrigin={{ block: "end", inline: "center" }}
       transformOrigin={{ block: "start", inline: "center" }}
       renderPopover={() => (
-        <TimePopover initialValue={value} onDone={handleDone} />
+        <TimePopover
+          initialValue={value}
+          onDone={(value: Temporal.PlainTime) => {
+            popoverButtonRef.current?.close();
+            onChange(value);
+          }}
+          onCancel={() => {
+            popoverButtonRef.current?.close();
+          }}
+        />
       )}
       {...rest}
     />
