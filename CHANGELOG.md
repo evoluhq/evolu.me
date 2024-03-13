@@ -1,5 +1,11 @@
 # evolu.me
 
+## 0.6.0
+
+### Minor Changes
+
+- 6d1504a: Show both month names on the boundary between months when the actual date isn't visible.
+
 ## 0.5.0
 
 ### Minor Changes
