@@ -13,7 +13,7 @@ export const PageWithTitle: FC<{
     <ScrollView>
       <div {...props(styles.container)}>
         <Head>
-          <title>{title}</title>
+          <title>{title + " – Evolu.me"}</title>
         </Head>
         <Text tag="h1">{title}</Text>
         {children}

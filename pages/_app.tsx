@@ -75,7 +75,7 @@ export default function App({
   return (
     <Providers>
       <Head>
-        <title>Evolu.me</title>
+        <title>Evolu.me: The Local-First Calendar and Notes</title>
         <link
           rel="apple-touch-icon"
           sizes="180x180"
