@@ -1,5 +1,11 @@
 # evolu.me
 
+## 0.7.0
+
+### Minor Changes
+
+- 76c6450: Add changelog page
+
 ## 0.6.0
 
 ### Minor Changes
