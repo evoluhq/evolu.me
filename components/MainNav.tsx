@@ -49,7 +49,7 @@ export const MainNav: FC = () => {
 const Links: FC = () => {
   return (
     <div {...props(styles.links)}>
-      <NavLink href="/">Home</NavLink>
+      <NavLink href="/">App</NavLink>
       <NavLink href="/settings">Settings</NavLink>
       <NavLink href="/about">About</NavLink>
       <NavLink href="/changelog">Changelog</NavLink>
