@@ -52,6 +52,7 @@ const Links: FC = () => {
       <NavLink href="/">Home</NavLink>
       <NavLink href="/settings">Settings</NavLink>
       <NavLink href="/about">About</NavLink>
+      <NavLink href="/changelog">Changelog</NavLink>
       <NavLink href="/privacy">Privacy</NavLink>
     </div>
   );

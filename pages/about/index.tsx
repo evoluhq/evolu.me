@@ -13,12 +13,9 @@ export default function About() {
       <Text tag="p">
         Apps are just artificial and arbitrary boundaries within data.
       </Text>
-      {/* <Text tag="h2">Links:</Text> */}
-      <Link href="https://github.com/evoluhq/evolu.me/blob/main/CHANGELOG.md">
-        Changelog
+      <Link href="https://github.com/evoluhq/evolu.me">
+        github.com/evoluhq/evolu.me
       </Link>
-      <Link href="https://github.com/evoluhq/evolu.me/issues">Issues</Link>
-      <Link href="https://github.com/evoluhq/evolu.me">GitHub repository</Link>
     </PageWithTitle>
   );
 }

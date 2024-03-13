@@ -5,7 +5,7 @@ import { colors, fontSizes, fonts, spacing } from "../lib/Tokens.stylex";
 import { RNfW } from "../lib/Types";
 
 export interface TextProps {
-  tag?: "h1" | "h2" | "p";
+  tag?: "h1" | "h2" | "h3" | "p";
   style?: StyleXStyles;
   children: ReactNode;
   "aria-hidden"?: boolean;
@@ -40,6 +40,11 @@ const styles = create({
     lineHeight: spacing.xl,
     textWrap: "balance",
   },
+  h3: {
+    fontSize: fontSizes.step1,
+    lineHeight: spacing.m,
+    textWrap: "balance",
+  },
   p: {},
 });
 
@@ -49,6 +54,8 @@ const tagToRnProps = (tag: TextProps["tag"]): RnTextProps => {
       return { role: "heading" };
     case "h2":
       return { role: "heading", "aria-level": 2 } as RnTextProps;
+    case "h3":
+      return { role: "heading", "aria-level": 3 } as RnTextProps;
     case "p":
       return { role: "paragraph" as RnTextProps["role"] };
     case undefined:
