@@ -1,6 +1,5 @@
 import * as S from "@effect/schema/Schema";
 import { create, props } from "@stylexjs/stylex";
-import Head from "next/head";
 import { FC, memo, useContext, useMemo, useState } from "react";
 import { Temporal } from "temporal-polyfill";
 import { PlainDateFromUrlString } from "../lib/Routing";
@@ -24,7 +23,6 @@ type DayProps = S.Schema.To<typeof DayProps>;
 
 const Day: FC<DayProps> = ({ date: _date }) => {
   const now = useContext(NowContext);
-  const intl = useContext(IntlContext);
 
   const date = useMemo(() => _date || now.plainDateISO(), [now, _date]);
   const [carouselOffset, setCarouselOffset] = useState(initialCarouselOffset);
@@ -47,17 +45,6 @@ const Day: FC<DayProps> = ({ date: _date }) => {
 
   return (
     <>
-      <Head>
-        <title>
-          {intl.toLocaleString(date, {
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })}{" "}
-          | Evolu.me
-        </title>
-      </Head>
       <MonthButton
         date={monthButtonDate}
         showBothMonths={carouselOffset !== 0}
