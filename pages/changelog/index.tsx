@@ -1,10 +1,10 @@
 import { promises as fs } from "fs";
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import path from "path";
+import { Children } from "react";
 import Markdown from "react-markdown";
 import { PageWithTitle } from "../../components/PageWithTitle";
 import { Text } from "../../components/Text";
-import { create } from "@stylexjs/stylex";
 
 export const getStaticProps = (async () => {
   const rawMarkdown = await fs.readFile(
@@ -35,25 +35,25 @@ export default function Changelog({
       <Markdown
         components={{
           h2({ children }) {
-            return (
-              <Text tag="h3" style={styles.p}>
-                {children}
-              </Text>
-            );
+            return <Text tag="h3">{children}</Text>;
           },
           ul({ children }) {
             return <>{children}</>;
           },
           li({ children }) {
             return (
-              <Text tag="p" style={styles.p}>
-                {children}
-              </Text>
+              <>
+                {Children.map(children, (child) => {
+                  if (child === "\n") return null;
+                  if (typeof child === "string")
+                    return <Text tag="p">{children}</Text>;
+                  return child;
+                })}
+              </>
             );
           },
           p({ children }) {
-            if (typeof children !== "string") return null;
-            return <>{children.trim()}</>;
+            return <Text tag="p">{children}</Text>;
           },
         }}
       >
@@ -62,9 +62,3 @@ export default function Changelog({
     </PageWithTitle>
   );
 }
-
-const styles = create({
-  p: {
-    whiteSpace: "normal",
-  },
-});
