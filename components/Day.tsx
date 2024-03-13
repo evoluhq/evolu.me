@@ -34,6 +34,7 @@ const Day: FC<DayProps> = ({ date: _date }) => {
     [carouselOffset, date],
   );
 
+  // Carousel has a state that must be reset when a date changes.
   // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
   const [previousDate, setPreviousDate] = useState(date);
   if (!date.equals(previousDate)) {
@@ -57,7 +58,10 @@ const Day: FC<DayProps> = ({ date: _date }) => {
           | Evolu.me
         </title>
       </Head>
-      <MonthButton date={monthButtonDate} />
+      <MonthButton
+        date={monthButtonDate}
+        showBothMonths={carouselOffset !== 0}
+      />
       <div {...props(styles.centered)}>
         <DayHeader date={date} onSnap={setCarouselOffset} />
         <DayBody date={date} />
@@ -67,13 +71,23 @@ const Day: FC<DayProps> = ({ date: _date }) => {
   );
 };
 
-const MonthButton = memo<{ date: Temporal.PlainDate }>(function DayMonthButton({
-  date,
-}) {
+const MonthButton = memo<{
+  date: Temporal.PlainDate;
+  showBothMonths: boolean;
+}>(function DayMonthButton({ date, showBothMonths }) {
   const intl = useContext(IntlContext);
+
+  const startOfWeek = intl.startOfWeek(date);
+  const endOfWeek = intl.startOfWeek(date).add({ days: 6 });
+
+  const title =
+    showBothMonths && startOfWeek.month !== endOfWeek.month
+      ? `${intl.toLocaleString(startOfWeek, { month: "long" })} / ${intl.toLocaleString(endOfWeek, { month: "long" })}`
+      : intl.toLocaleString(date, { month: "long" });
+
   return (
     <Button
-      title={intl.toLocaleString(date, { month: "long" })}
+      title={title}
       style={styles.monthButtonPressable}
       titleStyle={styles.monthButtonTitle}
       disabled
