@@ -1,5 +1,11 @@
 # evolu.me
 
+## 0.8.0
+
+### Minor Changes
+
+- 0bf4a67: Allow to select month and year in DatePopover
+
 ## 0.7.0
 
 ### Minor Changes
