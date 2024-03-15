@@ -1,11 +1,11 @@
 import { FC, ReactNode, createContext, useRef } from "react";
-import { Temporal } from "temporal-polyfill";
+import { Temporal, Intl } from "temporal-polyfill";
 
 interface IntlContextValue {
   weekInfo: WeekInfo;
 
   toLocaleString: (
-    value: Temporal.PlainDate,
+    value: Temporal.PlainDate | Temporal.PlainYearMonth,
     options?: Intl.DateTimeFormatOptions,
   ) => string;
 
@@ -68,8 +68,10 @@ export const IntlProvider: FC<{
     weekInfo,
 
     toLocaleString: (value, options) => {
-      // @ts-expect-error A TypeScript bug.
-      return value.toLocaleString(localeString, options);
+      return value.toLocaleString(localeString, {
+        ...options,
+        calendar: "iso8601",
+      });
     },
 
     startOfWeek: (date) => getStartOfWeek(weekInfo, date),
