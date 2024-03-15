@@ -4,15 +4,26 @@ import { Temporal } from "temporal-polyfill";
 import { IntlContext } from "../lib/contexts/IntlContext";
 
 export interface FormattedProps {
-  value: Temporal.PlainDate | Temporal.PlainTime | HoursOrMinutes;
+  value:
+    | Temporal.PlainDate
+    | Temporal.PlainTime
+    | Temporal.PlainYearMonth
+    | HoursOrMinutes;
 }
 
 type HoursOrMinutes = `${number}${"hours" | "minutes"}`;
 
 /** To ensure unified formatting across the whole app. */
 export const Formatted = memo<FormattedProps>(function Formatted({ value }) {
-  if (value instanceof Temporal.PlainDate) return <PlainDate value={value} />;
-  if (value instanceof Temporal.PlainTime) return <PlainTime value={value} />;
+  if (value instanceof Temporal.PlainDate) {
+    return <PlainDate value={value} />;
+  }
+  if (value instanceof Temporal.PlainTime) {
+    return <PlainTime value={value} />;
+  }
+  if (value instanceof Temporal.PlainYearMonth) {
+    return <PlainYearMonth value={value} />;
+  }
   if (typeof value === "string") {
     const result = /^(\d+)(hours|minutes)$/.exec(value);
     if (!result) throw new Error("Invalid HoursOrMinutes format.");
@@ -31,6 +42,13 @@ const PlainDate: FC<{ value: Temporal.PlainDate }> = ({ value }) => {
     weekday: "long",
     month: "long",
     day: "numeric",
+  });
+};
+
+const PlainYearMonth: FC<{ value: Temporal.PlainYearMonth }> = ({ value }) => {
+  return useContext(IntlContext).toLocaleString(value, {
+    month: "long",
+    year: "numeric",
   });
 };
 
