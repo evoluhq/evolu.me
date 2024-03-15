@@ -1,17 +1,8 @@
 import { create } from "@stylexjs/stylex";
 import { ReadonlyArray } from "effect";
-import {
-  FC,
-  memo,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { FC, memo, useCallback, useContext, useRef, useState } from "react";
 import { Temporal } from "temporal-polyfill";
 import { colors, consts, spacing } from "../lib/Tokens.stylex";
-import { IntlContext } from "../lib/contexts/IntlContext";
 import { NowContext } from "../lib/contexts/NowContext";
 import { Button } from "./Button";
 import {
@@ -25,6 +16,7 @@ import { PopoverContainer, PopoverFooter, PopoverHeader } from "./Popover";
 import { PopoverButtonProps } from "./PopoverButton";
 import { WeekDayGrid } from "./WeekDayGrid";
 import { WeekGrid } from "./WeekGrid";
+import { YearMonthPopoverButton } from "./YearMonthPopoverButton";
 
 export type DatePopoverButtonProps = Omit<
   PopoverButtonProps,
@@ -39,36 +31,34 @@ export const DatePopover: FC<{
   onDone: (value: Temporal.PlainDate) => void;
   onCancel: () => void;
 }> = ({ initialValue, onDone, onCancel }) => {
-  const intl = useContext(IntlContext);
   const [value, setValue] = useState(initialValue);
-  const carouselRef = useRef<CarouselRef>(null);
 
+  const carouselRef = useRef<CarouselRef>(null);
   const [carouselOffset, setCarouselOffset] = useState(initialCarouselOffset);
 
-  const handleDatePress = useCallback((date: Temporal.PlainDate) => {
-    setValue((previousDate) =>
-      date.equals(previousDate) ? previousDate : date,
-    );
+  const reset = useCallback((date: Temporal.PlainDate) => {
+    setValue(date);
     setCarouselOffset(initialCarouselOffset);
   }, []);
-
-  const monthYearButtonTitle = useMemo(
-    () =>
-      intl.toLocaleString(value.add({ months: carouselOffset }), {
-        year: "numeric",
-        month: "long",
-      }),
-    [carouselOffset, intl, value],
-  );
 
   return (
     <PopoverContainer>
       <PopoverHeader>
-        <Button
-          title={monthYearButtonTitle}
-          onPress={() => {
-            alert("Not yet");
-          }}
+        <YearMonthPopoverButton
+          anchorOrigin={{ block: "end", inline: "start" }}
+          transformOrigin={{ block: "start", inline: "start" }}
+          value={value.add({ months: carouselOffset }).toPlainYearMonth()}
+          onChange={useCallback(
+            (yearMonth) => {
+              reset(
+                value.with({
+                  month: yearMonth.month,
+                  year: yearMonth.year,
+                }),
+              );
+            },
+            [reset, value],
+          )}
         />
       </PopoverHeader>
       <WeekDayGrid weekday="short" />
@@ -83,9 +73,9 @@ export const DatePopover: FC<{
         }, [value])}
         renderItem={useCallback(
           (offset: number) => (
-            <Dates date={value} offset={offset} onDatePress={handleDatePress} />
+            <Dates date={value} offset={offset} onDatePress={reset} />
           ),
-          [handleDatePress, value],
+          [reset, value],
         )}
         onSnap={setCarouselOffset}
         style={styles.carousel}
