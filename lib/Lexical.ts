@@ -9,7 +9,7 @@ import { EditorState } from "lexical";
 const Node = S.struct({
   version: S.literal(1),
 });
-type Node = S.Schema.To<typeof Node>;
+type Node = S.Schema.Type<typeof Node>;
 
 const Element = Node.pipe(
   S.extend(
@@ -28,7 +28,7 @@ const Element = Node.pipe(
     }),
   ),
 );
-type Element = S.Schema.To<typeof Element>;
+type Element = S.Schema.Type<typeof Element>;
 
 export const Text = Node.pipe(
   S.extend(
@@ -42,7 +42,7 @@ export const Text = Node.pipe(
     }),
   ),
 );
-export type Text = S.Schema.To<typeof Text>;
+export type Text = S.Schema.Type<typeof Text>;
 
 export const LineBreak = Node.pipe(
   S.extend(
@@ -51,7 +51,7 @@ export const LineBreak = Node.pipe(
     }),
   ),
 );
-export type LineBreak = S.Schema.To<typeof LineBreak>;
+export type LineBreak = S.Schema.Type<typeof LineBreak>;
 
 export const Paragraph = Element.pipe(
   S.extend(
@@ -61,7 +61,7 @@ export const Paragraph = Element.pipe(
     }),
   ),
 );
-export type Paragraph = S.Schema.To<typeof Paragraph>;
+export type Paragraph = S.Schema.Type<typeof Paragraph>;
 
 export const Root = Element.pipe(
   S.extend(
@@ -74,7 +74,7 @@ export const Root = Element.pipe(
     }),
   ),
 );
-export type Root = S.Schema.To<typeof Root>;
+export type Root = S.Schema.Type<typeof Root>;
 
 export const rootsAreEqual = (root1: Root, root2: Root): boolean =>
   // TODO: Remove when Effect supports deep equality (soon)
@@ -90,7 +90,7 @@ export const Content = S.struct({
   version: S.literal(1),
   root: Root,
 });
-export type Content = S.Schema.To<typeof Content>;
+export type Content = S.Schema.Type<typeof Content>;
 
 export const contentFromEditorState = (editorState: EditorState) =>
   // decodeUnknown, because Content is more strict than EditorState.
@@ -109,7 +109,7 @@ export const ContentMax10k = Content.pipe(
     message: () => "JSON.stringify(a).length > 10000",
   }),
 );
-export type ContentMax10k = S.Schema.To<typeof ContentMax10k>;
+export type ContentMax10k = S.Schema.Type<typeof ContentMax10k>;
 
 export const ContentMax10kFromContent = S.transform(
   Content,

@@ -19,7 +19,7 @@ export const Layout: FC = () => (
 );
 
 const DayProps = S.struct({ date: S.optional(PlainDateFromUrlString) });
-type DayProps = S.Schema.To<typeof DayProps>;
+type DayProps = S.Schema.Type<typeof DayProps>;
 
 const Day: FC<DayProps> = ({ date: _date }) => {
   const now = useContext(NowContext);

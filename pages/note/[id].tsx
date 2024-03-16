@@ -24,7 +24,7 @@ import { useGetDayUrl } from "../../lib/hooks/useGetDayUrl";
 import { useOnUserLeave } from "../../lib/hooks/useOnUserLeave";
 
 const NoteProps = S.struct({ id: NoteId });
-type NoteProps = S.Schema.To<typeof NoteProps>;
+type NoteProps = S.Schema.Type<typeof NoteProps>;
 
 const Note: FC = () => (
   <RouterQuery

@@ -23,7 +23,7 @@ export const PlainDateFromUrlString = S.transformOrFail(
   (string, _, ast) =>
     /^\d{4}-\d{2}-\d{2}$/.test(string)
       ? ParseResult.succeed(Temporal.PlainDate.from(string))
-      : ParseResult.fail(ParseResult.type(ast, string)),
+      : ParseResult.fail(new ParseResult.Type(ast, string)),
   (date) => ParseResult.succeed(date.toString()),
 );
 

@@ -31,7 +31,7 @@ export interface CarouselRef {
 }
 
 export const CarouselOffset = S.number.pipe(S.int(), S.brand("CarouselOffset"));
-export type CarouselOffset = S.Schema.To<typeof CarouselOffset>;
+export type CarouselOffset = S.Schema.Type<typeof CarouselOffset>;
 
 export const decodeSyncCarouselOffset = S.decodeSync(CarouselOffset);
 export const initialCarouselOffset = decodeSyncCarouselOffset(0);

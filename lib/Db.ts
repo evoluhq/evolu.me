@@ -5,7 +5,7 @@ import { SqliteDateTime } from "./temporal/castTemporal";
 import { Content, ContentMax10k } from "./Lexical";
 
 export const NoteId = id("Note");
-export type NoteId = S.Schema.To<typeof NoteId>;
+export type NoteId = S.Schema.Type<typeof NoteId>;
 
 export const NoteTable = table({
   id: NoteId,
@@ -13,7 +13,7 @@ export const NoteTable = table({
   start: SqliteDateTime,
   end: S.nullable(SqliteDateTime),
 });
-export type NoteTable = S.Schema.To<typeof NoteTable>;
+export type NoteTable = S.Schema.Type<typeof NoteTable>;
 
 /**
  * The same as {@link NoteTable} but with unlimited content. It's for local
@@ -23,8 +23,7 @@ export const _NoteContentTable = table({
   id: NoteId,
   content: Content,
 });
-
-export type _NoteContentTable = S.Schema.To<typeof _NoteContentTable>;
+export type _NoteContentTable = S.Schema.Type<typeof _NoteContentTable>;
 
 const Database = database({
   note: NoteTable,
@@ -33,7 +32,7 @@ const Database = database({
   _noteContent: _NoteContentTable,
   _newNote: _NoteContentTable,
 });
-export type Database = S.Schema.To<typeof Database>;
+export type Database = S.Schema.Type<typeof Database>;
 
 export const evolu = createEvolu(Database);
 export const useEvolu = Evolu.useEvolu<Database>;

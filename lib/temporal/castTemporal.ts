@@ -11,15 +11,15 @@ const TemporalString = S.string.pipe(S.brand("TemporalString"));
  * and compared lexicographically.
  */
 export const SqliteDateTime = TemporalString.pipe(S.brand("SqliteDateTime"));
-export type SqliteDateTime = S.Schema.To<typeof SqliteDateTime>;
+export type SqliteDateTime = S.Schema.Type<typeof SqliteDateTime>;
 
 /** YYYY-MM-DD. There is no UTC. We can't say without a time. */
 export const SqliteDate = TemporalString.pipe(S.brand("SqliteDate"));
-export type SqliteDate = S.Schema.To<typeof SqliteDate>;
+export type SqliteDate = S.Schema.Type<typeof SqliteDate>;
 
 /** HH:MM. There is no UTC. We can't say without a date. */
 export const SqliteTime = TemporalString.pipe(S.brand("SqliteTime"));
-export type SqliteTime = S.Schema.To<typeof SqliteTime>;
+export type SqliteTime = S.Schema.Type<typeof SqliteTime>;
 
 /** Cast plain Temporal values to UTC strings and vice-versa. */
 export function castTemporal(
