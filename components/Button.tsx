@@ -53,7 +53,7 @@ export const Button = forwardRef<ButtonRef, ButtonProps>(function Button(
       style={[styles.pressable as RNfW, style as RNfW]}
       role="button"
       onPress={onPress}
-      // @ts-expect-error RNfW
+      // @ts-expect-error RNfW......
       tabIndex={tabIndex}
       disabled={disabled}
     >

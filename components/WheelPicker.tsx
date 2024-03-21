@@ -73,7 +73,7 @@ export const WheelPickerScrollView = forwardRef<
     <ScrollView
       showsVerticalScrollIndicator={false}
       style={styles.scrollView as RNfW}
-      // @ts-expect-error RNfW
+      // @ts-expect-error RNfW......
       tabIndex={0}
       ref={hoursScrollViewRef as RNfW}
       onScroll={({ nativeEvent: { contentOffset, layoutMeasurement } }) => {

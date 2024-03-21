@@ -38,7 +38,7 @@ export const Dialog: FC<{
         </div>
         {/* It must not be the first because of Modal auto-focus. */}
         <Pressable
-          // @ts-expect-error RNfW
+          // @ts-expect-error RNfW......
           tabIndex={-1}
           style={styles.pressableBackground as RNfW}
           onPress={onRequestClose}

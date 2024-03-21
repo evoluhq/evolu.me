@@ -48,7 +48,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
           hovered && pressableHoverStyle,
         ] as RNfW
       }
-      // @ts-expect-error RNfW
+      // @ts-expect-error RNfW......
       tabIndex={-1}
     >
       {(state) => {
