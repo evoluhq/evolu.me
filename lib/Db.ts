@@ -1,8 +1,8 @@
 import * as S from "@effect/schema/Schema";
 import * as Evolu from "@evolu/react";
 import { createEvolu, database, id, table } from "@evolu/react";
-import { SqliteDateTime } from "./temporal/castTemporal";
 import { Content, ContentMax10k } from "./Lexical";
+import { SqliteDateTime } from "./temporal/castTemporal";
 
 export const NoteId = id("Note");
 export type NoteId = S.Schema.Type<typeof NoteId>;
@@ -34,5 +34,12 @@ const Database = database({
 });
 export type Database = S.Schema.Type<typeof Database>;
 
-export const evolu = createEvolu(Database);
+const indexes = [
+  Evolu.createIndex("indexNoteStart").on("note").column("start"),
+];
+
+export const evolu = createEvolu(Database, {
+  name: "Evolu.me",
+  indexes,
+});
 export const useEvolu = Evolu.useEvolu<Database>;

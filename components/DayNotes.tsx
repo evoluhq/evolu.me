@@ -1,5 +1,6 @@
 import { ExtractRow, NotNull, cast, useQuery } from "@evolu/react";
 import { create, props } from "@stylexjs/stylex";
+import { ReadonlyArray, pipe } from "effect";
 import { FC, memo, useMemo, useState } from "react";
 import { Temporal } from "temporal-polyfill";
 import { evolu } from "../lib/Db";
@@ -12,7 +13,6 @@ import { EditorOneLine } from "./EditorOneLine";
 import { Formatted } from "./Formatted";
 import { Link } from "./Link";
 import { NoteDialog } from "./NoteDialog";
-import { ReadonlyArray, pipe } from "effect";
 
 const notesByDay = (startOfDay: SqliteDateTime, endOfDay: SqliteDateTime) =>
   evolu.createQuery((db) =>
