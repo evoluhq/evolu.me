@@ -39,7 +39,7 @@ const indexes = Evolu.createIndexes((create) => [
 ]);
 
 export const evolu = createEvolu(Database, {
-  name: "EvoluMe",
+  name: "Evolu.me",
   indexes,
   // minimumLogLevel: "trace",
 });
