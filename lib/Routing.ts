@@ -18,13 +18,15 @@ const PlainDateFromSelf = S.declare(isPlainDate).pipe(
 
 /** Date in this format: 2024-06-01 */
 export const PlainDateFromUrlString = S.transformOrFail(
-  S.string,
+  S.String,
   PlainDateFromSelf,
-  (string, _, ast) =>
-    /^\d{4}-\d{2}-\d{2}$/.test(string)
-      ? ParseResult.succeed(Temporal.PlainDate.from(string))
-      : ParseResult.fail(new ParseResult.Type(ast, string)),
-  (date) => ParseResult.succeed(date.toString()),
+  {
+    decode: (string, _, ast) =>
+      /^\d{4}-\d{2}-\d{2}$/.test(string)
+        ? ParseResult.succeed(Temporal.PlainDate.from(string))
+        : ParseResult.fail(new ParseResult.Type(ast, string)),
+    encode: (date) => ParseResult.succeed(date.toString()),
+  },
 );
 
 export const getDayUrl = (

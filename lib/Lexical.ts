@@ -6,16 +6,16 @@ import { EditorState } from "lexical";
 // to ensure a valid Schema.
 // In the future, NoteEditor will use its format based on Peritext.
 
-const Node = S.struct({
-  version: S.literal(1),
+const Node = S.Struct({
+  version: S.Literal(1),
 });
 type Node = S.Schema.Type<typeof Node>;
 
 const Element = Node.pipe(
   S.extend(
-    S.struct({
-      direction: S.nullable(S.literal("ltr", "rtl")),
-      format: S.literal(
+    S.Struct({
+      direction: S.NullOr(S.Literal("ltr", "rtl")),
+      format: S.Literal(
         "left",
         "start",
         "center",
@@ -24,7 +24,7 @@ const Element = Node.pipe(
         "justify",
         "",
       ),
-      indent: S.number,
+      indent: S.Number,
     }),
   ),
 );
@@ -32,13 +32,13 @@ type Element = S.Schema.Type<typeof Element>;
 
 export const Text = Node.pipe(
   S.extend(
-    S.struct({
-      type: S.literal("text"),
-      detail: S.number,
-      format: S.number,
-      mode: S.literal("normal", "token", "segmented"),
-      style: S.string,
-      text: S.string,
+    S.Struct({
+      type: S.Literal("text"),
+      detail: S.Number,
+      format: S.Number,
+      mode: S.Literal("normal", "token", "segmented"),
+      style: S.String,
+      text: S.String,
     }),
   ),
 );
@@ -46,8 +46,8 @@ export type Text = S.Schema.Type<typeof Text>;
 
 export const LineBreak = Node.pipe(
   S.extend(
-    S.struct({
-      type: S.literal("linebreak"),
+    S.Struct({
+      type: S.Literal("linebreak"),
     }),
   ),
 );
@@ -55,9 +55,9 @@ export type LineBreak = S.Schema.Type<typeof LineBreak>;
 
 export const Paragraph = Element.pipe(
   S.extend(
-    S.struct({
-      type: S.literal("paragraph"),
-      children: S.array(S.union(Text, LineBreak)),
+    S.Struct({
+      type: S.Literal("paragraph"),
+      children: S.Array(S.Union(Text, LineBreak)),
     }),
   ),
 );
@@ -65,12 +65,12 @@ export type Paragraph = S.Schema.Type<typeof Paragraph>;
 
 export const Root = Element.pipe(
   S.extend(
-    S.struct({
-      type: S.literal("root"),
+    S.Struct({
+      type: S.Literal("root"),
       // It's mutable in Lexical, so it must be here as well.
       // The array must be non-empty. Lexical can work with empty,
       // but when a text is pasted, it fails with some error.
-      children: S.mutable(S.nonEmptyArray(Paragraph)),
+      children: S.mutable(S.NonEmptyArray(Paragraph)),
     }),
   ),
 );
@@ -85,9 +85,9 @@ export const rootsAreEqual = (root1: Root, root2: Root): boolean =>
  * local-only tables because it can be huge. For the final state, use
  * ContentMax10k.
  */
-export const Content = S.struct({
-  _tag: S.literal("Content"),
-  version: S.literal(1),
+export const Content = S.Struct({
+  _tag: S.Literal("Content"),
+  version: S.Literal(1),
   root: Root,
 });
 export type Content = S.Schema.Type<typeof Content>;
@@ -104,19 +104,17 @@ export const contentFromEditorState = (editorState: EditorState) =>
 /** ContentMax10k is {@link Content} with `JSON.stringify(a).length <= 10000`. */
 export const ContentMax10k = Content.pipe(
   S.omit("_tag"),
-  S.extend(S.struct({ _tag: S.literal("ContentMax10k") })),
+  S.extend(S.Struct({ _tag: S.Literal("ContentMax10k") })),
   S.filter((a) => JSON.stringify(a).length <= 10000, {
     message: () => "JSON.stringify(a).length > 10000",
   }),
 );
 export type ContentMax10k = S.Schema.Type<typeof ContentMax10k>;
 
-export const ContentMax10kFromContent = S.transform(
-  Content,
-  ContentMax10k,
-  (a) => ({ ...a, _tag: "ContentMax10k" as const }),
-  (a) => ({ ...a, _tag: "Content" as const }),
-);
+export const ContentMax10kFromContent = S.transform(Content, ContentMax10k, {
+  decode: (a) => ({ ...a, _tag: "ContentMax10k" as const }),
+  encode: (a) => ({ ...a, _tag: "Content" as const }),
+});
 
 export const emptyRoot: Root = {
   type: "root",

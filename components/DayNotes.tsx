@@ -1,6 +1,6 @@
 import { ExtractRow, NotNull, cast, useQuery } from "@evolu/react";
 import { create, props } from "@stylexjs/stylex";
-import { ReadonlyArray, pipe } from "effect";
+import { Array, pipe } from "effect";
 import { FC, memo, useMemo, useState } from "react";
 import { Temporal } from "temporal-polyfill";
 import { evolu } from "../lib/Db";
@@ -80,10 +80,10 @@ export const DayNotes: FC<{
           }),
         ),
         // Overlapping notes first, then startsBefore, then rest.
-        ReadonlyArray.partition((row) => row.startsBefore && row.endsAfter),
+        Array.partition((row) => row.startsBefore && row.endsAfter),
         ([rest, overlapping]) =>
           overlapping.concat(
-            ...ReadonlyArray.partition(rest, (row) => !row.startsBefore),
+            ...Array.partition(rest, (row) => !row.startsBefore),
           ),
       ),
     [castTemporal, endOfDay, rows, startOfDay],
@@ -181,7 +181,7 @@ const TimeButton: FC<{
   );
 };
 
-// const Tags: FC<{ tags: ReadonlyArray<string> }> = ({ tags }) => {
+// const Tags: FC<{ tags: Array<string> }> = ({ tags }) => {
 //   return (
 //     <div {...props(styles.tags)}>
 //       <EnsureBaseline style={styles.tagsEnsureBaseLine} />

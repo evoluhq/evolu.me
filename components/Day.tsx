@@ -18,7 +18,7 @@ export const Layout: FC = () => (
   <RouterQuery schema={DayProps} render={(props) => <Day {...props} />} />
 );
 
-const DayProps = S.struct({ date: S.optional(PlainDateFromUrlString) });
+const DayProps = S.Struct({ date: S.optional(PlainDateFromUrlString) });
 type DayProps = S.Schema.Type<typeof DayProps>;
 
 const Day: FC<DayProps> = ({ date: _date }) => {

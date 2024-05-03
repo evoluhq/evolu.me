@@ -1,5 +1,5 @@
 import { create, keyframes, props } from "@stylexjs/stylex";
-import { ReadonlyArray, identity } from "effect";
+import { Array, identity } from "effect";
 import { memo, useCallback, useContext, useLayoutEffect, useRef } from "react";
 import { Temporal } from "temporal-polyfill";
 import { atDistance, colors, spacing, transitions } from "../lib/Tokens.stylex";
@@ -58,7 +58,7 @@ const Dates = memo<{
   const today = useContext(NowContext).plainDateISO();
   const intl = useContext(IntlContext);
   const startOfWeek = intl.startOfWeek(date).add({ weeks: offset });
-  const days = ReadonlyArray.makeBy(7, identity).map((n) =>
+  const days = Array.makeBy(7, identity).map((n) =>
     startOfWeek.add({ days: n }),
   );
 

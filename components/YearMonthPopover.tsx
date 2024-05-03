@@ -1,4 +1,4 @@
-import { ReadonlyArray } from "effect";
+import { Array } from "effect";
 import {
   FC,
   memo,
@@ -107,7 +107,7 @@ const Months = memo<{
   onPress: (index: number) => void;
 }>(function Months({ onPress }) {
   const intl = useContext(IntlContext);
-  return ReadonlyArray.makeBy(12, (index) => {
+  return Array.makeBy(12, (index) => {
     const date = Temporal.PlainDate.from({
       year: 2024,
       month: index + 1,
@@ -136,7 +136,7 @@ const yearsOffset = 10;
 const Years = memo<{
   onPress: (hour: number) => void;
 }>(function Years({ onPress }) {
-  return ReadonlyArray.makeBy(100, (index) => (
+  return Array.makeBy(100, (index) => (
     <WheelPickerItem
       key={index}
       onPress={() => {

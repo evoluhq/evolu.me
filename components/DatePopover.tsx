@@ -1,5 +1,5 @@
 import { create } from "@stylexjs/stylex";
-import { ReadonlyArray } from "effect";
+import { Array } from "effect";
 import { FC, memo, useCallback, useContext, useRef, useState } from "react";
 import { Temporal } from "temporal-polyfill";
 import { colors, consts, spacing } from "../lib/Tokens.stylex";
@@ -102,7 +102,7 @@ const Dates = memo<{
 
   return (
     <WeekGrid forMonth>
-      {ReadonlyArray.makeBy(offsetDate.daysInMonth, (i) => {
+      {Array.makeBy(offsetDate.daysInMonth, (i) => {
         const day = offsetDate.with({ day: i + 1 });
         const isSelected = day.equals(date);
         return (

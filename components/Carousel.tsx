@@ -1,6 +1,6 @@
 import * as S from "@effect/schema/Schema";
 import { StyleXStyles, create, props } from "@stylexjs/stylex";
-import { Number, ReadonlyArray } from "effect";
+import { Array, Number } from "effect";
 import {
   ReactNode,
   forwardRef,
@@ -16,8 +16,8 @@ import {
   NativeSyntheticEvent,
   ScrollView,
 } from "react-native";
-import { RNfW } from "../lib/Types";
 import { Temporal } from "temporal-polyfill";
+import { RNfW } from "../lib/Types";
 
 // TODO: Accessibility.
 // https://www.w3.org/WAI/ARIA/apg/patterns/carousel/
@@ -30,7 +30,7 @@ export interface CarouselRef {
   isCentered: () => boolean;
 }
 
-export const CarouselOffset = S.number.pipe(S.int(), S.brand("CarouselOffset"));
+export const CarouselOffset = S.Number.pipe(S.int(), S.brand("CarouselOffset"));
 export type CarouselOffset = S.Schema.Type<typeof CarouselOffset>;
 
 export const decodeSyncCarouselOffset = S.decodeSync(CarouselOffset);
@@ -176,10 +176,10 @@ export const Carousel = forwardRef<CarouselRef, CarouselProps>(
       [diffOffset, infinityOffset, onSnap],
     );
 
-    const offsetsRef = useRef<ReadonlyArray<number>>([]);
+    const offsetsRef = useRef<Array<number>>([]);
     const getOffsets = () => {
       if (offsetsRef.current.length === 0)
-        offsetsRef.current = ReadonlyArray.makeBy(
+        offsetsRef.current = Array.makeBy(
           totalSnapCountRef.current,
           (i) => i - snapCountRef.current,
         );

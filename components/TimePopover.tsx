@@ -1,4 +1,4 @@
-import { Function, ReadonlyArray } from "effect";
+import { Array, Function } from "effect";
 import {
   FC,
   memo,
@@ -12,9 +12,9 @@ import { Formatted } from "./Formatted";
 import {
   WheelPicker,
   WheelPickerItem,
-  wheelPickerItemStyles,
   WheelPickerScrollView,
   WheelPickerScrollViewRef,
+  wheelPickerItemStyles,
 } from "./WheelPicker";
 
 export const TimePopover: FC<{
@@ -110,7 +110,7 @@ const roundPlainTimeToNearestMultiple = (time: Temporal.PlainTime) => {
 const Hours = memo<{
   onPress: (hour: number) => void;
 }>(function Hours({ onPress }) {
-  return ReadonlyArray.makeBy(24, Function.identity).map((hour) => (
+  return Array.makeBy(24, Function.identity).map((hour) => (
     <WheelPickerItem
       key={hour}
       onPress={() => {
@@ -126,7 +126,7 @@ const Hours = memo<{
 const Minutes = memo<{
   onPress: (hour: number) => void;
 }>(function Hours({ onPress }) {
-  return ReadonlyArray.makeBy(
+  return Array.makeBy(
     60 / minuteRoundingMultiple,
     (n) => n * minuteRoundingMultiple,
   ).map((minute) => (

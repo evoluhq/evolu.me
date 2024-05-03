@@ -1,5 +1,5 @@
 import { create } from "@stylexjs/stylex";
-import { ReadonlyArray } from "effect";
+import { Array } from "effect";
 import { memo, useContext } from "react";
 import { Temporal } from "temporal-polyfill";
 import { colors, fontSizes, spacing } from "../lib/Tokens.stylex";
@@ -15,7 +15,7 @@ export const WeekDayGrid = memo<{ weekday: "narrow" | "short" }>(
 
     return (
       <WeekGrid>
-        {ReadonlyArray.makeBy(7, (i) => {
+        {Array.makeBy(7, (i) => {
           const day = date.add({ days: i });
           return (
             <Text

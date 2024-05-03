@@ -4,7 +4,7 @@ import { Temporal } from "temporal-polyfill";
 // https://www.sqlite.org/lang_datefunc.html
 
 /** To avoid a clash with the JavaScript Date SqliteDate type. */
-const TemporalString = S.string.pipe(S.brand("TemporalString"));
+const TemporalString = S.String.pipe(S.brand("TemporalString"));
 
 /**
  * UTC DateTime is stored in ISO 8601 format to ensure datetimes can be sorted

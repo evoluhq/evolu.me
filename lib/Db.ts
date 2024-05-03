@@ -11,7 +11,7 @@ export const NoteTable = table({
   id: NoteId,
   content: ContentMax10k,
   start: SqliteDateTime,
-  end: S.nullable(SqliteDateTime),
+  end: S.NullOr(SqliteDateTime),
 });
 export type NoteTable = S.Schema.Type<typeof NoteTable>;
 
@@ -34,12 +34,13 @@ const Database = database({
 });
 export type Database = S.Schema.Type<typeof Database>;
 
-const indexes = [
-  Evolu.createIndex("indexNoteStart").on("note").column("start"),
-];
+const indexes = Evolu.createIndexes((create) => [
+  create("indexNoteStart").on("note").column("start"),
+]);
 
 export const evolu = createEvolu(Database, {
-  name: "Evolu.me",
+  name: "EvoluMe",
   indexes,
+  // minimumLogLevel: "trace",
 });
 export const useEvolu = Evolu.useEvolu<Database>;
